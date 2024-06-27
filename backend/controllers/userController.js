@@ -43,5 +43,6 @@ exports.AddStudent = (req, res) => {
 
 // Returns all registered users
 exports.GetStudents = (req, res) => {
-    res.json({ message: 'User retrieved successfully' });
+    const users = readUsersJSON();
+    res.status(200).json({ message: 'Users retrieved successfully', users });
 };
