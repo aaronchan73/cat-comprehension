@@ -1,0 +1,36 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h1 {
+    font-family: Arial, sans-serif;
+    font-size: 4rem;
+    margin-bottom: 30%;
+}
+
+
+.homePageButtonContainer {
+    display: flex;
+    justify-content: center;
+    justify-content: space-between;
+}
+
+.homePageButton {
+    font-family: Arial, sans-serif;
+    font-size: 2rem;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.homePageButton:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.15);
+}
