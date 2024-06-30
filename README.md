@@ -8,9 +8,9 @@ Features such as **Progression and Performance Tracking** and **Educator Tools a
 
 ## Running with Docker
 1. Install Docker Desktop
-2. Start the containers using
+2. Start the containers using:
     ```sh
-    docker-compose up
+    docker compose up
     ```
 3. Frontend is accessible at `http://localhost:3000`
 4. Backend is accessible at `http://localhost:8080`
