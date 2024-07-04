@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "studentId": 20992368,
+    "username": "samzhao273"
+  },
+  {
+    "studentId": 20992367,
+    "username": "poopypoopoo"
+  },
+  {
+    "studentId": "123123123",
+    "username": "tesst"
+  },
+  {
+    "studentId": 20992369,
+    "username": "test"
+  },
+  {
+    "studentId": 123123,
+    "username": "test123123"
+  },
+  {
+    "studentId": 123123123123123,
+    "username": "asdoihaosdhiads"
+  }
+]
