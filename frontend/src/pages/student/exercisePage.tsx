@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import CodeBox from '../../components/codeBox'
-import { getExercises, getExerciseById } from '../../services/getExercises';
+import { getExercises, getExerciseById } from '../../services/exercises';
 
 export default function ExercisePage() {
     const [code, setCode] = useState<string>('')

@@ -16,23 +16,25 @@ const updateUsersJSON = (data) => {
 
 // Registers a new user
 exports.AddStudent = (req, res) => {
-  const { username } = req.body;
+  const { username, studentId } = req.body;
 
-  if (!username) {
-    return res.status(400).json({ message: 'Username is required' });
+  if (!username || !studentId) {
+    return res.status(400).json({ message: 'Username or student ID is required' });
   }
 
   // Read existing users from Users.json
   const users = readUsersJSON();
 
   // Check if username already exists in Users.json
-  const exists = users.some(user => user.username === username);
-  if (exists) {
-    return res.status(400).json({ message: 'Username already exists' });
+  const existsUserName = users.some(user => user.username === username);
+  const existsStudentId = users.some(user => user.studentId === studentId);
+
+  if (existsUserName || existsStudentId) {
+    return res.status(400).json({ message: 'Username or student ID already exists' });
   }
 
   // Add new user to the list
-  const user = { username };
+  const user = { studentId, username };
   users.push(user);
 
   // Write updated list back to the file
