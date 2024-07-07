@@ -19,8 +19,15 @@ exports.AddAttempt = (req, res) => {
     // TODO 
 };
 
+// Read Attempt-Tests.json and parse contents
+const readAttemptTestsJSON = () => { 
+    const filePath = path.join(__dirname, '../Attempt-Tests.json'); 
+    const data = fs.readFileSync(filePath, 'utf8'); 
+    return JSON.parse(data); 
+}; 
+
 // Tests the user's answer (translated into code) against pre-written test cases 
-exports.TestAttempt = () => { 
+exports.TestAttempt = (userCode, testCases) => { 
     // TODO
 }; 
 
