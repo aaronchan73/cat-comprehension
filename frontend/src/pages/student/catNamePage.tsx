@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/catNamePage.css'
 import { IUser } from '../../types/IUser';
 import { addUser } from '../../services/users';
 import Alert from '@mui/material/Alert';
+import { Button, FormLabel, Input, TextField } from '@mui/material';
 
 
 export default function CatNamePage() {
@@ -12,11 +13,11 @@ export default function CatNamePage() {
     const [error, setError] = useState<string>('')
     const [success, setSuccess] = useState<string>('')
     const navigate = useNavigate()
-    
+
 
     // TODO post request to save the cat name
     const saveStudent = async () => {
-        const data = {studentId: Number(studentID), username: catName} as IUser
+        const data = { studentId: Number(studentID), username: catName } as IUser
         const reponse = await addUser(data)
         console.log(reponse)
 
@@ -25,7 +26,7 @@ export default function CatNamePage() {
         }
         else {
             setSuccess(reponse.message)
-            setTimeout(() => {navigate('/student/exercisePage')} , 3000)
+            setTimeout(() => { navigate('/student/exercisePage') }, 3000)
         }
 
     }
@@ -35,19 +36,29 @@ export default function CatNamePage() {
 
     return (
         <div>
-            <h1>
-                What is your name?
-            </h1>
-            <div className = "inputContainer">
-                <label>Username:</label>
-                <input type="text" value={catName} onChange={(e) => {setCatName(e.target.value)}}/>
-                <label>Student ID:</label>
-                <input type="text" value={studentID} onChange={(e) => {setStudentID(e.target.value)}}/>
-                <button onClick={() => {saveStudent()}}>
+            <h1>What is your name?</h1>
+            <div className="inputContainer">
+                <TextField
+                    type="text"
+                    value={catName}
+                    onChange={(e) => setCatName(e.target.value)}
+                    label="User Name"
+                    variant="filled"
+                    className="customTextField"
+                />
+                <TextField
+                    type="text"
+                    value={studentID}
+                    onChange={(e) => setStudentID(e.target.value)}
+                    label="Student ID"
+                    variant="filled"
+                    className="customTextField"
+                />
+                <Button onClick={saveStudent} className="customButton">
                     Submit
-                </button>
+                </Button>
             </div>
-            {error && <Alert severity="error">{error}</Alert>}
+            {error && !success && <Alert severity="error">{error}</Alert>}
             {success && <Alert severity="success">{success}</Alert>}
         </div>
     )
