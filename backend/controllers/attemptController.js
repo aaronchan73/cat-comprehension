@@ -16,8 +16,13 @@ const updateAttemptsJSON = (data) => {
 
 // Adds a user’s answer and performance to the corresponding code sample
 exports.AddAttempt = (req, res) => {
-    // TODO
+    // TODO 
 };
+
+// Tests the user's answer (translated into code) against pre-written test cases 
+exports.TestAttempt = () => { 
+    // TODO
+}; 
 
 // Gets a list of all the attempts in in the application for the username provided
 exports.GetAttemptsByUsername = (req, res) => {
