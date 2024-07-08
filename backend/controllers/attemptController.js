@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { stringify } = require('querystring');
+const axios = require('axios');
+
 
 // Read Attempts.json and parse contents
 const readAttemptsJSON = () => {
@@ -15,9 +17,40 @@ const updateAttemptsJSON = (data) => {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
+getConvertedCode = (description) => {
+    try {
+
+        const response = await axios.post('http://localhost:8080/api/generate', {
+            'model':'llama3',
+            'prompt':'Using this description of how a function works, generate runnable javascript code based on the code' + description
+        });
+
+        res.status(200).json({message:'Successfully added attempt', code: response})
+    } catch(err) {
+        console.log("Adding attempt error ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 // Adds a user’s answer and performance to the corresponding code sample
 exports.AddAttempt = (req, res) => {
-    // TODO 
+    // TODO
+    // get the description, send it to LLM, run it against the test cases
+    try {
+        const { description } = req.body;
+
+        if (!description) {
+            return res.status(400).json({message: "'Description is required"});
+        }
+
+        const code = getConvertedCode(description);
+        console.log(code);
+    } catch(error) {
+        console.log("Adding attempt error ", err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+    return;
+
 };
 
 // Read Attempt-Tests.json and parse contents
