@@ -63,21 +63,21 @@ const readAttemptTestsJSON = () => {
 // Tests the user's answer (translated into code) against pre-written test cases 
 const testAttempt = (userCode, testCases) => { 
     const feedback = testCases.map(testCase => {
-        const {input, expectedOutput} = testCase; 
+        const { input, expectedOutput } = testCase; 
         let actualOutput; 
 
         try { 
             const func = eval(`(${userCode})`); 
             actualOutput = func(...JSON.parse(`[${input}]`)); 
         } catch (error) { 
-            actualOutput = error.message 
+            actualOutput = error.message; 
         } 
 
         return { 
             input, 
             expectedOutput, 
             actualOutput, 
-            passed: JSON.stringify(ActualOutput) === JSON.stringify(JSON.parse(expectedOutput))
+            passed: JSON.stringify(actualOutput) === JSON.stringify(JSON.parse(expectedOutput))
         }; 
     }); 
 
