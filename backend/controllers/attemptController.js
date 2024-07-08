@@ -28,7 +28,7 @@ const readAttemptTestsJSON = () => {
 }; 
 
 // Tests the user's answer (translated into code) against pre-written test cases 
-const TestAttempt = (userCode, testCases) => { 
+const testAttempt = (userCode, testCases) => { 
     const feedback = testCases.map(testCase => {
         const {input, expectedOutput} = testCase; 
         let actualOutput; 
