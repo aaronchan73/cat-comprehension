@@ -1,8 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { stringify } = require('querystring');
-const axios = require('axios');
-
+const fetch = require('node-fetch');
 
 // Read Attempts.json and parse contents
 const readAttemptsJSON = () => {
@@ -17,24 +15,36 @@ const updateAttemptsJSON = (data) => {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
-getConvertedCode = (description) => {
-    try {
+const getConvertedCode = async (description) => {
+    const ollamaPullUrl = 'http://localhost:11434/api/pull'
+    const ollamaGenerateUrl = 'http://localhost:11434/api/generate'
 
-        const response = await axios.post('http://localhost:8080/api/generate', {
-            'model':'llama3',
-            'prompt':'Using this description of how a function works, generate runnable javascript code based on the code' + description
+    try {
+        await fetch(ollamaPullUrl, {
+            'name': 'deepseek-coder',
         });
 
-        res.status(200).json({message:'Successfully added attempt', code: response})
+        const response = await fetch(ollamaGenerateUrl, {
+            method: "POST",
+            body: JSON.stringify({
+                'model': 'deepseek-coder',
+                'prompt': 'Using this description of how a function works, generate runnable javascript code based on the code' + description
+            })
+        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const json = await response.json();
+
+        return json;
     } catch(err) {
         console.log("Adding attempt error ", err);
-        res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 // Adds a user’s answer and performance to the corresponding code sample
 exports.AddAttempt = (req, res) => {
-    // TODO
     // get the description, send it to LLM, run it against the test cases
     try {
         const { description } = req.body;
@@ -45,12 +55,11 @@ exports.AddAttempt = (req, res) => {
 
         const code = getConvertedCode(description);
         console.log(code);
+        res.status(200).json({ message: 'Code received from Ollama', code });
     } catch(error) {
         console.log("Adding attempt error ", err);
         res.status(500).json({ message: 'Internal server error' });
     }
-    return;
-
 };
 
 // Read Attempt-Tests.json and parse contents
