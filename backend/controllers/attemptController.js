@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { stringify } = require('querystring');
 
 // Read Attempts.json and parse contents
 const readAttemptsJSON = () => {
@@ -27,8 +28,27 @@ const readAttemptTestsJSON = () => {
 }; 
 
 // Tests the user's answer (translated into code) against pre-written test cases 
-exports.TestAttempt = (userCode, testCases) => { 
-    // TODO
+const TestAttempt = (userCode, testCases) => { 
+    const feedback = testCases.map(testCase => {
+        const {input, expectedOutput} = testCase; 
+        let actualOutput; 
+
+        try { 
+            const func = eval('(${userCode})'); 
+            actualOutput = func(...JSON.parse('[${input}]')); 
+        } catch (error) { 
+            actualOutput = error.message 
+        } 
+
+        return { 
+            input, 
+            expectedOutput, 
+            actualOutput, 
+            passed: JSON.stringify(ActualOutput) === JSON.stringify(JSON.parse(expectedOutput))
+        }; 
+    }); 
+
+    return feedback;
 }; 
 
 // Gets a list of all the attempts in in the application for the username provided
