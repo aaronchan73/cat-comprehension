@@ -16,32 +16,49 @@ const updateAttemptsJSON = (data) => {
 };
 
 const getConvertedCode = async (description) => {
-    const ollamaPullUrl = 'http://localhost:11434/api/pull'
-    const ollamaGenerateUrl = 'http://localhost:11434/api/generate'
+    const ollamaPullUrl = 'http://127.0.0.1:11434/api/pull';
+    const ollamaGenerateUrl = 'http://127.0.0.1:11434/api/generate';
 
     try {
-        await fetch(ollamaPullUrl, {
-            'name': 'deepseek-coder',
-        });
-
-        const response = await fetch(ollamaGenerateUrl, {
+        // Pull the model
+        const pullResponse = await fetch(ollamaPullUrl, {
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
-                'model': 'deepseek-coder',
-                'prompt': 'Using this description of how a function works, generate runnable javascript code based on the code' + description
+                'name': 'deepseek-coder'
             })
         });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
+
+        if (!pullResponse.ok) {
+            throw new Error(`Pull request failed with status: ${pullResponse.status}`);
         }
 
-        const json = await response.json();
+        // Generate code
+        const generateResponse = await fetch(ollamaGenerateUrl, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'model': 'deepseek-coder',
+                'prompt': `Using this description of how a function works, generate runnable JavaScript code based on the description: ${description}`
+            })
+        });
+
+        if (!generateResponse.ok) {
+            throw new Error(`Generate request failed with status: ${generateResponse.status}`);
+        }
+
+        const json = await generateResponse.json();
 
         return json;
-    } catch(err) {
-        console.log("Adding attempt error ", err);
+    } catch (err) {
+        console.error("Error during conversion process:", err);
+        throw err; // Re-throw the error after logging it
     }
-}
+};
 
 // Adds a user’s answer and performance to the corresponding code sample
 exports.AddAttempt = (req, res) => {
