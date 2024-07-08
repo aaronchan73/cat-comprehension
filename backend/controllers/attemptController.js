@@ -67,8 +67,8 @@ const testAttempt = (userCode, testCases) => {
         let actualOutput; 
 
         try { 
-            const func = eval('(${userCode})'); 
-            actualOutput = func(...JSON.parse('[${input}]')); 
+            const func = eval(`(${userCode})`); 
+            actualOutput = func(...JSON.parse(`[${input}]`)); 
         } catch (error) { 
             actualOutput = error.message 
         } 
