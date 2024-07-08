@@ -52,6 +52,18 @@ exports.AddAttempt = (req, res) => {
 
 };
 
+// Read Attempt-Tests.json and parse contents
+const readAttemptTestsJSON = () => { 
+    const filePath = path.join(__dirname, '../Attempt-Tests.json'); 
+    const data = fs.readFileSync(filePath, 'utf8'); 
+    return JSON.parse(data); 
+}; 
+
+// Tests the user's answer (translated into code) against pre-written test cases 
+exports.TestAttempt = (userCode, testCases) => { 
+    // TODO
+}; 
+
 // Gets a list of all the attempts in in the application for the username provided
 exports.GetAttemptsByUsername = (req, res) => {
     const { username } = req.params.username;

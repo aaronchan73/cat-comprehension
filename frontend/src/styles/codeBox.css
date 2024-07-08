@@ -1,8 +1,7 @@
 .codeContainer {
-    background-color: #1e1e1e;
     padding: 16px;
     border-radius: 4px;
     overflow-x: auto;
-    color: #d4d4d4; /* Adjust text color if needed */
+    color: black; /* Adjust text color if needed */
   }
   

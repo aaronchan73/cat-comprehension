@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
-        "start": "cd frontend && npm start && cd ../backend && npm start"
+        "start:fe": "cd frontend && npm start",
+        "start:be": "cd backend && npm start"
     },
     "dependencies": {
         "all": "^0.0.0",
