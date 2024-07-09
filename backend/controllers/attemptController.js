@@ -8,6 +8,13 @@ const readAttemptsJSON = () => {
   return JSON.parse(data);
 };
 
+// Read Questions.json and parse contents
+const readQuestionsJSON = () => {
+    const filePath = path.join(__dirname, '../Questions.json');
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+};
+
 // Write new data into Attempts.json
 const updateAttemptsJSON = (data) => {
     const filePath = path.join(__dirname, '../Attempts.json');
@@ -15,7 +22,7 @@ const updateAttemptsJSON = (data) => {
 };
 
 // Generate code based off the description using the Ollama API
-const generateCode = async (description) => {
+const generateCode = async (description, question) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
     console.log("Generating code from description");
 
@@ -27,7 +34,7 @@ const generateCode = async (description) => {
             },
             body: JSON.stringify({
                 model: 'deepseek-coder',
-                prompt: `Using this description of how a function works, generate runnable JavaScript code based on the description: ${description}`,
+                prompt: `Generate runnable JavaScript code based on the following description: ${description}. Use the same function signature as this function: ${question}. Only include the JavaScript code in your response, without any additional text or comments.`,
                 stream: false
             })
         })
@@ -53,7 +60,11 @@ exports.AddAttempt = async (req, res) => {
             return res.status(400).json({message: "Description is required"});
         }
 
-        const code = await generateCode(description);
+        // Get questions and find the specific question matching the given ID
+        const questions = readQuestionsJSON();
+        const question = questions.find(q => q.id === questionId);
+
+        const code = await generateCode(description, question.code);
 
         if (code === undefined) {
             return res.status(400).json({message: "Error generating code from Ollama"});
@@ -61,7 +72,7 @@ exports.AddAttempt = async (req, res) => {
         console.log("Generated code: ", code);
         res.status(200).json({ message: 'Code received from Ollama', code });
     } catch(error) {
-        console.log("Adding attempt error ", err);
+        console.log("Adding attempt error ", error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
