@@ -39,6 +39,10 @@ const parseCode = (response) => {
 // Generate code based off the description using the Ollama API
 const generateCode = async (description, question) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
+    const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}. \
+                            Use the same function signature as this function: ${question}. \
+                            Only include the JavaScript code in your response. Do not include any comments inside or outside the function. \
+                            Do not use arrow functions. Return the function as a one-line string.`;
     console.log("Generating code from description");
 
     try {
@@ -49,7 +53,7 @@ const generateCode = async (description, question) => {
             },
             body: JSON.stringify({
                 model: 'deepseek-coder',
-                prompt: `Generate runnable JavaScript code based on the following description: ${description}. Use the same function signature as this function: ${question}. Only include the JavaScript code in your response, without any additional text or comments.`,
+                prompt: generatePrompt,
                 stream: false
             })
         })
@@ -79,6 +83,10 @@ exports.AddAttempt = async (req, res) => {
         const questions = readQuestionsJSON();
         const question = questions.find(q => q.id === questionId);
 
+         // Get tests and find the specific test matching the given ID
+        const tests = readAttemptTestsJSON();
+        const test = tests.find(t => t.id === questionId);
+
         const code = await generateCode(description, question.code);
 
         if (code === undefined) {
@@ -87,6 +95,9 @@ exports.AddAttempt = async (req, res) => {
 
         const parsedCode = parseCode(code);
         console.log("Generated code: ", parsedCode);
+
+        const testResults = testAttempt(parsedCode, test.testCases);
+        console.log("Test results: ", testResults)
 
         res.status(200).json({ message: 'Code received from Ollama', parsedCode });
     } catch(error) {
