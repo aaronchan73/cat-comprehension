@@ -74,6 +74,7 @@ exports.AddAttempt = async (req, res) => {
     // Get the description, send it to LLM, run it against the test cases
     try {
         const { username, description, questionId } = req.body;
+        const { attemptId } = req.params;
 
         if (!description) {
             return res.status(400).json({message: "Description is required"});
@@ -99,7 +100,18 @@ exports.AddAttempt = async (req, res) => {
         const testResults = testAttempt(parsedCode, test.testCases);
         console.log("Test results: ", testResults)
 
-        res.status(200).json({ message: 'Code received from Ollama', parsedCode });
+        const overallPassed = testResults.some(t => t.passed);
+        const numPassed = testResults.filter(t => t.passed).length;
+
+        const result = {
+            success: overallPassed,
+            message: overallPassed ? "All tests passed" : "Tests failed",
+            attemptId: attemptId,
+            generateCode: parsedCode,
+            numPassed: numPassed,
+        }
+
+        res.status(200).json({ message: 'Tests successfully ran', result });
     } catch(error) {
         console.log("Adding attempt error ", error);
         res.status(500).json({ message: 'Internal server error' });
@@ -132,8 +144,8 @@ const testAttempt = (userCode, testCases) => {
             input, 
             expectedOutput, 
             actualOutput, 
-            message : passed ? successMessage : errorMessage
-    
+            message : passed ? successMessage : errorMessage,
+            passed,
         }; 
     }); 
 
