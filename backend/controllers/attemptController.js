@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
 
 // Read Attempts.json and parse contents
 const readAttemptsJSON = () => {
@@ -15,63 +14,85 @@ const updateAttemptsJSON = (data) => {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
-const getConvertedCode = async (description) => {
-    const ollamaPullUrl = 'http://127.0.0.1:11434/api/pull';
-    const ollamaGenerateUrl = 'http://127.0.0.1:11434/api/generate';
+// Pull the LLM from the Ollama API
+const pullModel = async () => {
+    const ollamaPullUrl = 'http://localhost:11434/api/pull';
+    console.log("Pulling model from Ollama");
 
     try {
-        // Pull the model
-        const pullResponse = await fetch(ollamaPullUrl, {
+        const response = await fetch(ollamaPullUrl, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'name': 'deepseek-coder'
+                name: 'deepseek-coder'
             })
         });
-
-        if (!pullResponse.ok) {
-            throw new Error(`Pull request failed with status: ${pullResponse.status}`);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
         }
 
-        // Generate code
-        const generateResponse = await fetch(ollamaGenerateUrl, {
+        await new Promise(resolve => setTimeout(resolve, 30000));
+    } catch (error) {
+        console.error(error.message);
+    }
+};
+
+// Generate code based off the description using the Ollama API
+const generateCode = async (description) => {
+    const ollamaGenerateUrl = 'http://localhost:11434/api/generate';
+    console.log("Generating code from description");
+
+    try {
+        const response = await fetch(ollamaGenerateUrl, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'model': 'deepseek-coder',
-                'prompt': `Using this description of how a function works, generate runnable JavaScript code based on the description: ${description}`
+                model: 'deepseek-coder',
+                prompt: `Using this description of how a function works, generate runnable JavaScript code based on the description: ${description}`,
+                stream: false
             })
-        });
-
-        if (!generateResponse.ok) {
-            throw new Error(`Generate request failed with status: ${generateResponse.status}`);
+        })
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
         }
 
-        const json = await generateResponse.json();
+        const json = await response.json();
 
         return json;
-    } catch (err) {
-        console.error("Error during conversion process:", err);
-        throw err; // Re-throw the error after logging it
+    } catch (error) {
+        console.error(error.message);
+    }
+};
+
+// Pull model and convert code
+const getConvertedCode = async (description) => {
+    try {
+        await pullModel();
+        const json = await generateCode(description);
+        console.log("Generated JSON: ", json);
+        return json;
+    } catch (error) {
+        console.error(error.message);
+        throw error;
     }
 };
 
 // Adds a user’s answer and performance to the corresponding code sample
-exports.AddAttempt = (req, res) => {
-    // get the description, send it to LLM, run it against the test cases
+exports.AddAttempt = async (req, res) => {
+    // Get the description, send it to LLM, run it against the test cases
     try {
-        const { description } = req.body;
+        const { username, description, questionId } = req.body;
 
         if (!description) {
             return res.status(400).json({message: "'Description is required"});
         }
 
-        const code = getConvertedCode(description);
-        console.log(code);
+        const code = await getConvertedCode(description);
+        console.log("Generated code: ", code);
         res.status(200).json({ message: 'Code received from Ollama', code });
     } catch(error) {
         console.log("Adding attempt error ", err);
