@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation} from 'react-router-dom';
 import CodeBox from '../../components/codeBox'
 import '../../styles/exercisePage.css'
 import { getExercises, getExerciseById } from '../../services/exercises';
-import { Box, Button, TextareaAutosize, Tooltip } from '@mui/material';
+import { Alert, Box, Button, TextareaAutosize, Tooltip } from '@mui/material';
+import { addAttempt } from '../../services/attempts';
 
 export default function ExercisePage() {
     const [code, setCode] = useState<string>('')
     const [name, setName] = useState<string>('')
     const [questionId, setQuestionId] = useState<string>('1')
     const [summaryDescription, setSummaryDescription] = useState<string>('')
-
+    const [userName, setUsername] = useState<string>('')
+    const [error, setError] = useState<string>('')
     const navigate = useNavigate()
+    const location = useLocation()
 
     const getExercise = async () => {
         try {
@@ -30,6 +33,7 @@ export default function ExercisePage() {
             const data = await getExerciseById(id)
             setCode(data.question.code)
             setName(data.question.name)
+            setQuestionId(id)
         } catch (e) {
             console.log(e)
         }
@@ -38,17 +42,30 @@ export default function ExercisePage() {
 
     const handleChangeQuestion = () => {
         const newQuestion = String(Number(questionId) + 1)
-        console.log(newQuestion)
         setExerciseById(newQuestion)
     }
 
-    const handleOnSubmit = () => {
-        // placeholder to pass in code Id, and summary descritpion to BE
-        console.log(summaryDescription)
+    const handleOnSubmit = async () => {
+        // placeholder to pass in code Id, and summary descritpion to BE, username
+        console.log(userName, questionId, summaryDescription)
+        try {
+            const response = await addAttempt(summaryDescription, questionId, userName)
+            if (response.status === 200) {
+                navigate(`/student/exercisePage?username=${userName}&questionId=${questionId}`)
+            }
+        } catch (e) {
+            setError(`Error submitting attempt: ${e}`)
+        }
     }
+
 
     useEffect(() => {
         setExerciseById(questionId)
+        const searchParams = new URLSearchParams(location.search);
+        const user = searchParams.get('username');
+        if (user) {
+            setUsername(user);
+        }
     }, [questionId])
 
     return (
@@ -105,6 +122,7 @@ export default function ExercisePage() {
                     >
                         Submit
                     </Button>
+                    {error && <Alert severity="error">{error}</Alert>}
                 </div>
             </div>
         </div>
