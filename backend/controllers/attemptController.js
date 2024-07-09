@@ -14,31 +14,6 @@ const updateAttemptsJSON = (data) => {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
-// Pull the LLM from the Ollama API
-const pullModel = async () => {
-    const ollamaPullUrl = 'http://localhost:11434/api/pull';
-    console.log("Pulling model from Ollama");
-
-    try {
-        const response = await fetch(ollamaPullUrl, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: 'deepseek-coder'
-            })
-        });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 30000));
-    } catch (error) {
-        console.error(error.message);
-    }
-};
-
 // Generate code based off the description using the Ollama API
 const generateCode = async (description) => {
     const ollamaGenerateUrl = 'http://localhost:11434/api/generate';
@@ -62,22 +37,9 @@ const generateCode = async (description) => {
 
         const json = await response.json();
 
-        return json;
+        return json.response;
     } catch (error) {
         console.error(error.message);
-    }
-};
-
-// Pull model and convert code
-const getConvertedCode = async (description) => {
-    try {
-        await pullModel();
-        const json = await generateCode(description);
-        console.log("Generated JSON: ", json);
-        return json;
-    } catch (error) {
-        console.error(error.message);
-        throw error;
     }
 };
 
@@ -88,10 +50,14 @@ exports.AddAttempt = async (req, res) => {
         const { username, description, questionId } = req.body;
 
         if (!description) {
-            return res.status(400).json({message: "'Description is required"});
+            return res.status(400).json({message: "Description is required"});
         }
 
-        const code = await getConvertedCode(description);
+        const code = await generateCode(description);
+
+        if (code === undefined) {
+            return res.status(400).json({message: "Error generating code from Ollama"});
+        }
         console.log("Generated code: ", code);
         res.status(200).json({ message: 'Code received from Ollama', code });
     } catch(error) {

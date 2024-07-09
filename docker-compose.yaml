@@ -14,7 +14,7 @@ services:
       - "3000:3000"
   
   ollama:
-    image: ollama/ollama
-    container_name: ollama
+    build: ./ollama
+    container_name: cat-ollama
     ports:
       - "11434:11434"
