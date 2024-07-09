@@ -21,6 +21,21 @@ const updateAttemptsJSON = (data) => {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
+// Parse LLM response to only include generated JavaScript code
+const parseCode = (response) => {
+    const codeStart = '```javascript';
+    const codeEnd = '```';
+    const indexStart = response.indexOf(codeStart);
+    const indexEnd = response.indexOf(codeEnd, indexStart + codeStart.length);
+    
+    if (indexStart !== -1 && indexEnd !== -1) {
+        const code = response.substring(indexStart + codeStart.length, indexEnd).trim();
+        return code;
+    } else {
+        return '';
+    }
+}
+
 // Generate code based off the description using the Ollama API
 const generateCode = async (description, question) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
@@ -69,8 +84,11 @@ exports.AddAttempt = async (req, res) => {
         if (code === undefined) {
             return res.status(400).json({message: "Error generating code from Ollama"});
         }
-        console.log("Generated code: ", code);
-        res.status(200).json({ message: 'Code received from Ollama', code });
+
+        const parsedCode = parseCode(code);
+        console.log("Generated code: ", parsedCode);
+
+        res.status(200).json({ message: 'Code received from Ollama', parsedCode });
     } catch(error) {
         console.log("Adding attempt error ", error);
         res.status(500).json({ message: 'Internal server error' });
