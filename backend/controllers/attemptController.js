@@ -16,7 +16,7 @@ const updateAttemptsJSON = (data) => {
 
 // Generate code based off the description using the Ollama API
 const generateCode = async (description) => {
-    const ollamaGenerateUrl = 'http://localhost:11434/api/generate';
+    const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
     console.log("Generating code from description");
 
     try {
