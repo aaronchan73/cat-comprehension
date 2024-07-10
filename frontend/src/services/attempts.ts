@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import { IAddAttemptResposne } from '../types/AddAttempt'
-import { IResult } from '../types/IResult'
+import { IGetAttemptByUsername } from '../types/IGetAttemptByUsername'
 
 const randomId = uuidv4()
 
@@ -27,9 +27,17 @@ export const getAttemptByUsername = async (username: string | null) => {
         if (!username) {
             throw new Error('Username is required')
         }
-        const response = await fetch(`http://locahost:8080/api/attempts/${username}`)
+        const response = await fetch(`http://localhost:8080/api/attempts/${username}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         const data = await response.json()
-        return data as IResult[]
+        
+        console.log(data)
+
+        return data as IGetAttemptByUsername
     } catch (e) {
         throw new Error('Error getting attempt by username')
     }

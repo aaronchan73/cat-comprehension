@@ -4,6 +4,7 @@ import { IAnalysis } from '../../types/IAnalysis'
 import { useLocation } from 'react-router-dom'
 import { getAttemptByUsername } from '../../services/attempts'
 import { IResult } from '../../types/IResult'
+import CodeBox from '../../components/codeBox'
 
 export default function ResultsPage() {
     const [analysis, setAnalysis] = useState<IResult>()
@@ -15,20 +16,22 @@ export default function ResultsPage() {
             const searchParams = new URLSearchParams(location.search);
             const username = searchParams.get('username');
             const attemptId = searchParams.get('attemptId');
+
+            console.log(username)
             const response = await getAttemptByUsername(username)
 
             console.log(response)
-            
-            for (let attempt of response) {
+
+            for (let attempt of response.userAttempts) {
                 if (attempt.attemptId === attemptId) {
                     setAnalysis(attempt)
+                    setCode(attempt.generateCode)
                 }
             }
         } catch (e) {
             console.log(e)
         }
     }
-
 
     useEffect(() => {
         getAttempt()
@@ -51,7 +54,7 @@ export default function ResultsPage() {
                     height: '500px',
                 }}
             >
-                <div style={{ display: 'flex',}}>
+                <div style={{ display: 'flex', flexDirection:'column'}}>
                     <Box
                         sx={{
                             padding: '10px',
@@ -64,19 +67,13 @@ export default function ResultsPage() {
                     </Box>
                     <List>
                         <ListItem>
+                            User: {analysis?.username}
+                        </ListItem>
+                        <ListItem>
+                            Result: {analysis?.message}
+                        </ListItem>
+                        <ListItem>
                             Test Cases Passed : {analysis?.numPassed}
-                        </ListItem>
-                        <ListItem>
-                        </ListItem>
-                        <ListItem>
-                        </ListItem>
-                        <ListItem>
-                        </ListItem>
-                        <ListItem>
-                        </ListItem>
-                        <ListItem>
-                        </ListItem>
-                        <ListItem>
                         </ListItem>
                     </List>
                     
@@ -97,16 +94,22 @@ export default function ResultsPage() {
                     height: '500px'
                 }}
             >
-                <Box
-                    sx={{
-                        padding: '10px',
-                        borderRadius: '10px',
-                        backgroundColor: '#d3d3d3',
-                        marginBottom: '10px'
-                    }}
-                >
-                    <Typography variant="h6">Your Code</Typography>
-                </Box>
+                <div>
+                    <Box
+                        sx={{
+                            padding: '10px',
+                            borderRadius: '10px',
+                            backgroundColor: '#d3d3d3',
+                            marginBottom: '10px'
+                        }}
+                    >
+                        <Typography variant="h6">Your Code</Typography>
+
+                        <CodeBox language="python" code={code} name={null} />
+
+                    </Box>
+                </div>
+                
 
             </Box>
         </div>

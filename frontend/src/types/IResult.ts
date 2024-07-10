@@ -4,4 +4,5 @@ export interface IResult {
     attemptId: string;
     generateCode: string;
     numPassed: number;
+    username: string;
 }
