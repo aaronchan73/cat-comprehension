@@ -40,9 +40,8 @@ const parseCode = (response) => {
 const generateCode = async (description, question) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
     const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}.
-                            Do not include any comments inside or outside the function. 
-                            Use the same function signature as this function: ${question}. \
-                            Only include the JavaScript code in your response. Do not include any comments inside or outside the function. \
+                            Use the same parameters and return value as this function: ${question}.
+                            Only include the JavaScript code in your response. Do not include any comments inside or outside the function.
                             Do not use arrow functions. Return the function as a one-line string.`
     console.log("Generating code from description");
 
@@ -104,6 +103,7 @@ exports.AddAttempt = async (req, res) => {
         const numPassed = testResults.filter(t => t.passed).length;
 
         const result = {
+            username: username,
             success: overallPassed,
             message: overallPassed ? "All tests passed" : "Tests failed",
             attemptId: attemptId,
@@ -160,14 +160,14 @@ const testAttempt = (userCode, testCases) => {
 
 // Gets a list of all the attempts in in the application for the username provided
 exports.GetAttemptsByUsername = (req, res) => {
-    const { username } = req.params.username;
+    const { username } = req.params;
 
     // Get attempts and find the specific attempt matching the given username
     const attempts = readAttemptsJSON();
-    const attempt = attempts.filter(a => a.user === username);
+    const userAttempts = attempts.filter(attempt => attempt.username === username);
 
-    if (attempt) {
-        res.status(200).json({ message: 'Attempt retrieved successfully', attempt });
+    if (userAttempts.length > 0) {
+        res.status(200).json({ message: 'Attempt retrieved successfully', userAttempts });
     } else {
         res.status(400).json({ message: 'Attempt not found' });
     }

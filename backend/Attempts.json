@@ -1,1 +1,10 @@
-[]
+[
+    {
+        "username": "test",
+        "success": true,
+        "message": "All tests passed",
+        "attemptId": 1,
+        "generateCode": "function sum(a, b) { return a + b; }",
+        "numPassed": 1
+    }
+]
