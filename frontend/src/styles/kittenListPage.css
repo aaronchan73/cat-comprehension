@@ -1,0 +1,29 @@
+.infoContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.title,
+.username {
+  margin: 0;
+  background-color: #f0f0f0;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 20px;
+  align-self: "center";
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #cacaca;
+  color: #000;
+  margin: 10px;
+  border-radius: 8px;
+  justify-content: "flex-start";
+}

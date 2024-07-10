@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { IAddAttemptResposne } from '../types/AddAttempt'
+import { IAddAttemptResponse } from '../types/AddAttempt'
 import { IGetAttemptByUsername } from '../types/IGetAttemptByUsername'
 
 const randomId = uuidv4()
@@ -16,7 +16,7 @@ export const addAttempt = async (username: string, description: string, question
             body: JSON.stringify({ username, description, questionId })
         })
         const data = await response.json()
-        return data as IAddAttemptResposne
+        return data as IAddAttemptResponse
     } catch (e) {
         throw new Error('Error adding attempt')
     }
