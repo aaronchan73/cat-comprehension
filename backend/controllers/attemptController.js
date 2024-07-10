@@ -110,6 +110,10 @@ exports.AddAttempt = async (req, res) => {
             generateCode: parsedCode,
             numPassed: numPassed,
         }
+        
+        const attempts = readAttemptsJSON();
+        attempts.push(result);
+        updateAttemptsJSON(attempts);
 
         res.status(200).json({ message: 'Tests successfully ran', result });
     } catch(error) {
