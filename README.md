@@ -24,5 +24,5 @@ Features such as **Progression and Performance Tracking** and **Educator Tools a
 1. Unit tests are located in `/backend/test`
 2. Run tests using:
     ```sh
-    cd backend && npm test
+    cd backend && npm i && npm test
     ```
