@@ -2,4 +2,4 @@
 
 ollama serve &
 ollama list
-ollama pull deepseek-coder
+ollama pull tinyllama

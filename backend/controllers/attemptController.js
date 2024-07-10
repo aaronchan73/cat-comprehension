@@ -53,7 +53,7 @@ const generateCode = async (description, question) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'deepseek-coder',
+                model: 'tinyllama',
                 prompt: generatePrompt,
                 stream: false
             })
