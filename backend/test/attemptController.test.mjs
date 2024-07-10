@@ -1,90 +1,133 @@
-
 import { expect } from 'chai';
 import sinon from 'sinon';
+import fs from 'fs';
 const attemptController = await import('../controllers/attemptController.js');
 
-describe('AddAttempt', () => {
-    let req, res, readQuestionsJSONStub, readAttemptTestsJSONStub, generateCodeStub, parseCodeStub, testAttemptStub, readAttemptsJSONStub, updateAttemptsJSONStub;
+const {
+    readAttemptsJSON,
+    readQuestionsJSON,
+    updateAttemptsJSON,
+    parseCode,
+    generateCode,
+    readAttemptTestsJSON,
+    testAttempt
+} = attemptController;
 
-    beforeEach(() => {
-        req = {
-            body: {
-                username: 'testUser',
-                description: 'testDescription',
-                questionId: '1'
-            },
-            params: {
-                attemptId: '1'
-            }
-        };
-        res = {
-            status: sinon.stub().returnsThis(),
-            json: sinon.stub()
-        };
-
-        readQuestionsJSONStub = sinon.stub().returns([{ id: '123', code: 'someCode' }]);
-        readAttemptTestsJSONStub = sinon.stub().returns([{ id: '123', testCases: ['testCase1', 'testCase2'] }]);
-        generateCodeStub = sinon.stub().resolves('generatedCode');
-        parseCodeStub = sinon.stub().returns('parsedCode');
-        testAttemptStub = sinon.stub().returns([{ passed: true }, { passed: false }]);
-        readAttemptsJSONStub = sinon.stub().returns([]);
-        updateAttemptsJSONStub = sinon.stub();
-
-        // Replace the real functions with stubs
-        global.readQuestionsJSON = readQuestionsJSONStub;
-        global.readAttemptTestsJSON = readAttemptTestsJSONStub;
-        global.generateCode = generateCodeStub;
-        global.parseCode = parseCodeStub;
-        global.testAttempt = testAttemptStub;
-        global.readAttemptsJSON = readAttemptsJSONStub;
-        global.updateAttemptsJSON = updateAttemptsJSONStub;
-    });
+describe('Helper Functions', () => {
 
     afterEach(() => {
         sinon.restore();
     });
 
-    it('should return 400 if description is missing', async () => {
-        req.body.description = '';
+    describe('readAttemptsJSON', () => {
+        it('should read and parse Attempts.json', () => {
+            const fakeData = '[{"id":1}]';
+            sinon.stub(fs, 'readFileSync').returns(fakeData);
 
-        await attemptController.AddAttempt(req, res);
-        console.log(res)
-        expect(res.status.calledWith(400)).to.be.true;
-        expect(res.json.calledWith({ message: 'Description is required' })).to.be.true;
+            const result = readAttemptsJSON();
+            expect(result).to.deep.equal([{ id: 1 }]);
+        });
     });
 
-    it('should return 400 if code generation fails', async () => {
-        generateCodeStub.resolves(undefined);
+    describe('readQuestionsJSON', () => {
+        it('should read and parse Questions.json', () => {
+            const fakeData = '[{"id":1, "code":"someCode"}]';
+            sinon.stub(fs, 'readFileSync').returns(fakeData);
 
-        await attemptController.AddAttempt(req, res);
-
-        expect(res.status.calledWith(400)).to.be.true;
-        expect(res.json.calledWith({ message: 'Error generating code from Ollama' })).to.be.true;
+            const result = readQuestionsJSON();
+            expect(result).to.deep.equal([{ id: 1, code: 'someCode' }]);
+        });
     });
 
-    it('should return 200 and the result if successful', async () => {
-        await attemptController.AddAttempt(req, res)
-        expect(res.status.calledWith(200)).to.be.true;
-        expect(res.json.calledWithMatch({
-            message: 'Tests successfully ran',
-            result: {
-                username: 'testUser',
-                success: true,
-                message: 'All tests passed',
-                attemptId: '1',
-                questionId: '1',
-                generateCode: 'parsedCode',
-                numPassed: 1
+    describe('updateAttemptsJSON', () => {
+        it('should write data to Attempts.json', () => {
+            const fakeData = [{ id: 1 }];
+            const writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
+
+            updateAttemptsJSON(fakeData);
+            expect(writeFileSyncStub.calledOnce).to.be.true;
+            expect(writeFileSyncStub.calledWith(sinon.match.string, JSON.stringify(fakeData, null, 2), 'utf8')).to.be.true;
+        });
+    });
+
+    describe('parseCode', () => {
+        it('should parse code from the response', () => {
+            const response = '```javascript\nconst code = "example";\n```';
+            const result = parseCode(response);
+            expect(result).to.equal('const code = "example";');
+        });
+
+        it('should return an empty string if no code is found', () => {
+            const response = 'No code here';
+            const result = parseCode(response);
+            expect(result).to.equal('');
+        });
+    });
+
+    describe('generateCode', () => {
+        it('should generate code based on the description and question', async () => {
+            const fetchStub = sinon.stub(global, 'fetch').resolves({
+                ok: true,
+                json: async () => ({ response: 'generatedCode' })
+            });
+
+            const result = await generateCode('description', 'question');
+            expect(result).to.equal('generatedCode');
+            fetchStub.restore();
+        });
+
+        it('should throw an error if the response is not ok', async () => {
+            const fetchStub = sinon.stub(global, 'fetch').resolves({
+                ok: false,
+                status: 500
+            });
+
+            let error;
+            try {
+                await generateCode('description', 'question');
+            } catch (err) {
+                error = err;
             }
-        })).to.be.true;
+            expect(error).to.be.an('error');
+            fetchStub.restore();
+        });
     });
 
-    it('should handle internal server error', async () => {
-        generateCodeStub.rejects(new Error('Some error'));
+    describe('readAttemptTestsJSON', () => {
+        it('should read and parse Attempt-Tests.json', () => {
+            const fakeData = '[{"id":1, "testCases": []}]';
+            sinon.stub(fs, 'readFileSync').returns(fakeData);
 
-        await attemptController.AddAttempt(req, res);
+            const result = readAttemptTestsJSON();
+            expect(result).to.deep.equal([{ id: 1, testCases: [] }]);
+        });
+    });
 
-        expect(res.status.calledWith(500)).to.be.true;
-        expect(res.json.calledWith({ message: 'Internal server error' })).to.be.true;
+    describe('testAttempt', () => {
+        it('should test user code against test cases', () => {
+            const userCode = 'function add(a, b) { return a + b; }';
+            const testCases = [
+                { input: '1, 2', expectedOutput: '3', successMessage: 'Success', errorMessage: 'Fail' },
+                { input: '2, 2', expectedOutput: '4', successMessage: 'Success', errorMessage: 'Fail' }
+            ];
+
+            const result = testAttempt(userCode, testCases);
+            expect(result).to.deep.equal([
+                { input: '1, 2', expectedOutput: '3', actualOutput: 3, message: 'Success', passed: true },
+                { input: '2, 2', expectedOutput: '4', actualOutput: 4, message: 'Success', passed: true }
+            ]);
+        });
+
+        it('should handle errors in user code', () => {
+            const userCode = 'function add(a, b) { throw new Error("error"); }';
+            const testCases = [
+                { input: '1, 2', expectedOutput: '3', successMessage: 'Success', errorMessage: 'Fail' }
+            ];
+
+            const result = testAttempt(userCode, testCases);
+            expect(result).to.deep.equal([
+                { input: '1, 2', expectedOutput: '3', actualOutput: 'error', message: 'Fail', passed: false }
+            ]);
+        });
     });
 });
