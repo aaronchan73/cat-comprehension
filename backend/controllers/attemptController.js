@@ -102,6 +102,10 @@ exports.AddAttempt = async (req, res) => {
         const parsedCode = parseCode(code);
         console.log("Generated code: ", parsedCode);
 
+        if (parsedCode === undefined || parsedCode === '') {
+            return res.status(400).json({message: "Error parsing code from Ollama"});
+        }
+
         const testResults = testAttempt(parsedCode, test.testCases);
         console.log("Test results: ", testResults)
 
