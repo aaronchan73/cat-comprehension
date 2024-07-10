@@ -39,10 +39,11 @@ const parseCode = (response) => {
 // Generate code based off the description using the Ollama API
 const generateCode = async (description, question) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
-    const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}. \
+    const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}.
+                            Do not include any comments inside or outside the function. 
                             Use the same function signature as this function: ${question}. \
                             Only include the JavaScript code in your response. Do not include any comments inside or outside the function. \
-                            Do not use arrow functions. Return the function as a one-line string.`;
+                            Do not use arrow functions. Return the function as a one-line string.`
     console.log("Generating code from description");
 
     try {
@@ -62,7 +63,6 @@ const generateCode = async (description, question) => {
         }
 
         const json = await response.json();
-
         return json.response;
     } catch (error) {
         console.error(error.message);
@@ -82,11 +82,11 @@ exports.AddAttempt = async (req, res) => {
 
         // Get questions and find the specific question matching the given ID
         const questions = readQuestionsJSON();
-        const question = questions.find(q => q.id === questionId);
-
+        const question = questions.find(q => q.id == questionId);
+        
          // Get tests and find the specific test matching the given ID
         const tests = readAttemptTestsJSON();
-        const test = tests.find(t => t.id === questionId);
+        const test = tests.find(t => t.id == questionId);
 
         const code = await generateCode(description, question.code);
 
@@ -110,6 +110,8 @@ exports.AddAttempt = async (req, res) => {
             generateCode: parsedCode,
             numPassed: numPassed,
         }
+
+        console.log(result)
 
         const attempts = readAttemptsJSON();
         attempts.push(result);

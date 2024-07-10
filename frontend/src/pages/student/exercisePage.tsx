@@ -49,7 +49,7 @@ export default function ExercisePage() {
         // placeholder to pass in code Id, and summary descritpion to BE, username
         console.log(userName, questionId, summaryDescription)
         try {
-            const response = await addAttempt(summaryDescription, questionId, userName)
+            const response = await addAttempt(userName, summaryDescription, questionId)
             if (response.status === 200) {
                 navigate(`/student/exercisePage?username=${userName}&questionId=${questionId}`)
             }
