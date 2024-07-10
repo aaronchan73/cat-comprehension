@@ -6,5 +6,13 @@
         "attemptId": 1,
         "generateCode": "function sum(a, b) { return a + b; }",
         "numPassed": 1
+    },
+    {
+        "username": "test",
+        "success": false,
+        "message": "Tests failed",
+        "attemptId": 2,
+        "generateCode": "function multiply(a, b) { return a * b; }",
+        "numPassed": 0
     }
 ]
