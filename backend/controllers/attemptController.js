@@ -38,13 +38,13 @@ const parseCode = (response) => {
 
 // Generate code based off the description using the Ollama API
 const generateCode = async (description, question) => {
-    const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
+    const ollamaGenerateUrl = 'http://localhost:11434/api/generate';
     const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}.
                             DO NOT INCLUDE COMMENTS IN THE RESPONSE.
                             Use the same parameters and return value as this function: ${question}.
                             Only include the JavaScript code in your response.
                             Ensure the function is returned as a one-line string and properly formatted to be executed using eval.`
-    console.log("Generating code from description");
+    // console.log("Generating code from description");
 
     try {
         const response = await fetch(ollamaGenerateUrl, {
@@ -98,7 +98,7 @@ exports.AddAttempt = async (req, res) => {
         console.log("Generated code: ", parsedCode);
 
         const testResults = testAttempt(parsedCode, test.testCases);
-        console.log("Test results: ", testResults)
+        // console.log("Test results: ", testResults)
 
         const overallPassed = testResults.some(t => t.passed);
         const numPassed = testResults.filter(t => t.passed).length;
@@ -113,7 +113,7 @@ exports.AddAttempt = async (req, res) => {
             numPassed: numPassed,
         }
 
-        console.log('this is the result', result)
+        // console.log('this is the result', result)
 
         const attempts = readAttemptsJSON();
         attempts.push(result);
@@ -121,7 +121,7 @@ exports.AddAttempt = async (req, res) => {
 
         res.status(200).json({ message: 'Tests successfully ran', result });
     } catch(error) {
-        console.log("Adding attempt error ", error);
+        // console.log("Adding attempt error ", error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };

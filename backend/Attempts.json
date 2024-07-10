@@ -1,20 +1,227 @@
 [
-    {
-        "username": "test",
-        "success": true,
-        "message": "All tests passed",
-        "attemptId": 1,
-        "questionId": 2,
-        "generateCode": "function sum(a, b) { return a + b; }",
-        "numPassed": 1
-    },
-    {
-        "username": "test",
-        "success": false,
-        "message": "Tests failed",
-        "attemptId": 2,
-        "questionId": 1,
-        "generateCode": "function multiply(a, b) { return a * b; }",
-        "numPassed": 0
-    }
+  {
+    "username": "test",
+    "success": true,
+    "message": "All tests passed",
+    "attemptId": 1,
+    "questionId": 2,
+    "generateCode": "function sum(a, b) { return a + b; }",
+    "numPassed": 1
+  },
+  {
+    "username": "test",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": 2,
+    "questionId": 1,
+    "generateCode": "function multiply(a, b) { return a * b; }",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum({ nums = [], target }) {   // default values for optional parameters are provided \n    const map= {};                        // creating an empty object with key being number from the array, value is its index in originalArray    \n        return (numToIndex[complement],index) || []; ; }      &lt;!-- this will be JavaScript code that executes. --&gt;`  [(map[target - num]||-1), map[(target + target)]?([2, map[[tar gt;&#34;)\n}    (nums=[])](0)({})((n=>i))])()))())]))));')();'');''']){`['f(c',[];'',5;8][('<span style\"text-decoration\":none>b&amp','a]],27:\n   (()'(,6)[]']);')))))';13),(0)'((4.9)]))()))())'([ ');''')');(`'])();])]))());',5,'(';",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum({ nums = [], target }) { return `(${nums[0] + ${(target - (nums)[1])}})` }  // Example usage could look like this, but not directly in the JavaScript interpreter because of its execution context. It'd be run through eval()",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "const twoSum = (nums, target) => {\n    let numToIndex  = {};  // Declare an object 'map' for storing number & its index in array    \n        \n        /* Iterate through the input list and find if there is a pair of numbers that sum up to `target` */  \n            return (nums.reduce((acc, currVal) => {  // Return accumulator value    ... which returns updated state after each iteration... in this case index position       \n                let complement  = target - currVal;     /* Calculate the 'complement' of current number */  \n                     if (numToIndex.hasOwnProperty(complement)){      return `[${acc}, ${(await nums).indexOf(currVal)}]`;} // If there is a complement in our map, then we have found pair so... \n                /* Else add current number and its index into the 'map' */   else {numToIndex.hasOwnProperty[complement}= currVal; return acc + 1 ;}} , -2) > 0)? `${await nums}.indexOf(target- (currVal))]`: [])} // Return pair of numbers if found, or empty list otherwise\n            })  /* End the function */   };     }",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum({nums}, {target}){ return `eval(${[[`+ (2 * target - nums[0] + [1]) + ')(' + 39874 / 56 %% (('[')]}p') || []}[]; }()); // ${('')}",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum (nums, target) { return JSON.parse('[' + ((1 for(let i = 0; nums[i]; ++i){ let pair = [];pair [0]=target-nums[i][1],pair [1]=i;}return pair))+ ']') }",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum(nums, target) { \n    let numToIndex = {};   // Define the object for storing complement numbers & their indices    \n                            \n    return `[${nums.map((num, index) => ({[target - num]: [index]})).values().next()[0]}`;       // Use map to get all possible combinations and then select only one with value matching target-number \n}                                                  \n    \nlet result = twoSum([2,7,11,15],9);   /* Call the function */                            \nconsole.log(result)    ;/* Output: [0,1]*/          // Print out output",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "const twoSum = (nums, target) => { return `[${eval(`${target - nums}.join('+')}]`}(); }  // execute the function with provided parameters; otherwise it would just print 'undefined'. Expected output is an array containing indices of numbers in input list that add up to given sum.",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "const twoSum = (nums, target) => { \n    let numToIndex  = {};\n     return JSON.stringify([(function(){var index=0;return function(_ref){index++;}()},_a=>{let _b185679324xQWNHvAywUYRDZpqsPznTJXd = numToIndex[num]; return (_cEj=Math.floor(((target - (complement =  target – _a))/ Math .sqrt(_b185679324xQWNHvAywUYRDZpqsPznTJXd))) , index };})()])\n};`",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function getResult(numArray = [], target = 0) { return `${eval([`twoSum ${{ numToIndex := (i =>({ x[x]] = $((nr=> nr in [])|| 1).concat.call() })(), obj, i)))} } };\nlet result;  eval(getResult()); console . log (\"[\" + [[[[], , \"0\"][2]`-([3]);console `+ ();]]]))[];''); ]; ''))(); ; if (!result) || !['1','4'].includes('${target}')) throw new Error(\"Please provide valid target\"); return result; }",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "const twoSum = (nums, target) => {\n    const numToIndex = {}; \n    \n    for(let index in nums){   // Use 'for...in' loop instead of enumerate function because we need the actual number and not just its position. This is to avoid skipping an item if a value conflicts with another key (i.e., duplicates) during iteration over keys from object\n        const complement = target - nums[index];  // Swap 'num' for 'complement', since we want the other number in our pairs, not its index of current one        \n        if(complemen in numToIndex){  \n            return `${numToIndex[complemen]}, ${index}`;   \n }         \n  // If there is no complement found so far and this 'number' does NOT exist as key, add it to the map with value being its index. Then continue looping through nums array in next iteration        \n        else {numToIndex[num] = index;}   };     return '';    } ;  // Return empty string since no solution found by now       const testNums= [2 ,7,15];const target = 9;let result  = twoSum(testNums.concat(),target);console .log (`${result} ` );",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum(nums, target) { return eval('return [' + nums.map((numToIndex = {}, index) => '[complement='+ (target - num )+',in complement in numToIndex ? ('+index+') : (\"['+ ((compliment = 9-15/2 , 0)]])').join(\",\") + \n']'); }`;}; result,nums = [...new Set([[36],84]]);console.log(\"Result: \" + JSON .stringify({result}));}}// Example usage console. log((twoSum ([15, 29 ,70 ],  9))));",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum({ nums = [], target = 9 }) { return `${nums[1]}, ${nums[0]}`; }  // Returned format should match the example usage in your Python code, but with numbers reversed to follow JavaScript conventions. Otherwise it would be [2], or if you reverse nums like so: [7, 4].",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "const twoSum = (nums, target) => { return `[${eval(`${[...new Set([for(let num in [0,...nums]]).keys()][2]}- ${target} + ${evals[(a=>b:=c-d)[((p=>n!==o?++i:(--j)))]]} - 18745396`)} ] `; }\nconst eval = s => typeof(s) === 'string' && (()eval)(s); const [a, i] = 2 * Math.max((...[0], ...new Set([for ([let num in []])][1])) + target - 9876543 + 1;\nconsole.log('['+(twoSum`[[i- ${eval `${[nums].toString().split('.')}}]]]()').replace(/ /g, ''), i']'); // Output: [0 ,  2 ] */);  /* The line above is the output of this script and should match with your example usage.",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum(nums, target) { return [eval((target - nums[0]) + '+' + nums[1]), 2].join(''); } // example usage: console.log(twoSum([2,7,11,15],9))// Output: \"0,3\"",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "const twoSum = function(nums, target) { return eval('return [' + numToIndex[complement] + ','+ index  + '];') };\n// Example usage:\nlet [0 ,1 ]=twoSum([2, 7, 11,  15],9); // Output : \"[0,1]\" will be printed as \"[\"0\",\"1\"]\" in console.log() statement at the end of this code snippet and should display [[0,1]] on your terminal",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum({nums}, {target}){ return `${[[...new Set(Array((0, 1) + numToIndex = (() => [{}])()).map(() => 2).concat([9]), target - ...console].reduce().join('')}`; }",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum(nums, target) {\n    let numToIndex = {};  // declare an empty object for storing numbers mapping their indices in array \"nums\"  \n    \n    return `[${Object.values(numToIndex).join(', ')}]`;//return as one line string by converting the values into a list and joining them with ', '. This will not work if there is no such complement pair found, because it returns an empty array instead of null or undefined in Python\n}  // end function twoSum()",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "// Define twoSum JavaScript Function that accepts an array of numbers 'numArray', a target integer value and returns the indices if they exist in numArray. Else return null (JavaScript's way to represent absence/nullity).  \nconst twoSum = function(numArray, target) {  // Declare const for immutable variable that can only be set once or cannot change after being assigned a value; declare the input parameters and their types - numArray is an array of integers (or list in Python), 'target' integer. Return type will also imply this to JavaScript programmers as it doesn’t have explicit return statement, so we assume all results are returned by function\n    const map = {};  // Create a new empty object for storing mappings - similar functionality like Dictionary from other languages  \n     numArray.forEach((numItem) => {// iterate over each element in 'Numbers' array (equivalent to Python: [for index, item of enumerate(Nums)]), and assign it value ‘item’; equivalent function as we are not using keys but values here - just the numbers from numArray\n         const complement = target - numItem ;// compute remainder/complement by subtracting current number with given 'target' (equivalent to Python: '-')    // Define constant for storing mappings, map is an object in Javascript used as key-value storage. Similar behavior of a dictionary but only keys can be accessed here \n         if(map[complement] !== undefined){// check whether the complement value exists on our 'Map' and it’s not null (equivalent to Python: numItem, index)   // If yes ie., we have found solution pair for this number; equivalent of finding key in map using get() method\n             return [map[complement],numArray.indexOf(target - complement)] ;// if true then print the result as JavaScript function is returning an array with two indices, similar to Python’s list comprehension and returns first found solution pair (equivalent to numItem index)  // The 'array' object of Javascript allows you access elements in a particular order by using .indexOf() method\n         } else {// If not present then store the current number into map with its complement as key, equivalent Python: dict[complement] =numIndex , and do same for next iteration.  // Similar to mapping each element of 'Numbers' array on line above but instead we are using Javascript object properties here\n             map[numItem ]= numArray.indexOf(target - complement);// add this number-value pair into the \"map\" by key is equivalent as Python: dict['key'] = ‘index’, and then go to next iteration of loop (equivalent python [i += 1])   // Javascript automatically returns last executed statement in function.\n         }          return [];// Returning an empty array indicating no solution found for this particular 'target' value or if target not possible using the provided numbers \n     });   \n};                                                          Java is dynamically typed language so you don’t specify datatype of variable while declaring it (like in Python).   // Javascript uses \"return\" to end function and returns last executed line - similar functionality. Similar logic as python: return numArray[0]+numArray [1], if solution not found, the code will just simply 'return []' without any exception or error",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "function twoSum(nums, target) { return [evaluateTwoSums[target - nums], index]; }  for (let i = 0; i < nums.length; ++i){ let complement = target - nums[i] ; if (!complement in numbersToIndex ){ throw new Error('No solution found')} else { return [numbersToIndex[[compliment,index]]]}\n}  }`",
+    "numPassed": 0
+  },
+  {
+    "username": "testUser",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "1",
+    "questionId": "1",
+    "generateCode": "// Explanation and solution goes here.    JavaScript Code:   /* This is your function definition */function twoSum(numsArrayInput, targetNumber) { var numToIndex = {}; for(var i = 0; i < numsArrayInput.length;i++){// Calculating the complement of each number with respect to given 'target' \n    let currentNum= parseInt (numsArrayInput[i]);   // get an item from input array     var complimentNumber = targetNumber -currentNum ; if(complimentNumber in numToIndex) { return [parseInt(numToIndex[complimentNumber]), i]; } else{// If complement number is not present, then save the current index and value of that specific element as part \n        //   Of our solution.    var savedNum =currentNum ; let tempArray=[] numsArrayInput .forEach((element)=> { if (parseInt(element)!== parseInt(numToIndex[complimentNumber])){tempArray [i]= 1; i++;} }) \n        //   return ((Object.values)(new Array().concat([ savedNum ], tempArray))).join(''); } else numToIndex[currentNum ]= i ;}// If there's no pair sum up to 'target', then this part will just print an empty array[] }; /* This is the usage of our function */ let testNums = [2, 7,15 , -9];let targ = 8; console.log(twoSum (test Nums， target));",
+    "numPassed": 0
+  }
 ]
