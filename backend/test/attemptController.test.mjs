@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import fs from 'fs';
 const attemptController = await import('../controllers/attemptController.js');
-
+import path from 'path';
+const __dirname = path.resolve();
 const {
     readAttemptsJSON,
     readQuestionsJSON,
@@ -10,7 +11,10 @@ const {
     parseCode,
     generateCode,
     readAttemptTestsJSON,
-    testAttempt
+    testAttempt,
+    GetAttemptsByUsername,
+    AddAttempt
+
 } = attemptController;
 
 describe('Helper Functions', () => {
@@ -131,3 +135,41 @@ describe('Helper Functions', () => {
         });
     });
 });
+
+
+describe('GetAttemptsByUsername', () => {
+    let req, res;
+  
+    beforeEach(() => {
+      req = { params: { username: 'testuser' } };
+      res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub()
+      };
+      sinon.stub(fs, 'readFileSync');
+    });
+  
+    afterEach(() => {
+      sinon.restore();
+    });
+  
+    it.only('should return attempts for the given username', () => {
+      const attempts = [{ "username": 'testuser', "attemptId": 1 }];
+      fs.readFileSync.withArgs(path.join(__dirname, '../Attempts.json')).returns(JSON.stringify(attempts));
+    
+      GetAttemptsByUsername(req, res);
+      console.log(GetAttemptsByUsername)
+      expect(res.status.calledWith(200)).to.be.true;
+      expect(res.json.calledWith(sinon.match({ message: 'Attempt retrieved successfully', userAttempts: attempts }))).to.be.true;
+    });
+  
+    it('should return 400 if no attempts found for the given username', () => {
+      const attempts = [{ username: 'testUser', attemptId: 1 }];
+      fs.readFileSync.withArgs(path.join(__dirname, '../Attempts.json')).returns(JSON.stringify(attempts));
+  
+      GetAttemptsByUsername(req, res);
+  
+      expect(res.status.calledWith(400)).to.be.true;
+      expect(res.json.calledWith(sinon.match({ message: 'Attempt not found' }))).to.be.true;
+    });
+  });
