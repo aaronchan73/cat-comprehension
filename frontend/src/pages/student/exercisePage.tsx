@@ -119,6 +119,7 @@ export default function ExercisePage() {
                     </div>
                     <Button
                         onClick={handleOnSubmit}
+                        disabled={loading}
                         style={{
                             alignContent: 'right',
                             color: 'black',
@@ -127,9 +128,10 @@ export default function ExercisePage() {
                             padding: '10px',
                         }}
                     >
-                        Submit
+                        {loading? 'Loading...' : 'Submit Attempt'}
                     </Button>
                     {error && <Alert severity="error">{error}</Alert>}
+                    
                 </div>
             </div>
         </div>
