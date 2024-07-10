@@ -110,7 +110,7 @@ exports.AddAttempt = async (req, res) => {
             generateCode: parsedCode,
             numPassed: numPassed,
         }
-        
+
         const attempts = readAttemptsJSON();
         attempts.push(result);
         updateAttemptsJSON(attempts);
@@ -162,7 +162,7 @@ exports.GetAttemptsByUsername = (req, res) => {
 
     // Get attempts and find the specific attempt matching the given username
     const attempts = readAttemptsJSON();
-    const attempt = attempts.find(a => a.user === username);
+    const attempt = attempts.filter(a => a.user === username);
 
     if (attempt) {
         res.status(200).json({ message: 'Attempt retrieved successfully', attempt });
