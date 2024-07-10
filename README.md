@@ -8,9 +8,14 @@ Features such as **Progression and Performance Tracking** and **Educator Tools a
 
 ## Running with Docker
 1. Install Docker Desktop
-2. Start the containers using:
+2. Build the containers using:
+    ```sh
+    docker compose build
+    ```
+3. Start the containers using:
     ```sh
     docker compose up
     ```
-3. Frontend is accessible at `http://localhost:3000`
-4. Backend is accessible at `http://localhost:8080`
+4. Frontend is accessible at `http://localhost:3000`
+5. Backend is accessible at `http://localhost:8080`
+6. Ollama is accessible at `http://localhost:11434`
