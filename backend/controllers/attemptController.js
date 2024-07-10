@@ -40,8 +40,13 @@ const parseCode = (response) => {
 const generateCode = async (description, question) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
     const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}.
+<<<<<<< HEAD
                             Use the same parameters and return value as this function: ${question}.
                             Only include the JavaScript code in your response. Do not include any comments inside or outside the function.
+=======
+                            Do not include any comments inside or outside the function. 
+                            Only include the JavaScript code in your response. Do not include any comments inside or outside the function. \
+>>>>>>> 902afc3 (results page)
                             Do not use arrow functions. Return the function as a one-line string.`
     console.log("Generating code from description");
 
@@ -111,7 +116,7 @@ exports.AddAttempt = async (req, res) => {
             numPassed: numPassed,
         }
 
-        console.log(result)
+        console.log('this is the result', result)
 
         const attempts = readAttemptsJSON();
         attempts.push(result);

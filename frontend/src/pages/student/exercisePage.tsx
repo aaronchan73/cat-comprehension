@@ -13,6 +13,9 @@ export default function ExercisePage() {
     const [summaryDescription, setSummaryDescription] = useState<string>('')
     const [userName, setUsername] = useState<string>('')
     const [error, setError] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(false)
+
+
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -47,12 +50,16 @@ export default function ExercisePage() {
 
     const handleOnSubmit = async () => {
         // placeholder to pass in code Id, and summary descritpion to BE, username
-        console.log(userName, questionId, summaryDescription)
         try {
+            setLoading(true)
             const response = await addAttempt(userName, summaryDescription, questionId)
-            if (response.status === 200) {
-                navigate(`/student/exercisePage?username=${userName}&questionId=${questionId}`)
-            }
+            setLoading(false)
+
+            if (response.message === 'Tests successfully ran') {
+                navigate(`/student/resultsPage?username=${userName}&attemptId=${response.result.attemptId}`)
+            } else {
+                setError('Error submitting attempt')
+            }            
         } catch (e) {
             setError(`Error submitting attempt: ${e}`)
         }
@@ -127,6 +134,4 @@ export default function ExercisePage() {
             </div>
         </div>
     )
-
-
 }
