@@ -27,10 +27,12 @@ const parseCode = (response) => {
     const codeEnd = '```';
     const indexStart = response.indexOf(codeStart);
     const indexEnd = response.indexOf(codeEnd, indexStart + codeStart.length);
+    const regex = /function\s+\w+\s*\([^)]*\)\s*{[^}]*}/g;
     
     if (indexStart !== -1 && indexEnd !== -1) {
-        const code = response.substring(indexStart + codeStart.length, indexEnd).trim();
-        return code;
+        const trimmedCode = response.substring(indexStart + codeStart.length, indexEnd).trim();
+        const parsedCode = trimmedCode.match(regex);
+        return parsedCode;
     } else {
         return '';
     }
@@ -40,10 +42,13 @@ const parseCode = (response) => {
 const generateCode = async (description, question) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
     const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}.
-                            DO NOT INCLUDE COMMENTS IN THE RESPONSE.
                             Use the same parameters and return value as this function: ${question}.
+                            Do not call the function.
+                            Do not include comments in the response.
+                            Do not provide any example usage or tests.
                             Only include the JavaScript code in your response.
-                            Ensure the function is returned as a one-line string and properly formatted to be executed using eval.`
+                            Ensure the function is returned as a one-line string in the form: "function name(params) {}"
+                            and properly formatted to be executed using eval.`
     console.log("Generating code from description");
 
     try {
