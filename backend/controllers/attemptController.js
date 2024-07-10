@@ -8,40 +8,41 @@ const readAttemptsJSON = () => {
   return JSON.parse(data);
 };
 
+// Read Questions.json and parse contents
+const readQuestionsJSON = () => {
+    const filePath = path.join(__dirname, '../Questions.json');
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+};
+
 // Write new data into Attempts.json
 const updateAttemptsJSON = (data) => {
     const filePath = path.join(__dirname, '../Attempts.json');
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
-// Pull the LLM from the Ollama API
-const pullModel = async () => {
-    const ollamaPullUrl = 'http://localhost:11434/api/pull';
-    console.log("Pulling model from Ollama");
-
-    try {
-        const response = await fetch(ollamaPullUrl, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: 'deepseek-coder'
-            })
-        });
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 30000));
-    } catch (error) {
-        console.error(error.message);
+// Parse LLM response to only include generated JavaScript code
+const parseCode = (response) => {
+    const codeStart = '```javascript';
+    const codeEnd = '```';
+    const indexStart = response.indexOf(codeStart);
+    const indexEnd = response.indexOf(codeEnd, indexStart + codeStart.length);
+    
+    if (indexStart !== -1 && indexEnd !== -1) {
+        const code = response.substring(indexStart + codeStart.length, indexEnd).trim();
+        return code;
+    } else {
+        return '';
     }
-};
+}
 
 // Generate code based off the description using the Ollama API
-const generateCode = async (description) => {
-    const ollamaGenerateUrl = 'http://localhost:11434/api/generate';
+const generateCode = async (description, question) => {
+    const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
+    const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}. \
+                            Use the same function signature as this function: ${question}. \
+                            Only include the JavaScript code in your response. Do not include any comments inside or outside the function. \
+                            Do not use arrow functions. Return the function as a one-line string.`;
     console.log("Generating code from description");
 
     try {
@@ -52,7 +53,7 @@ const generateCode = async (description) => {
             },
             body: JSON.stringify({
                 model: 'deepseek-coder',
-                prompt: `Using this description of how a function works, generate runnable JavaScript code based on the description: ${description}`,
+                prompt: generatePrompt,
                 stream: false
             })
         })
@@ -62,22 +63,9 @@ const generateCode = async (description) => {
 
         const json = await response.json();
 
-        return json;
+        return json.response;
     } catch (error) {
         console.error(error.message);
-    }
-};
-
-// Pull model and convert code
-const getConvertedCode = async (description) => {
-    try {
-        await pullModel();
-        const json = await generateCode(description);
-        console.log("Generated JSON: ", json);
-        return json;
-    } catch (error) {
-        console.error(error.message);
-        throw error;
     }
 };
 
@@ -86,16 +74,50 @@ exports.AddAttempt = async (req, res) => {
     // Get the description, send it to LLM, run it against the test cases
     try {
         const { username, description, questionId } = req.body;
+        const { attemptId } = req.params;
 
         if (!description) {
-            return res.status(400).json({message: "'Description is required"});
+            return res.status(400).json({message: "Description is required"});
         }
 
-        const code = await getConvertedCode(description);
-        console.log("Generated code: ", code);
-        res.status(200).json({ message: 'Code received from Ollama', code });
+        // Get questions and find the specific question matching the given ID
+        const questions = readQuestionsJSON();
+        const question = questions.find(q => q.id === questionId);
+
+         // Get tests and find the specific test matching the given ID
+        const tests = readAttemptTestsJSON();
+        const test = tests.find(t => t.id === questionId);
+
+        const code = await generateCode(description, question.code);
+
+        if (code === undefined) {
+            return res.status(400).json({message: "Error generating code from Ollama"});
+        }
+
+        const parsedCode = parseCode(code);
+        console.log("Generated code: ", parsedCode);
+
+        const testResults = testAttempt(parsedCode, test.testCases);
+        console.log("Test results: ", testResults)
+
+        const overallPassed = testResults.some(t => t.passed);
+        const numPassed = testResults.filter(t => t.passed).length;
+
+        const result = {
+            success: overallPassed,
+            message: overallPassed ? "All tests passed" : "Tests failed",
+            attemptId: attemptId,
+            generateCode: parsedCode,
+            numPassed: numPassed,
+        }
+
+        const attempts = readAttemptsJSON();
+        attempts.push(result);
+        updateAttemptsJSON(attempts);
+
+        res.status(200).json({ message: 'Tests successfully ran', result });
     } catch(error) {
-        console.log("Adding attempt error ", err);
+        console.log("Adding attempt error ", error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
@@ -126,8 +148,8 @@ const testAttempt = (userCode, testCases) => {
             input, 
             expectedOutput, 
             actualOutput, 
-            message : passed ? successMessage : errorMessage
-    
+            message : passed ? successMessage : errorMessage,
+            passed,
         }; 
     }); 
 
@@ -140,7 +162,7 @@ exports.GetAttemptsByUsername = (req, res) => {
 
     // Get attempts and find the specific attempt matching the given username
     const attempts = readAttemptsJSON();
-    const attempt = attempts.find(a => a.user === username);
+    const attempt = attempts.filter(a => a.user === username);
 
     if (attempt) {
         res.status(200).json({ message: 'Attempt retrieved successfully', attempt });

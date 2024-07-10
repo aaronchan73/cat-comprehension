@@ -1,135 +1,126 @@
-{ 
-    "testCases": [
-        {
-            "id": 1, 
-            "name": "twoSum",
-            "testCases": [
-                {
-                    "test": "basic case", 
-                    "input": "[2, 7, 11, 15], 9", 
-                    "expectedOutput": "[0,1]", 
-                    "successMessage": "Good job! Your code can handle basic cases", 
-                    "errorMessage": "Try again! Your code failed to handle basic cases"
-                }, 
-                {
-                    "test": "duplicate numbers", 
-                    "input": "[3, 3], 6", 
-                    "expectedOutput": "[0, 1]", 
-                    "successMessage": "Good job! Your code can handle duplicate numbers", 
-                    "errorMessage": "Try again! Your code failed to handle duplicate numbers" 
-                }, 
-                { 
-                    "test": "0s", 
-                    "input": "[0, 4, 3, 0], 0",
-                    "expectedOutput": "[0, 3]", 
-                    "successMessage": "Good job! Your code can handle zeros", 
-                    "errorMessage": "Try again! Your code failed to handle zeros" 
-                },
-                {
-                    "test": "no solution",
-                    "input": "[1, 2, 3], 8", 
-                    "expectedOutput": "[]", 
-                    "successMessage": "Good job! Your code can handle cases with no solution", 
-                    "errorMessage": "Try again! Your code failed to handle cases with no solution"
-                },
-                {
-                    "test": "negative numbers",
-                    "input": "[-1, -2, -3, -4, -5], -8",
-                    "expectedOutput": "[2, 4]", 
-                    "successMessage": "Good job! Your code can handle negative numbers", 
-                    "errorMessage": "Try again! Your code failed to handle negative numbers"  
-                },
-                {
-                    "test": "positive and negative numbers", 
-                    "input": "[1, -2, 3, -4, 5], 1", 
-                    "expectedOutput": "[0, 3]", 
-                    "successMessage": "Good job! Your code can handle both positive and negative numbers", 
-                    "errorMessage": "Try again! Your code failed to handle both positive and negative numbers"  
-                },
-                {
-                    "test": "large numbers", 
-                    "input": "[1000000, 999999], 1", 
-                    "expectedOutput": "[0, 1]", 
-                    "successMessage": "Good job! Your code can handle large numbers", 
-                    "errorMessage": "Try again! Your code failed to handle large numbers"  
-                }, 
-                {
-                    "test": "1 element in list", 
-                    "input": "[1], 1", 
-                    "expectedOutput": "[]", 
-                    "successMessage": "Good job! Your code can handle lists with 1 element", 
-                    "errorMessage": "Try again! Your code failed to handle lists with 1 element"    
-                },
-                {
-                    "test": "empty list", 
-                    "input": "[], 1",
-                    "expectedOutput": "[]", 
-                    "successMessage": "Good job! Your code can handle empty lists", 
-                    "errorMessage": "Try again! Your code failed to handle empty lists"  
-                },
-                {
-                    "test": "more than 1 solution", 
-                    "input": "[1, 1, 3, 3], 4", 
-                    "expectedOutput": "[1, 2]", 
-                    "successMessage": "Good job! Your code can handle cases with more than 1 solution", 
-                    "errorMessage": "Try again! Your code failed to handle cases with more than 1 solution"  
-                }
-            ]
-        }, 
-        {
-            "id": 2, 
-            "name": "add", 
-            "testCases": [
-                {
-                    "test": "basic case", 
-                    "input": "2, 3",
-                    "expectedOutput": "5", 
-                    "successMessage": "Good job! Your code can handle basic cases", 
-                    "errorMessage": "Try again! Your code failed to handle basic cases"   
-                },
-                {
-                    "test": "0s", 
-                    "input": "0, 0", 
-                    "expectedOutput": "0", 
-                    "successMessage": "Good job! Your code can handle zeros", 
-                    "errorMessage": "Try again! Your code failed to handle zeros"  
-                }, 
-                {
-                    "test": "negative numbers", 
-                    "input": "-1, -1", 
-                    "expectedOutput": "-2", 
-                    "successMessage": "Good job! Your code can handle negative numbers", 
-                    "errorMessage": "Try again! Your code failed to handle negative numbers"  
-                }, 
-                {
-                    "test": "decimals", 
-                    "input": "1.5, 2.5", 
-                    "expectedOutput": "4.0", 
-                    "successMessage": "Good job! Your code can handle decimals", 
-                    "errorMessage": "Try again! Your code failed to handle decimals"  
-                }, 
-                {
-                    "test": "large numbers", 
-                    "input": "1000000, 1000000",
-                    "expectedOutput": "2000000", 
-                    "successMessage": "Good job! Your code can handle large numbers", 
-                    "errorMessage": "Try again! Your code failed to handle large numbers"  
-                },
-                {
-                    "test": "positive and negative numbers",
-                    "input": "-2, 2", 
-                    "expectedOutput": "0", 
-                    "successMessage": "Good job! Your code can handle both positive and negative numbers", 
-                    "errorMessage": "Try again! Your code failed to handle both positive and negative numbers"  
-                }, 
-                {
-                    "test": "infinity", 
-                    "input": "Infinity, -Infinity", 
-                    "expectedOutput": "NaN", 
-                    "successMessage": "Good job! Your code can handle infinities", 
-                    "errorMessage": "Try again! Your code failed to handle infinities"  
-                }
-            ]
-        }
-    ]
-}
+[
+    {
+        "id": 1,
+        "name": "twoSum",
+        "testCases": [
+            {
+                "test": "basic case",
+                "input": "[2, 7, 11, 15], 9",
+                "expectedOutput": "[0,1]",
+                "successMessage": "Good job! Your code can handle basic cases",
+                "errorMessage": "Try again! Your code failed to handle basic cases"
+            },
+            {
+                "test": "duplicate numbers",
+                "input": "[3, 3], 6",
+                "expectedOutput": "[0, 1]",
+                "successMessage": "Good job! Your code can handle duplicate numbers",
+                "errorMessage": "Try again! Your code failed to handle duplicate numbers"
+            },
+            {
+                "test": "0s",
+                "input": "[0, 4, 3, 0], 0",
+                "expectedOutput": "[0, 3]",
+                "successMessage": "Good job! Your code can handle zeros",
+                "errorMessage": "Try again! Your code failed to handle zeros"
+            },
+            {
+                "test": "no solution",
+                "input": "[1, 2, 3], 8",
+                "expectedOutput": "[]",
+                "successMessage": "Good job! Your code can handle cases with no solution",
+                "errorMessage": "Try again! Your code failed to handle cases with no solution"
+            },
+            {
+                "test": "negative numbers",
+                "input": "[-1, -2, -3, -4, -5], -8",
+                "expectedOutput": "[2, 4]",
+                "successMessage": "Good job! Your code can handle negative numbers",
+                "errorMessage": "Try again! Your code failed to handle negative numbers"
+            },
+            {
+                "test": "positive and negative numbers",
+                "input": "[1, -2, 3, -4, 5], 1",
+                "expectedOutput": "[0, 3]",
+                "successMessage": "Good job! Your code can handle both positive and negative numbers",
+                "errorMessage": "Try again! Your code failed to handle both positive and negative numbers"
+            },
+            {
+                "test": "large numbers",
+                "input": "[1000000, 999999], 1",
+                "expectedOutput": "[0, 1]",
+                "successMessage": "Good job! Your code can handle large numbers",
+                "errorMessage": "Try again! Your code failed to handle large numbers"
+            },
+            {
+                "test": "1 element in list",
+                "input": "[1], 1",
+                "expectedOutput": "[]",
+                "successMessage": "Good job! Your code can handle lists with 1 element",
+                "errorMessage": "Try again! Your code failed to handle lists with 1 element"
+            },
+            {
+                "test": "empty list",
+                "input": "[], 1",
+                "expectedOutput": "[]",
+                "successMessage": "Good job! Your code can handle empty lists",
+                "errorMessage": "Try again! Your code failed to handle empty lists"
+            },
+            {
+                "test": "more than 1 solution",
+                "input": "[1, 1, 3, 3], 4",
+                "expectedOutput": "[1, 2]",
+                "successMessage": "Good job! Your code can handle cases with more than 1 solution",
+                "errorMessage": "Try again! Your code failed to handle cases with more than 1 solution"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "add",
+        "testCases": [
+            {
+                "test": "basic case",
+                "input": "2, 3",
+                "expectedOutput": "5",
+                "successMessage": "Good job! Your code can handle basic cases",
+                "errorMessage": "Try again! Your code failed to handle basic cases"
+            },
+            {
+                "test": "0s",
+                "input": "0, 0",
+                "expectedOutput": "0",
+                "successMessage": "Good job! Your code can handle zeros",
+                "errorMessage": "Try again! Your code failed to handle zeros"
+            },
+            {
+                "test": "negative numbers",
+                "input": "-1, -1",
+                "expectedOutput": "-2",
+                "successMessage": "Good job! Your code can handle negative numbers",
+                "errorMessage": "Try again! Your code failed to handle negative numbers"
+            },
+            {
+                "test": "decimals",
+                "input": "1.5, 2.5",
+                "expectedOutput": "4.0",
+                "successMessage": "Good job! Your code can handle decimals",
+                "errorMessage": "Try again! Your code failed to handle decimals"
+            },
+            {
+                "test": "large numbers",
+                "input": "1000000, 1000000",
+                "expectedOutput": "2000000",
+                "successMessage": "Good job! Your code can handle large numbers",
+                "errorMessage": "Try again! Your code failed to handle large numbers"
+            },
+            {
+                "test": "positive and negative numbers",
+                "input": "-2, 2",
+                "expectedOutput": "0",
+                "successMessage": "Good job! Your code can handle both positive and negative numbers",
+                "errorMessage": "Try again! Your code failed to handle both positive and negative numbers"
+            }
+        ]
+    }
+]
