@@ -100,7 +100,7 @@ exports.AddAttempt = async (req, res) => {
         const testResults = testAttempt(parsedCode, test.testCases);
         console.log("Test results: ", testResults)
 
-        const overallPassed = testResults.some(t => t.passed);
+        const overallPassed = testResults.every(t => t.passed);
         const numPassed = testResults.filter(t => t.passed).length;
 
         const result = {
