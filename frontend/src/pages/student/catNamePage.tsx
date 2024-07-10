@@ -26,9 +26,8 @@ export default function CatNamePage() {
         }
         else {
             setSuccess(reponse.message)
-            setTimeout(() => { navigate('/student/exercisePage') }, 3000)
+            setTimeout(() => { navigate(`/student/exercisePage?username=${catName}`); }, 3000);
         }
-
     }
 
     useEffect(() => {
