@@ -1,50 +1,111 @@
-const fs = require('fs');
-const path = require('path');
+import { expect } from 'chai';
+import sinon from 'sinon';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import userController from '../controllers/userController.js';
 
-// Read Users.json and parse contents
-const readUsersJSON = () => {
-  const filePath = path.join(__dirname, '../Users.json');
-  const data = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(data);
-};
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Write new data into Users.json
-const updateUsersJSON = (data) => {
-  const filePath = path.join(__dirname, '../Users.json');
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-};
+describe('userController tests', () => {
+  let req, res;
+  let mockDb;
 
-// Registers a new user
-exports.AddStudent = (req, res) => {
-  const { username, studentId } = req.body;
+  beforeEach(() => {
+    // Initialize mock database
+    mockDb = [
+      { username: 'gloria', studentId: 123 },
+      { username: 'tim', studentId: 456 }
+    ];
 
-  if (!username || !studentId) {
-    return res.status(400).json({ message: 'Username or student ID is required' });
-  }
+    // Stub fs.readFileSync to return the mock database
+    sinon.stub(fs, 'readFileSync').callsFake((filePath, encoding) => {
+      if (encoding === 'utf8') {
+        return JSON.stringify(mockDb);
+      }
+    });
 
-  // Read existing users from Users.json
-  const users = readUsersJSON();
+    // Stub fs.writeFileSync to update the mock database
+    sinon.stub(fs, 'writeFileSync').callsFake((filePath, data) => {
+      mockDb = JSON.parse(data);
+    });
 
-  // Check if username already exists in Users.json
-  const existsUserName = users.some(user => user.username === username);
-  const existsStudentId = users.some(user => user.studentId === studentId);
+    req = {
+      body: {}
+    };
+    res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub()
+    };
+  });
 
-  if (existsUserName || existsStudentId) {
-    return res.status(400).json({ message: 'Username or student ID already exists' });
-  }
+  afterEach(() => {
+    sinon.restore();
+  });
 
-  // Add new user to the list
-  const user = { studentId, username };
-  users.push(user);
+  describe('AddStudent', () => {
+    it('successfully adds a new student', () => {
+      req.body = {
+        username: 'newname',
+        studentId: '789'
+      };
 
-  // Write updated list back to the file
-  updateUsersJSON(users);
+      userController.AddStudent(req, res);
 
-  res.status(200).json({ message: 'User added successfully', user: user });
-};
+      expect(res.status.calledWith(200)).to.be.true;
+      expect(res.json.calledWith(sinon.match({
+        message: 'User added successfully',
+        user: { username: 'newname', studentId: '789' }
+      }))).to.be.true;
+      expect(mockDb).to.deep.include({ username: 'newname', studentId: '789' });
+    });
 
-// Returns all registered users
-exports.GetStudents = (req, res) => {
-    const users = readUsersJSON();
-    res.status(200).json({ message: 'Users retrieved successfully', users });
-};
+    it('returns error if username or studentId is missing', () => {
+      req.body = { username: 'missingId' };
+
+      userController.AddStudent(req, res);
+
+      expect(res.status.calledWith(400)).to.be.true;
+      expect(res.json.calledWith({ message: 'Username or student ID is required' })).to.be.true;
+    });
+
+    it('returns error if username or studentId already exists', () => {
+      req.body = {
+        username: 'gloria',
+        studentId: 123
+      };
+
+      userController.AddStudent(req, res);
+
+      expect(res.status.calledWith(400)).to.be.true;
+      expect(res.json.calledWith({ message: 'Username or student ID already exists' })).to.be.true;
+    });
+  });
+
+  
+
+  describe('GetStudents', () => {
+    it('returns all registered students', () => {
+      userController.GetStudents(req, res);
+
+      expect(res.status.calledWith(200)).to.be.true;
+      expect(res.json.calledWith(sinon.match({
+        message: 'Users retrieved successfully',
+        users: mockDb
+      }))).to.be.true;
+    });
+
+    it('returns an empty array if no users are present', () => {
+      mockDb = []; // Clear the mock database
+
+      userController.GetStudents(req, res);
+
+      expect(res.status.calledWith(200)).to.be.true;
+      expect(res.json.calledWith(sinon.match({
+        message: 'Users retrieved successfully',
+        users: []
+      }))).to.be.true;
+    });
+  });
+});
