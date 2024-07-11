@@ -43,33 +43,6 @@ exports.AddStudent = (req, res) => {
   res.status(200).json({ message: 'User added successfully', user: user });
 };
 
-//Delete Student (for testing purposes)
-exports.DeleteStudent = (req, res) => {
-  const { studentId } = req.body;
-
-  if (!studentId) {
-    return res.status(400).json({ message: 'Student ID is required' });
-  }
-
-  // Read existing users from Users.json
-  const users = readUsersJSON();
-
-  // Check if studentId exists in Users.json
-  const userIndex = users.findIndex(user => user.studentId === studentId);
-
-  if (userIndex === -1) {
-    return res.status(400).json({ message: 'Student ID not found' });
-  }
-
-  // Remove user from the list
-  const removedUser = users.splice(userIndex, 1)[0];
-
-  // Write updated list back to the file
-  updateUsersJSON(users);
-
-  res.status(200).json({ message: 'User deleted successfully', user: removedUser });
-};
-
 // Returns all registered users
 exports.GetStudents = (req, res) => {
     const users = readUsersJSON();
