@@ -1,20 +1,31 @@
 const fs = require('fs');
 const path = require('path');
 
-// Read Users.json and parse contents
+/**
+ * @description Read Users.json and parse contents
+ * @returns contents of Users.json
+ */
 const readUsersJSON = () => {
   const filePath = path.join(__dirname, '../Users.json');
   const data = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(data);
 };
 
-// Write new data into Users.json
+/**
+ * @description Write new data into Users.json
+ * @param data - contents to update Users.json with
+ */
 const updateUsersJSON = (data) => {
   const filePath = path.join(__dirname, '../Users.json');
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
-// Registers a new user
+/**
+ * @description Registers a new user
+ * @param req - request of API
+ * @param res - response of API
+ * @returns - 200 for success, 400 for failure
+ */
 exports.AddStudent = (req, res) => {
   const { username, studentId } = req.body;
 
@@ -43,7 +54,11 @@ exports.AddStudent = (req, res) => {
   res.status(200).json({ message: 'User added successfully', user: user });
 };
 
-// Returns all registered users
+/**
+ * @description Returns all registered users
+ * @param req - request of API
+ * @param res - response of API
+ */
 exports.GetStudents = (req, res) => {
     const users = readUsersJSON();
     res.status(200).json({ message: 'Users retrieved successfully', users });
