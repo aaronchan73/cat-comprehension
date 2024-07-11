@@ -6,7 +6,7 @@ CAT Comprehension is a web application that allows students to enhance their cod
 The application allows students to write a summary of a block of code from our database, which is marked from our test cases and generates a score for the user.
 Features such as **Progression and Performance Tracking** and **Educator Tools and Analytics** are supported to benefit both students and teachers.
 
-## Running with Docker
+## Docker Compose
 1. Install Docker Desktop
 2. Build the containers using:
     ```sh
@@ -19,3 +19,10 @@ Features such as **Progression and Performance Tracking** and **Educator Tools a
 4. Frontend is accessible at `http://localhost:3000`
 5. Backend is accessible at `http://localhost:8080`
 6. Ollama is accessible at `http://localhost:11434`
+
+## Testing
+1. Unit tests are located in `/backend/test`
+2. Run tests using:
+    ```sh
+    cd backend && npm i && npm test
+    ```
