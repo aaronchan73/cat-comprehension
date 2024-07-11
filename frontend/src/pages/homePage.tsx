@@ -1,19 +1,19 @@
-import React, { useState } from "react";
 import "../styles/homePage.css";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
-// homepage has the questions
-// has two buttons that go to seperate pages
-// - teacher flow is just seeing the list of kittens + can click into each student individually
-// - student flow next page is to set your cat name
-//
+
 export default function HomePage() {
   const navigate = useNavigate();
 
+  /**
+   * @description Function to navigate to the student cat name page
+   */
   const handleStudentClick = () => {
     navigate("/student/catNamePage");
   };
 
+  /**
+   * @description Function to navigate to the teacher kitten list page
+   */ 
   const handleTeacherClick = () => {
     navigate("/teacher/kittenListPage");
   };

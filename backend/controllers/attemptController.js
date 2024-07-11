@@ -123,8 +123,6 @@ exports.AddAttempt = async (req, res) => {
             numPassed: numPassed,
         }
 
-        console.log('this is the result', result)
-
         const attempts = readAttemptsJSON();
         attempts.push(result);
         updateAttemptsJSON(attempts);
@@ -146,10 +144,10 @@ const readAttemptTestsJSON = () => {
 // Tests the user's answer (translated into code) against pre-written test cases 
 const testAttempt = (userCode, testCases) => { 
     const feedback = testCases.map(testCase => {
-        const { input, expectedOutput, successMessage, errorMessage } = testCase; 
+        const { input, expectedOutput, successMessage, errorMessage } = testCase; // extract these fields from JSON 
         let actualOutput; 
 
-        try { 
+        try { // try each test case against the user's code 
             const func = eval(`(${userCode})`); 
             actualOutput = func(...JSON.parse(`[${input}]`)); 
         } catch (error) { 
@@ -158,7 +156,7 @@ const testAttempt = (userCode, testCases) => {
 
         const passed = JSON.stringify(actualOutput) === JSON.stringify(JSON.parse(expectedOutput));   
 
-        return { 
+        return { // return clear feedback 
             input, 
             expectedOutput, 
             actualOutput, 

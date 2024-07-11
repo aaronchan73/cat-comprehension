@@ -6,7 +6,11 @@ import ExercisePage from "./pages/student/exercisePage";
 import KittenListPage from "./pages/teacher/kittenListPage";
 import ResultsPage from "./pages/student/resultsPage";
 
-function App() {
+/**
+ * @description - Routing for application
+ * @returns - The main App component
+ */
+export default function App() {
   return (
     <Router>
       <div className="App">
@@ -21,5 +25,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;
