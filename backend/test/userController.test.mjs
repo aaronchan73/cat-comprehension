@@ -44,8 +44,9 @@ describe('userController tests', () => {
     sinon.restore();
   });
 
+  // Tests for AddStudent
   describe('AddStudent', () => {
-    it('successfully adds a new student', () => {
+    it('successfully adds a new student', () => { // Successful case 
       req.body = {
         username: 'newname',
         studentId: '789'
@@ -61,7 +62,7 @@ describe('userController tests', () => {
       expect(mockDb).to.deep.include({ username: 'newname', studentId: '789' });
     });
 
-    it('returns error if username or studentId is missing', () => {
+    it('returns error if username or studentId is missing', () => { // missing username or student ID, should fail 
       req.body = { username: 'missingId' };
 
       userController.AddStudent(req, res);
@@ -70,7 +71,7 @@ describe('userController tests', () => {
       expect(res.json.calledWith({ message: 'Username or student ID is required' })).to.be.true;
     });
 
-    it('returns error if username or studentId already exists', () => {
+    it('returns error if username or studentId already exists', () => { // username or student ID already exists, should fail 
       req.body = {
         username: 'gloria',
         studentId: 123
@@ -84,9 +85,9 @@ describe('userController tests', () => {
   });
 
   
-
+  // Tests for GetStudents
   describe('GetStudents', () => {
-    it('returns all registered students', () => {
+    it('returns all registered students', () => { // Successful case 
       userController.GetStudents(req, res);
 
       expect(res.status.calledWith(200)).to.be.true;
@@ -96,7 +97,7 @@ describe('userController tests', () => {
       }))).to.be.true;
     });
 
-    it('returns an empty array if no users are present', () => {
+    it('returns an empty array if no users are present', () => { // no students to retrieve, should return empty array 
       mockDb = []; 
 
       userController.GetStudents(req, res);
