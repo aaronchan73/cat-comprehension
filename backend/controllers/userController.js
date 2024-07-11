@@ -1,111 +1,77 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import userController from '../controllers/userController.js';
+const fs = require('fs');
+const path = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Read Users.json and parse contents
+const readUsersJSON = () => {
+  const filePath = path.join(__dirname, '../Users.json');
+  const data = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(data);
+};
 
-describe('userController tests', () => {
-  let req, res;
-  let mockDb;
+// Write new data into Users.json
+const updateUsersJSON = (data) => {
+  const filePath = path.join(__dirname, '../Users.json');
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+};
 
-  beforeEach(() => {
-    // Initialize mock database
-    mockDb = [
-      { username: 'gloria', studentId: 123 },
-      { username: 'tim', studentId: 456 }
-    ];
+// Registers a new user
+exports.AddStudent = (req, res) => {
+  const { username, studentId } = req.body;
 
-    // Stub fs.readFileSync to return the mock database
-    sinon.stub(fs, 'readFileSync').callsFake((filePath, encoding) => {
-      if (encoding === 'utf8') {
-        return JSON.stringify(mockDb);
-      }
-    });
+  if (!username || !studentId) {
+    return res.status(400).json({ message: 'Username or student ID is required' });
+  }
 
-    // Stub fs.writeFileSync to update the mock database
-    sinon.stub(fs, 'writeFileSync').callsFake((filePath, data) => {
-      mockDb = JSON.parse(data);
-    });
+  // Read existing users from Users.json
+  const users = readUsersJSON();
 
-    req = {
-      body: {}
-    };
-    res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.stub()
-    };
-  });
+  // Check if username already exists in Users.json
+  const existsUserName = users.some(user => user.username === username);
+  const existsStudentId = users.some(user => user.studentId === studentId);
 
-  afterEach(() => {
-    sinon.restore();
-  });
+  if (existsUserName || existsStudentId) {
+    return res.status(400).json({ message: 'Username or student ID already exists' });
+  }
 
-  describe('AddStudent', () => {
-    it('successfully adds a new student', () => {
-      req.body = {
-        username: 'newname',
-        studentId: '789'
-      };
+  // Add new user to the list
+  const user = { studentId, username };
+  users.push(user);
 
-      userController.AddStudent(req, res);
+  // Write updated list back to the file
+  updateUsersJSON(users);
 
-      expect(res.status.calledWith(200)).to.be.true;
-      expect(res.json.calledWith(sinon.match({
-        message: 'User added successfully',
-        user: { username: 'newname', studentId: '789' }
-      }))).to.be.true;
-      expect(mockDb).to.deep.include({ username: 'newname', studentId: '789' });
-    });
+  res.status(200).json({ message: 'User added successfully', user: user });
+};
 
-    it('returns error if username or studentId is missing', () => {
-      req.body = { username: 'missingId' };
+//Delete Student (for testing purposes)
+exports.DeleteStudent = (req, res) => {
+  const { studentId } = req.body;
 
-      userController.AddStudent(req, res);
+  if (!studentId) {
+    return res.status(400).json({ message: 'Student ID is required' });
+  }
 
-      expect(res.status.calledWith(400)).to.be.true;
-      expect(res.json.calledWith({ message: 'Username or student ID is required' })).to.be.true;
-    });
+  // Read existing users from Users.json
+  const users = readUsersJSON();
 
-    it('returns error if username or studentId already exists', () => {
-      req.body = {
-        username: 'gloria',
-        studentId: 123
-      };
+  // Check if studentId exists in Users.json
+  const userIndex = users.findIndex(user => user.studentId === studentId);
 
-      userController.AddStudent(req, res);
+  if (userIndex === -1) {
+    return res.status(400).json({ message: 'Student ID not found' });
+  }
 
-      expect(res.status.calledWith(400)).to.be.true;
-      expect(res.json.calledWith({ message: 'Username or student ID already exists' })).to.be.true;
-    });
-  });
+  // Remove user from the list
+  const removedUser = users.splice(userIndex, 1)[0];
 
-  
+  // Write updated list back to the file
+  updateUsersJSON(users);
 
-  describe('GetStudents', () => {
-    it('returns all registered students', () => {
-      userController.GetStudents(req, res);
+  res.status(200).json({ message: 'User deleted successfully', user: removedUser });
+};
 
-      expect(res.status.calledWith(200)).to.be.true;
-      expect(res.json.calledWith(sinon.match({
-        message: 'Users retrieved successfully',
-        users: mockDb
-      }))).to.be.true;
-    });
-
-    it('returns an empty array if no users are present', () => {
-      mockDb = []; // Clear the mock database
-
-      userController.GetStudents(req, res);
-
-      expect(res.status.calledWith(200)).to.be.true;
-      expect(res.json.calledWith(sinon.match({
-        message: 'Users retrieved successfully',
-        users: []
-      }))).to.be.true;
-    });
-  });
-});
+// Returns all registered users
+exports.GetStudents = (req, res) => {
+    const users = readUsersJSON();
+    res.status(200).json({ message: 'Users retrieved successfully', users });
+};

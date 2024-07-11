@@ -1,167 +1,111 @@
-import chai from 'chai';
-import mockFs from 'mock-fs';
+import { expect } from 'chai';
+import sinon from 'sinon';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import userController from '../controllers/userController.js';
-import chaiHttp from 'chai-http';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const testData = JSON.stringify([]);
+describe('userController tests', () => {
+  let req, res;
+  let mockDb;
 
+  beforeEach(() => {
+    // Initialize mock database
+    mockDb = [
+      { username: 'gloria', studentId: 123 },
+      { username: 'tim', studentId: 456 }
+    ];
 
-  describe ('userController tests', () => {
-
-    beforeEach(() => { 
-        mockFs({
-            [path.join(__dirname, '../Users.json')] : testData 
-        });
-    }); 
-
-    afterEach(() => {
-        mockFs.restore();
+    // Stub fs.readFileSync to return the mock database
+    sinon.stub(fs, 'readFileSync').callsFake((filePath, encoding) => {
+      if (encoding === 'utf8') {
+        return JSON.stringify(mockDb);
+      }
     });
 
-    describe('AddStudent', () => { 
-        it('successfully adds new student', () => {
-            const req = {
-                body: { 
-                    username: "gloria", 
-                    studentId: "123"
-                }
-            };
-
-            const res = { 
-                status: function (statusCode) {
-                    this.statusCode = statusCode; 
-                    return this; 
-                }, 
-                json: function (data) {
-                    this.data = data;
-                    return this
-                }
-            };
-
-            userController.AddStudent(req, res); 
-            expect(res.statusCode).to.equal(200); 
-            expect(res.data).to.have.property('message', 'User added successfully'); 
-            expect(res.data.user).to.have.property('username', 'gloria'); 
-            expect(res.data.user).to.have.property('studentId', '123');    
-        }); 
-
-        it ('returns error if username or studentId is missing', () => {
-            const req = {
-                body: { 
-                    username: 'gloria'
-                }
-            }; 
-
-            const res = {
-                status: function(statusCode) {
-                    this.statusCode = statusCode; 
-                    return this;
-                }, 
-
-                json: function (data) {
-                    this.data = data; 
-                    return this;
-                }, 
-            }; 
-
-            userController.AddStudent(req, res); 
-
-            expect(res.statusCode).to.equal(400); 
-            expect(res.data).to.have.property('message', 'Username or student ID is required'); 
-        });
-
-        it('returns error if username or studentId already exists', () => {
-
-            mockFs({
-                [path.join(__dirname, '../Users.json')] : JSON.stringify([
-                    {"studentId" : 123, "username": "gloria"}
-                ])
-            });
-
-            const req = {
-                body: {
-                    username: 'gloria', 
-                    studentId: 123 
-                }
-            };
-
-            const res = {
-                status: function (statusCode) { 
-                    this.statusCode = statusCode; 
-                    return this; 
-                }, 
-
-                json: function(data) { 
-                    this.data = data; 
-                    return this; 
-                }
-            }; 
-
-            userController.AddStudent(req, res); 
-
-            expect(res.statusCode).to.equal(400); 
-            expect(res.data).to.have.property('message', 'Username or student ID already exists'); 
-        }); 
-    }); 
-
-
-    describe('GetStudents', () => {
-        it ('returns all registered students', () => {
-            mockFs({
-                [path.join(__dirname, '../Users.json')]: JSON.stringify([
-                    {"studentId": 123, "username": "gloria"}, 
-                    {"studentId": 456, "username": "tim"}, 
-                ])
-            }); 
-
-            const req = {}; 
-
-            const res = {
-                status: function (statusCode){
-                    this.statusCode = statusCode; 
-                    return this;
-                },
-
-                json: function(data) { 
-                    this.data = data; 
-                    return this; 
-                }
-            }; 
-
-            userController.GetStudents(req, res); 
-
-            expect(res.statusCode).to.equal(200);
-            expect(res.data).to.have.property('message', 'Users retrieved successfully');
-            expect(res.data.users).to.be.an('array');
-            expect(res.data.users).to.have.lengthOf(2);
-        }); 
-
-        it('empty array case', () => {
-
-            const req = {};
-
-            const res = {
-                status: function (statusCode) {
-                    this.statusCode = statusCode;
-                    return this;
-                },
-                json: function (data) {
-                    this.data = data;
-                    return this;
-                }
-            };
-
-            userController.GetStudents(req, res);
-
-            expect(res.statusCode).to.equal(200);
-            expect(res.data).to.have.property('message', 'Users retrieved successfully');
-            expect(res.data.users).to.be.an('array').that.is.empty;
-         });
-        });
+    // Stub fs.writeFileSync to update the mock database
+    sinon.stub(fs, 'writeFileSync').callsFake((filePath, data) => {
+      mockDb = JSON.parse(data);
     });
+
+    req = {
+      body: {}
+    };
+    res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub()
+    };
+  });
+
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  describe('AddStudent', () => {
+    it('successfully adds a new student', () => {
+      req.body = {
+        username: 'newname',
+        studentId: '789'
+      };
+
+      userController.AddStudent(req, res);
+
+      expect(res.status.calledWith(200)).to.be.true;
+      expect(res.json.calledWith(sinon.match({
+        message: 'User added successfully',
+        user: { username: 'newname', studentId: '789' }
+      }))).to.be.true;
+      expect(mockDb).to.deep.include({ username: 'newname', studentId: '789' });
+    });
+
+    it('returns error if username or studentId is missing', () => {
+      req.body = { username: 'missingId' };
+
+      userController.AddStudent(req, res);
+
+      expect(res.status.calledWith(400)).to.be.true;
+      expect(res.json.calledWith({ message: 'Username or student ID is required' })).to.be.true;
+    });
+
+    it('returns error if username or studentId already exists', () => {
+      req.body = {
+        username: 'gloria',
+        studentId: 123
+      };
+
+      userController.AddStudent(req, res);
+
+      expect(res.status.calledWith(400)).to.be.true;
+      expect(res.json.calledWith({ message: 'Username or student ID already exists' })).to.be.true;
+    });
+  });
+
   
+
+  describe('GetStudents', () => {
+    it('returns all registered students', () => {
+      userController.GetStudents(req, res);
+
+      expect(res.status.calledWith(200)).to.be.true;
+      expect(res.json.calledWith(sinon.match({
+        message: 'Users retrieved successfully',
+        users: mockDb
+      }))).to.be.true;
+    });
+
+    it('returns an empty array if no users are present', () => {
+      mockDb = []; 
+
+      userController.GetStudents(req, res);
+
+      expect(res.status.calledWith(200)).to.be.true;
+      expect(res.json.calledWith(sinon.match({
+        message: 'Users retrieved successfully',
+        users: []
+      }))).to.be.true;
+    });
+  });
+});
