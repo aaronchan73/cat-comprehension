@@ -1,5 +1,5 @@
 import { Box, Button, List, ListItem, Typography } from '@mui/material'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getAttemptByUsername } from '../../services/attempts'
 import { IResult } from '../../types/IResult'
@@ -11,6 +11,9 @@ export default function ResultsPage() {
     const [code, setCode] = useState<string>('')
     const navigate = useNavigate()
 
+    /**
+     * @description - Function to get the attempt by username and setting states for analysis and code
+     */
     const getAttempt = async () => {
         try {
             const searchParams = new URLSearchParams(location.search);
@@ -33,13 +36,18 @@ export default function ResultsPage() {
         }
     }
 
+    /** 
+     * @description - Function to navigate to the exercise page with same username when retry button is clicked
+    */
     const handleRetry = () => {
-        // navigate to exercise page
         const searchParams = new URLSearchParams(location.search);
         const username = searchParams.get('username');
         navigate(`/student/exercisePage?username=${username}`)
     }
 
+    /**
+     * @description - useEffect to get the attempt by username on page mount
+     */
     useEffect(() => {
         getAttempt()
     }, [])
@@ -54,10 +62,10 @@ export default function ResultsPage() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: '20px',
-                        borderRadius: '10px', // Rounded corners
-                        backgroundColor: '#f0f0f0', // Light grey background
+                        borderRadius: '10px',
+                        backgroundColor: '#f0f0f0',
                         marginTop: '20px',
-                        marginRight: '20px', // Space between boxes
+                        marginRight: '20px',
                         width: '500px',
                         height: '500px',
                     }}
@@ -95,8 +103,8 @@ export default function ResultsPage() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: '20px',
-                        borderRadius: '10px', // Rounded corners
-                        backgroundColor: '#f0f0f0', // Light grey background
+                        borderRadius: '10px',
+                        backgroundColor: '#f0f0f0',
                         marginTop: '20px',
                         width: '500px',
                         height: '500px'

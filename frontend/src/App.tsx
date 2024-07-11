@@ -6,6 +6,7 @@ import ExercisePage from "./pages/student/exercisePage";
 import KittenListPage from "./pages/teacher/kittenListPage";
 import ResultsPage from "./pages/student/resultsPage";
 
+// Routes to ensure smooth navigation between pages
 function App() {
   return (
     <Router>
