@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/catNamePage.css'
 import { IUser } from '../../types/IUser';
 import { addUser } from '../../services/users';
 import Alert from '@mui/material/Alert';
-import { Button, FormLabel, Input, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 
 
 export default function CatNamePage() {
@@ -14,8 +14,9 @@ export default function CatNamePage() {
     const [success, setSuccess] = useState<string>('')
     const navigate = useNavigate()
 
-
-    // TODO post request to save the cat name
+    /**
+     * @description - Function to save the student to the db
+     */
     const saveStudent = async () => {
         const data = { studentId: Number(studentID), username: catName } as IUser
         const reponse = await addUser(data)
