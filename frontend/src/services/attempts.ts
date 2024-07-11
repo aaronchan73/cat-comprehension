@@ -1,12 +1,16 @@
 import { v4 as uuidv4 } from 'uuid'
-import { IAddAttemptResposne } from '../types/AddAttempt'
+import { IAddAttemptResponse } from '../types/AddAttempt'
 import { IGetAttemptByUsername } from '../types/IGetAttemptByUsername'
 
-const randomId = uuidv4()
-
+/**
+ * @description - Service for adding an attempt to the db
+ * @param username - username of the user
+ * @param description - summaryDescription of the code question
+ * @param questionId - id of the code question
+ * @returns data - response from the db as IAddAttemptResponse
+ */
 export const addAttempt = async (username: string, description: string, questionId: string) => {
     try {
-        // generate random attempt id
         const attemptId = uuidv4()
         const response = await fetch(`http://localhost:8080/api/attempts/${attemptId}`, {
             method: 'POST',
@@ -16,12 +20,18 @@ export const addAttempt = async (username: string, description: string, question
             body: JSON.stringify({ username, description, questionId })
         })
         const data = await response.json()
-        return data as IAddAttemptResposne
+
+        return data as IAddAttemptResponse
     } catch (e) {
         throw new Error('Error adding attempt')
     }
 }
 
+/**
+ * @description - Service for getting an attempt by username
+ * @param username - username of the user
+ * @returns data - response from the db as IGetAttemptByUsername
+ */
 export const getAttemptByUsername = async (username: string | null) => {
     try{
         if (!username) {
@@ -34,8 +44,6 @@ export const getAttemptByUsername = async (username: string | null) => {
             }
         })
         const data = await response.json()
-        
-        console.log(data)
 
         return data as IGetAttemptByUsername
     } catch (e) {

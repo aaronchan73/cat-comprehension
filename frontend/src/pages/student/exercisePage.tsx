@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation} from 'react-router-dom';
 import CodeBox from '../../components/codeBox'
 import '../../styles/exercisePage.css'
@@ -15,14 +15,15 @@ export default function ExercisePage() {
     const [error, setError] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
 
-
     const navigate = useNavigate()
     const location = useLocation()
 
+    /**
+     * @description - Function to get the exercises and choosing an excersie to set - will be usedl in next sprint
+     */
     const getExercise = async () => {
         try {
             const data = await getExercises()
-            // case where we want to randomize the exercise
             const randomNumber = Math.random()
             setCode(data.questions[0].code)
             setName(data.questions[0].name)
@@ -31,6 +32,10 @@ export default function ExercisePage() {
         }
     }
 
+    /**
+     * @description - Function to set the exercise by id and setting states for code and name
+     * @param id - id of the exercise
+     */
     const setExerciseById = async (id: string) => {
         try {
             const data = await getExerciseById(id)
@@ -43,13 +48,18 @@ export default function ExercisePage() {
 
     }
 
+    /**
+     * @description - Function to change the question by incrementing the question id
+     */
     const handleChangeQuestion = () => {
         const newQuestion = String(Number(questionId) + 1)
         setExerciseById(newQuestion)
     }
 
+    /**
+     * @description - Function to handle the submit button click
+     */
     const handleOnSubmit = async () => {
-        // placeholder to pass in code Id, and summary descritpion to BE, username
         try {
             setLoading(true)
             const response = await addAttempt(userName, summaryDescription, questionId)
@@ -65,7 +75,9 @@ export default function ExercisePage() {
         }
     }
 
-
+    /**
+     * @description - useEffect to set the states + render UI on page mount
+     */
     useEffect(() => {
         setExerciseById(questionId)
         const searchParams = new URLSearchParams(location.search);
@@ -93,8 +105,8 @@ export default function ExercisePage() {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 padding: '20px',
-                                borderRadius: '10px', // Rounded corners
-                                backgroundColor: '#f0f0f0', // Light grey background
+                                borderRadius: '10px',
+                                backgroundColor: '#f0f0f0',
                                 marginTop: '20px',
                                 width: '500px',
                                 height: '500px'
@@ -119,6 +131,7 @@ export default function ExercisePage() {
                     </div>
                     <Button
                         onClick={handleOnSubmit}
+                        disabled={loading}
                         style={{
                             alignContent: 'right',
                             color: 'black',
@@ -127,9 +140,10 @@ export default function ExercisePage() {
                             padding: '10px',
                         }}
                     >
-                        Submit
+                        {loading? 'Loading...' : 'Submit Attempt'}
                     </Button>
                     {error && <Alert severity="error">{error}</Alert>}
+                    
                 </div>
             </div>
         </div>
