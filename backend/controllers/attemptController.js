@@ -123,8 +123,6 @@ exports.AddAttempt = async (req, res) => {
             numPassed: numPassed,
         }
 
-        console.log('this is the result', result)
-
         const attempts = readAttemptsJSON();
         attempts.push(result);
         updateAttemptsJSON(attempts);
