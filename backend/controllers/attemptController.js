@@ -1,27 +1,40 @@
 const fs = require('fs');
 const path = require('path');
 
-// Read Attempts.json and parse contents
+/**
+ * @description Read Attempts.json and parse contents
+ * @returns contents of Attempts.json
+ */
 const readAttemptsJSON = () => {
   const filePath = path.join(__dirname, '../Attempts.json');
   const data = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(data);
 };
 
-// Read Questions.json and parse contents
+/**
+ * @description Read Questions.json and parse contents
+ * @returns contents of Questions.json
+ */
 const readQuestionsJSON = () => {
     const filePath = path.join(__dirname, '../Questions.json');
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
 };
 
-// Write new data into Attempts.json
+/**
+ * @description Write new data into Attempts.json
+ * @param data - contents to update Attempts.json with
+ */
 const updateAttemptsJSON = (data) => {
     const filePath = path.join(__dirname, '../Attempts.json');
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
-// Parse LLM response to only include generated JavaScript code
+/**
+ * @description Parse LLM response to only include generated JavaScript code
+ * @param response - generated response from LLM
+ * @returns parsed response of JavaScript function or empty string on failure
+ */
 const parseCode = (response) => {
     const codeStart = '```javascript';
     const codeEnd = '```';
@@ -30,15 +43,25 @@ const parseCode = (response) => {
     const regex = /function\s+\w+\s*\([^)]*\)\s*{[^}]*}/g;
     
     if (indexStart !== -1 && indexEnd !== -1) {
+        // Find JavaScript code block
         const trimmedCode = response.substring(indexStart + codeStart.length, indexEnd).trim();
+
+        // Parse code using regex
         const parsedCode = trimmedCode.match(regex);
+
         return parsedCode;
     } else {
         return '';
     }
 }
 
-// Generate code based off the description using the Ollama API
+/**
+ * @description Generate code based off the description using the Ollama API
+ * @param description - user description of code to comprehend 
+ * @param question - code to comprehend
+ * @returns JSON of generated code from LLM
+ * @throws error on fetch failures
+ */
 const generateCode = async (description, question) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
     const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}.
@@ -52,6 +75,7 @@ const generateCode = async (description, question) => {
     console.log("Generating code from description");
 
     try {
+        // Generate code from LLM
         const response = await fetch(ollamaGenerateUrl, {
             method: "POST",
             headers: {
@@ -75,7 +99,12 @@ const generateCode = async (description, question) => {
     }
 };
 
-// Adds a user’s answer and performance to the corresponding code sample
+/**
+ * @description Adds a user’s answer and performance to the corresponding code sample
+ * @param req - request of API
+ * @param res - response of API
+ * @returns - 200 for success, 400 for failure
+ */
 exports.AddAttempt = async (req, res) => {
     // Get the description, send it to LLM, run it against the test cases
     try {
@@ -94,22 +123,22 @@ exports.AddAttempt = async (req, res) => {
         const tests = readAttemptTestsJSON();
         const test = tests.find(t => t.id == questionId);
 
+        // Generate code from LLM
         const code = await generateCode(description, question.code);
-
         if (code === undefined) {
             return res.status(400).json({message: "Error generating code from Ollama"});
         }
 
+        // Parse code from response
         const parsedCode = parseCode(code);
         console.log("Generated code: ", parsedCode);
-
         if (parsedCode === undefined || parsedCode === '') {
             return res.status(400).json({message: "Error parsing code from Ollama"});
         }
 
+        // Run test cases on generated code
         const testResults = testAttempt(parsedCode, test.testCases);
-        console.log("Test results: ", testResults)
-
+        console.log("Test results: ", testResults);
         const overallPassed = testResults.every(t => t.passed);
         const numPassed = testResults.filter(t => t.passed).length;
 
@@ -123,6 +152,7 @@ exports.AddAttempt = async (req, res) => {
             numPassed: numPassed,
         }
 
+        // Update Attempts.json for persistence
         const attempts = readAttemptsJSON();
         attempts.push(result);
         updateAttemptsJSON(attempts);
@@ -134,26 +164,36 @@ exports.AddAttempt = async (req, res) => {
     }
 };
 
-// Read Attempt-Tests.json and parse contents
+/**
+ * @description Read Attempt-Tests.json and parse contents
+ * @returns contents of Attempt-Tests.json
+ */
 const readAttemptTestsJSON = () => { 
     const filePath = path.join(__dirname, '../Attempt-Tests.json'); 
     const data = fs.readFileSync(filePath, 'utf8'); 
     return JSON.parse(data); 
 }; 
 
-// Tests the user's answer (translated into code) against pre-written test cases 
+/**
+ * @description Tests the user's answer (translated into code) against pre-written test cases 
+ * @param userCode - code that the user generates from the LLM
+ * @param testCases - test cases to run the code on
+ * @returns JSON representing the feedback from the tests
+ */
 const testAttempt = (userCode, testCases) => { 
     const feedback = testCases.map(testCase => {
         const { input, expectedOutput, successMessage, errorMessage } = testCase; // extract these fields from JSON 
         let actualOutput; 
 
-        try { // try each test case against the user's code 
+        try {
+            // Run generated code from LLM
             const func = eval(`(${userCode})`); 
             actualOutput = func(...JSON.parse(`[${input}]`)); 
         } catch (error) { 
             actualOutput = error.message; 
-        } 
+        }
 
+        // Check test case
         const passed = JSON.stringify(actualOutput) === JSON.stringify(JSON.parse(expectedOutput));   
 
         return { // return clear feedback 
@@ -168,7 +208,11 @@ const testAttempt = (userCode, testCases) => {
     return feedback;
 }; 
 
-// Gets a list of all the attempts in in the application for the username provided
+/**
+ * @description Gets a list of all the attempts in in the application for the username provided
+ * @param req - request of API
+ * @param res - response of API
+ */
 exports.GetAttemptsByUsername = (req, res) => {
     const { username } = req.params;
 

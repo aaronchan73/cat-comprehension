@@ -1,20 +1,31 @@
 const fs = require('fs');
 const path = require('path');
 
-// Read Questions.json and parse contents
+/**
+ * @description Read Questions.json and parse contents
+ * @returns contents of Questions.json
+ */
 const readQuestionsJSON = () => {
   const filePath = path.join(__dirname, '../Questions.json');
   const data = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(data);
 };
 
-// Returns all available code questions
+/**
+ * @description Returns all available code questions
+ * @param req - request of API
+ * @param res - response of API
+ */
 exports.GetQuestions = (req, res) => {
     const questions = readQuestionsJSON();
     res.status(200).json({ message: 'Questions retrieved successfully', questions });
 };
 
-// Retrieves a specific question by ID
+/**
+ * @description Retrieves a specific question by ID
+ * @param req - request of API
+ * @param res - response of API
+ */
 exports.GetQuestionsById = (req, res) => {
     const id = parseInt(req.params.id);
 
