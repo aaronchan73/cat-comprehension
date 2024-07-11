@@ -22,6 +22,9 @@ export default function KittenListPage() {
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
 
+  /**
+   * @description - useEffect to fetch users and questions when page mounts
+   */
   useEffect(() => {
     /**
      * @description - fetch users from API
@@ -52,6 +55,7 @@ export default function KittenListPage() {
 
   /**
    * @description - handle button click to fetch attempts for a selected user
+   *  @param username - username of selected user
    */
   const handleButtonClick = async (username: string) => {
     setSelectedUsername(username);
@@ -75,6 +79,7 @@ export default function KittenListPage() {
 
   /**
    * @description - get the current attempt for the selected question
+   *  @param questionId - id of the exercise
    */
   const getCurrentAttempt = (questionId: number) => {
     if (!attempts.userAttempts || attempts.userAttempts.length === 0) {
