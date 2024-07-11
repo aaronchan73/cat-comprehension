@@ -71,6 +71,7 @@ const generateCode = async (description, question) => {
         return json.response;
     } catch (error) {
         console.error(error.message);
+        throw error;
     }
 };
 
@@ -183,3 +184,12 @@ exports.GetAttemptsByUsername = (req, res) => {
         res.status(400).json({ message: 'Attempt not found' });
     }
 }
+
+// Export the helper functions for testing
+exports.readAttemptsJSON = readAttemptsJSON;
+exports.readQuestionsJSON = readQuestionsJSON;
+exports.updateAttemptsJSON = updateAttemptsJSON;
+exports.parseCode = parseCode;
+exports.generateCode = generateCode;
+exports.readAttemptTestsJSON = readAttemptTestsJSON;
+exports.testAttempt = testAttempt;
