@@ -27,7 +27,7 @@ describe('Question Controller', () => {
             ])
         };
 
-        // Stub fs.readFileSync to return the mock database
+        // Stub fs.readFileSync to return mock database
         sinon.stub(fs, 'readFileSync').callsFake((filePath, encoding) => {
             if (encoding === 'utf8') {
                 if (filePath.includes('Questions.json')) {
