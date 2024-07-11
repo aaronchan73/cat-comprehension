@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getUsers } from "../../services/users";
 import { getAttemptByUsername } from "../../services/attempts";
 import { getExercises } from "../../services/exercises";
@@ -14,6 +14,7 @@ export default function KittenListPage() {
     userAttempts: [],
     message: "",
   };
+
   const [users, setUsers] = useState<IUser[]>([]);
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
   const [attempts, setAttempts] =
@@ -21,7 +22,13 @@ export default function KittenListPage() {
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
 
+  /**
+   * @description - useEffect to fetch users and questions when page mounts
+   */
   useEffect(() => {
+    /**
+     * @description - fetch users from API
+     */
     const fetchUsers = async () => {
       try {
         const data = await getUsers();
@@ -32,6 +39,9 @@ export default function KittenListPage() {
     };
     fetchUsers();
 
+    /**
+     * @description - fetch questions from API
+     */
     const fetchQuestions = async () => {
       try {
         const data = await getExercises();
@@ -43,11 +53,14 @@ export default function KittenListPage() {
     fetchQuestions();
   }, []);
 
+  /**
+   * @description - handle button click to fetch attempts for a selected user
+   * @param username - username of selected user
+   */
   const handleButtonClick = async (username: string) => {
     setSelectedUsername(username);
     try {
       const attemptsData = await getAttemptByUsername(username);
-      console.log("DATA HERE", attemptsData);
       setAttempts(attemptsData);
       setQuestionIndex(0);
     } catch (e) {
@@ -55,15 +68,20 @@ export default function KittenListPage() {
     }
   };
 
+  /**
+   * @description - handle title click to switch to the next question
+   */
   const handleTitleClick = () => {
     if (questions.length > 0) {
       setQuestionIndex((prev) => (prev + 1) % questions.length);
     }
   };
 
+  /**
+   * @description - get the current attempt for the selected question
+   * @param questionId - id of the exercise
+   */
   const getCurrentAttempt = (questionId: number) => {
-    console.log("HERE:", attempts);
-    console.log("LENGTH:", attempts.userAttempts);
     if (!attempts.userAttempts || attempts.userAttempts.length === 0) {
       return {
         attemptId: 0,
@@ -89,7 +107,7 @@ export default function KittenListPage() {
       }
     );
   };
-
+  
   const currentQuestion = questions[questionIndex];
   const currentAttempt = currentQuestion
     ? getCurrentAttempt(currentQuestion.id)
