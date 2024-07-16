@@ -40,16 +40,11 @@ const parseCode = (response) => {
     const codeEnd = '```';
     const indexStart = response.indexOf(codeStart);
     const indexEnd = response.indexOf(codeEnd, indexStart + codeStart.length);
-    const regex = /function\s+\w+\s*\([^)]*\)\s*{[^}]*}/g;
     
     if (indexStart !== -1 && indexEnd !== -1) {
         // Find JavaScript code block
         const trimmedCode = response.substring(indexStart + codeStart.length, indexEnd).trim();
-
-        // Parse code using regex
-        const parsedCode = trimmedCode.match(regex);
-
-        return parsedCode;
+        return trimmedCode;
     } else {
         return '';
     }
