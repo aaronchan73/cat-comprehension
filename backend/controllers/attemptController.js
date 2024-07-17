@@ -64,6 +64,7 @@ const generateCode = async (description, question) => {
                             Do not call the function.
                             Do not include comments in the response.
                             Do not provide any example usage or tests.
+                            Do not include any console.log statements. If the function has a return value, ensure it is returned.
                             Only include the JavaScript code in your response.
                             Ensure the function is returned as a one-line string in the form: "function name(params) {}"
                             and properly formatted to be executed using eval.`

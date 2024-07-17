@@ -1,8 +1,11 @@
 .codeContainer {
-    font-size: 0.75em;
-    padding: 16px;
-    border-radius: 4px;
-    overflow-x: auto;
-    color: black; /* Adjust text color if needed */
-  }
-  
+  width: 90%;
+  height: 80%;
+  overflow-x: auto;
+  overflow-y: auto;
+  font-size: 0.75em;
+  padding: 16px;
+  border-radius: 4px;
+  color: black;
+  white-space: pre; 
+}
