@@ -67,7 +67,8 @@ const generateCode = async (description, question) => {
                             Do not include any console.log statements. If the function has a return value, ensure it is returned.
                             Only include the JavaScript code in your response.
                             Ensure the function is returned as a one-line string in the form: "function name(params) {}"
-                            and properly formatted to be executed using eval.`
+                            and properly formatted to be executed using eval.
+                            Ensure that all of the variables within the function are consistent.`
     console.log("Generating code from description");
 
     try {
@@ -80,7 +81,11 @@ const generateCode = async (description, question) => {
             body: JSON.stringify({
                 model: 'tinyllama',
                 prompt: generatePrompt,
-                stream: false
+                stream: false,
+                options: {
+                    top_p: 0.7,
+                    temperature: 0.7
+                }
             })
         })
         if (!response.ok) {
