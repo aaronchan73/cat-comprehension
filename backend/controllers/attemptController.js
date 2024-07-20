@@ -227,6 +227,61 @@ exports.GetAttemptsByUsername = (req, res) => {
     }
 }
 
+/**
+ * @description Generate feedback based on attempt's results using the Ollama API
+ * @param attempt - previous attempt from the user
+ * @returns JSON of generated feedback from LLM
+ * @throws error on fetch failures
+ */
+const generateFeedback = async (attempt) => {
+    const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
+    const feedbackPrompt = `Generate feedback based on the students' previous attempt: ${attempt}.`
+    console.log("Generating feedback from attempt");
+
+    try {
+        // Generate feedback from LLM
+        const response = await fetch(ollamaGenerateUrl, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: 'tinyllama',
+                prompt: feedbackPrompt,
+                stream: false
+            })
+        })
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const json = await response.json();
+        return json.response;
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+};
+
+/**
+ * @description Generate feedback based on the user's previous attempts
+ * @param req - request of API
+ * @param res - response of API
+ * @returns - 200 for success, 400 for failure
+ */
+exports.GetFeedback = async (req, res) => {
+    try {
+        const { username, attemptId } = req.params;
+
+        // Get attempt by attemptId, then run LLM and return feedback
+
+        res.status(200).json({ message: 'Feedback successfully generated' });
+    } catch(error) {
+        console.log("Adding attempt error ", error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 // Export the helper functions for testing
 exports.readAttemptsJSON = readAttemptsJSON;
 exports.readQuestionsJSON = readQuestionsJSON;
