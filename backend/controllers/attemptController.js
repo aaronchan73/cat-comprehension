@@ -233,10 +233,10 @@ exports.GetAttemptsByUsername = (req, res) => {
  * @returns JSON of generated feedback from LLM
  * @throws error on fetch failures
  */
-const generateFeedback = async (attempt) => {
+const generateFeedback = async (attempts) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
-    const feedbackPrompt = `Generate feedback based on the students' previous attempt: ${attempt}.`
-    console.log("Generating feedback from attempt");
+    const feedbackPrompt = `Generate feedback based on the students' previous attempt: ${attempts}.`
+    console.log("Generating feedback from attempts", attempts);
 
     try {
         // Generate feedback from LLM
@@ -271,11 +271,19 @@ const generateFeedback = async (attempt) => {
  */
 exports.GetFeedback = async (req, res) => {
     try {
-        const { username, attemptId } = req.params;
+        const { username, questionId } = req.params;
 
-        // Get attempt by attemptId, then run LLM and return feedback
+        // Get attempts and find the specific attempt matching the given username
+        const attempts = readAttemptsJSON();
+        const userAttempts = attempts.filter(attempt => attempt.username === username);
 
-        res.status(200).json({ message: 'Feedback successfully generated' });
+        // Filter out specific attempts by question
+        const feedbackAttempts = userAttempts.filter(attempt => attempt.questionId === questionId);
+
+        // Send feedback to LLM
+        const feedback = await generateFeedback(JSON.stringify(feedbackAttempts));
+
+        res.status(200).json({ message: 'Feedback successfully generated', feedback});
     } catch(error) {
         console.log("Adding attempt error ", error);
         res.status(500).json({ message: 'Internal server error' });
