@@ -81,7 +81,7 @@ export default function KittenListPage() {
    * @description - get the current attempt for the selected question
    * @param questionId - id of the exercise
    */
-  const getCurrentAttempt = (questionId: number) => {
+  const getCurrentAttempt = (questionId: string) => {
     if (!attempts.userAttempts || attempts.userAttempts.length === 0) {
       return {
         attemptId: 0,
@@ -110,7 +110,7 @@ export default function KittenListPage() {
   
   const currentQuestion = questions[questionIndex];
   const currentAttempt = currentQuestion
-    ? getCurrentAttempt(currentQuestion.id)
+    ? getCurrentAttempt(String(currentQuestion.id))
     : null;
 
   return (

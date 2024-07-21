@@ -66,7 +66,7 @@ export default function ExercisePage() {
             setLoading(false)
 
             if (response.message === 'Tests successfully ran') {
-                navigate(`/student/resultsPage?username=${userName}&attemptId=${response.result.attemptId}`)
+                navigate(`/student/resultsPage?username=${userName}&attemptId=${response.result.attemptId}&questionId=${questionId}`)
             } else {
                 setError('Error submitting attempt')
             }            
