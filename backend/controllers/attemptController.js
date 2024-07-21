@@ -229,7 +229,7 @@ exports.GetAttemptsByUsername = (req, res) => {
 
 /**
  * @description Generate feedback based on attempt's results using the Ollama API
- * @param attempt - previous attempt from the user
+ * @param attempts - previous attempts from the user
  * @returns JSON of generated feedback from LLM
  * @throws error on fetch failures
  */
@@ -282,6 +282,9 @@ exports.GetFeedback = async (req, res) => {
 
         // Send feedback to LLM
         const feedback = await generateFeedback(JSON.stringify(feedbackAttempts));
+        if (feedback === undefined) {
+            return res.status(400).json({message: "Error generating feedback from Ollama"});
+        }
 
         res.status(200).json({ message: 'Feedback successfully generated', feedback});
     } catch(error) {
