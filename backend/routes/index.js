@@ -13,7 +13,7 @@ router.get('/questions/:id', questionController.GetQuestionsById);
 // Attempts
 router.get('/attempts/:username', attemptController.GetAttemptsByUsername);
 router.post('/attempts/:attemptId', attemptController.AddAttempt);
-router.get('/attempts/:username/:questionId', attemptController.GetFeedback);
+router.get('/attempts/:username/:attemptId/:questionId', attemptController.GetFeedback);
 
 module.exports = router;
 
