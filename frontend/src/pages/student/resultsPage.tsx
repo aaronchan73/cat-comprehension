@@ -5,6 +5,25 @@ import { getAttemptByUsername } from '../../services/attempts'
 import { IResult } from '../../types/IResult'
 import CodeBox from '../../components/codeBox'
 
+
+const codeString = `
+/**
+ * This is a function that takes in an array of numbers and a target number,
+ * and will return a list of two indices of the numbers that sum up to the target number.
+ */
+function twoSum(nums, target) {
+  const numToIndex = {};
+  for (let index = 0; index < nums.length; index++) {
+    const complement = target - nums[index];
+    if (complement in numToIndex) {
+      return [numToIndex[complement], index];
+    }
+    numToIndex[nums[index]] = index;
+  }
+  return []; // If there are no two numbers that sum up to the target number, return an empty array
+}
+`;
+
 export default function ResultsPage() {
     const [analysis, setAnalysis] = useState<IResult>()
     const location = useLocation()
@@ -53,7 +72,7 @@ export default function ResultsPage() {
     }, [])
 
     return (
-        <div style={{display: 'flex', flexDirection: 'column',}}>
+        <div style={{ display: 'flex', flexDirection: 'column', }}>
             <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
                 <Box
                     sx={{
@@ -107,29 +126,25 @@ export default function ResultsPage() {
                         backgroundColor: '#f0f0f0',
                         marginTop: '20px',
                         width: '500px',
-                        height: '500px'
+                        height: '500px',
                     }}
                 >
-                    <div>
-                        <Box
-                            sx={{
-                                padding: '10px',
-                                borderRadius: '10px',
-                                backgroundColor: '#d3d3d3',
-                                marginBottom: '10px'
-                            }}
-                        >
-                            <Typography variant="h6">Your Code</Typography>
-
-                            <CodeBox language="python" code={code} name={null} />
-
-                        </Box>
-                    </div>
-
-
+                    <Box
+                        sx={{
+                            padding: '10px',
+                            borderRadius: '10px',
+                            backgroundColor: '#d3d3d3',
+                            width: '100%', // Set width to 100% to take the full width of the parent box
+                            maxWidth: '400px', // Set a maximum width for the inner box
+                            textAlign: 'center', // Center the text inside the inner box
+                        }}
+                    >
+                        <Typography variant="h6">Your Code</Typography>
+                        <CodeBox language="python" code={code} name={null} />
+                    </Box>
                 </Box>
             </div>
-                <Button
+            <Button
                 sx={{
                     width: '100px',
                     alignSelf: 'center',
@@ -141,7 +156,7 @@ export default function ResultsPage() {
                     }
                 }}
                 onClick={handleRetry}
-                > Retry </Button>
+            > Retry </Button>
         </div>
 
     )
