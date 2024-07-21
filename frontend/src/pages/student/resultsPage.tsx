@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { getAttemptByUsername } from '../../services/attempts'
 import { IResult } from '../../types/IResult'
 import CodeBox from '../../components/codeBox'
+import { LineChart } from '@mui/x-charts'
 
 
 const codeString = `
@@ -28,6 +29,8 @@ export default function ResultsPage() {
     const [analysis, setAnalysis] = useState<IResult>()
     const location = useLocation()
     const [code, setCode] = useState<string>('')
+    const [xAxis, setXAxis] = useState<number[]>([])
+    const [values, setValues] = useState<number[]>([])
     const navigate = useNavigate()
 
     /**
@@ -38,18 +41,30 @@ export default function ResultsPage() {
             const searchParams = new URLSearchParams(location.search);
             const username = searchParams.get('username');
             const attemptId = searchParams.get('attemptId');
+            const questionId=  searchParams.get('questionId')
 
-            console.log(username)
             const response = await getAttemptByUsername(username)
+            let xAxisValues = []
+            let yAxisValues = []
 
-            console.log(response)
+            // ensures filtered attempts of the certain question
+            console.log(response.userAttempts)
+            const filteredAttempts = response.userAttempts.filter(attempt => attempt.questionId === questionId)
+            console.log(filteredAttempts)
 
-            for (let attempt of response.userAttempts) {
+            for (var i = 0; i < filteredAttempts.length; i++) {
+
+                const attemptNumber = i + 1
+                xAxisValues.push(attemptNumber)
+                yAxisValues.push(filteredAttempts[i].numPassed)
+                const attempt = filteredAttempts[i]
                 if (attempt.attemptId === attemptId) {
                     setAnalysis(attempt)
                     setCode(attempt.generateCode)
                 }
             }
+            setXAxis(xAxisValues)
+            setValues(yAxisValues)
         } catch (e) {
             console.log(e)
         }
@@ -108,10 +123,25 @@ export default function ResultsPage() {
                                 Result: {analysis?.message}
                             </ListItem>
                             <ListItem>
-                                Test Cases Passed : {analysis?.numPassed}
+                                Attempt #: {xAxis.length}
+                            </ListItem>
+                            <ListItem>
+                                Test Cases Passed: {analysis?.numPassed}
                             </ListItem>
                         </List>
-
+                        {xAxis.length >= 2 && values.length >= 2 && <LineChart // Only render the line chart if there are at least 2 attempts - for the feedback workflow
+                            width={500}
+                            height={300}
+                            xAxis={[{ data: xAxis, label: 'Attempt Number' }]}
+                            series={[
+                                {
+                                    data: values,
+                                    label: 'Test Cases Passed',
+                                },
+                            ]}
+                            grid={{ vertical: true, horizontal: true }}
+                        >
+                        </LineChart>}
                     </div>
 
                 </Box>
@@ -158,6 +188,5 @@ export default function ResultsPage() {
                 onClick={handleRetry}
             > Retry </Button>
         </div>
-
     )
 }

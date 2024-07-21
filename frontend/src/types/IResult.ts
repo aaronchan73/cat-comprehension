@@ -2,7 +2,7 @@ export interface IResult {
   success: boolean;
   message: string;
   attemptId: string;
-  questionId: number;
+  questionId: string;
   generateCode: string;
   numPassed: number;
   username: string;
