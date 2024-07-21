@@ -1,7 +1,7 @@
 import { Box, Button, List, ListItem, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { getAttemptByUsername } from '../../services/attempts'
+import { getAttemptByUsername, generateFeedback } from '../../services/attempts'
 import { IResult } from '../../types/IResult'
 import CodeBox from '../../components/codeBox'
 import { LineChart } from '@mui/x-charts'
@@ -31,6 +31,10 @@ export default function ResultsPage() {
     const [code, setCode] = useState<string>('')
     const [xAxis, setXAxis] = useState<number[]>([])
     const [values, setValues] = useState<number[]>([])
+    const [loadingFeedback, setLoadingFeedback] = useState<boolean>(false)
+    const [feedback, setFeedback] = useState<string>('')
+    const [errorFeedback, setErrorFeedback] = useState<string>('')
+
     const navigate = useNavigate()
 
     /**
@@ -41,7 +45,7 @@ export default function ResultsPage() {
             const searchParams = new URLSearchParams(location.search);
             const username = searchParams.get('username');
             const attemptId = searchParams.get('attemptId');
-            const questionId=  searchParams.get('questionId')
+            const questionId = searchParams.get('questionId')
 
             const response = await getAttemptByUsername(username)
             let xAxisValues = []
@@ -69,6 +73,24 @@ export default function ResultsPage() {
             console.log(e)
         }
     }
+
+    const getFeedback = async () => {
+        try {
+          setLoadingFeedback(true);
+          const response = await generateFeedback(analysis);
+      
+          if (response.message) {
+            setFeedback(response.message);
+          } else {
+            setErrorFeedback('Error generating feedback');
+          }
+        } catch (e) {
+          console.log(e);
+          setErrorFeedback('Error generating feedback');
+        } finally {
+          setLoadingFeedback(false);
+        }
+      };
 
     /** 
      * @description - Function to navigate to the exercise page with same username when retry button is clicked
@@ -113,35 +135,41 @@ export default function ResultsPage() {
                                 marginBottom: '10px'
                             }}
                         >
-                            <Typography variant="h6">Analysis</Typography>
+                            <Typography variant="h6">{loadingFeedback ? 'FeedbacK' : 'Analysis'}</Typography>
                         </Box>
-                        <List>
-                            <ListItem>
-                                User: {analysis?.username}
-                            </ListItem>
-                            <ListItem>
-                                Result: {analysis?.message}
-                            </ListItem>
-                            <ListItem>
-                                Attempt #: {xAxis.length}
-                            </ListItem>
-                            <ListItem>
-                                Test Cases Passed: {analysis?.numPassed}
-                            </ListItem>
-                        </List>
-                        {xAxis.length >= 2 && values.length >= 2 && <LineChart // Only render the line chart if there are at least 2 attempts - for the feedback workflow
-                            width={500}
-                            height={300}
-                            xAxis={[{ data: xAxis, label: 'Attempt Number' }]}
-                            series={[
-                                {
-                                    data: values,
-                                    label: 'Test Cases Passed',
-                                },
-                            ]}
-                            grid={{ vertical: true, horizontal: true }}
-                        >
-                        </LineChart>}
+                        {loadingFeedback && <Typography variant="h6"> Generating Feedback...</Typography>}
+                        {!feedback ? <>
+                            <List>
+                                <ListItem>
+                                    User: {analysis?.username}
+                                </ListItem>
+                                <ListItem>
+                                    Result: {analysis?.message}
+                                </ListItem>
+                                <ListItem>
+                                    Attempt #: {xAxis.length}
+                                </ListItem>
+                                <ListItem>
+                                    Test Cases Passed: {analysis?.numPassed}
+                                </ListItem>
+                            </List>
+                            {xAxis.length >= 2 && values.length >= 2 && <LineChart // Only render the line chart if there are at least 2 attempts - for the feedback workflow
+                                width={500}
+                                height={300}
+                                xAxis={[{ data: xAxis, label: 'Attempt Number' }]}
+                                series={[
+                                    {
+                                        data: values,
+                                        label: 'Test Cases Passed',
+                                    },
+                                ]}
+                                grid={{ vertical: true, horizontal: true }}
+                            >
+                            </LineChart>}
+                            {!analysis?.success && <Button onClick={getFeedback}>Generate Feedback</Button>}
+                        </> :
+                        <Typography variant="h6">AI Generated Feedback: {feedback}</Typography>
+                        }
                     </div>
 
                 </Box>
@@ -186,7 +214,7 @@ export default function ResultsPage() {
                     }
                 }}
                 onClick={handleRetry}
-            > Retry </Button>
+            > {analysis?.success ? 'Try New Exercise' : 'Retry'} </Button>
         </div>
     )
 }

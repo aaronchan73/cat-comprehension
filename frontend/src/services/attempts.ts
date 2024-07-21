@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { IAddAttemptResponse } from '../types/AddAttempt'
 import { IGetAttemptByUsername } from '../types/IGetAttemptByUsername'
+import { IResult } from '../types/IResult'
 
 /**
  * @description - Service for adding an attempt to the db
@@ -48,5 +49,33 @@ export const getAttemptByUsername = async (username: string | null) => {
         return data as IGetAttemptByUsername
     } catch (e) {
         throw new Error('Error getting attempt by username')
+    }
+}
+
+/**
+ * 
+ * @param attempt - IResult object
+ * @returns 
+ */
+export const generateFeedback = async (attempt: IResult | undefined) => {
+    try {
+        if (!attempt) {
+            throw new Error('Attempt is undefined')
+        }
+
+        const response = await 
+        fetch(`http://localhost:8080/api/attempts/${attempt.username}/${attempt.attemptId}/${attempt.questionId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        const data = await response.json()
+        
+        console.log(data)
+        return data
+    } catch (e) {
+        throw new Error('Error getting feedback for attempt')
     }
 }
