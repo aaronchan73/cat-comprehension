@@ -93,9 +93,16 @@ export default function KittenListPage() {
       };
     }
 
-    const attempt = attempts.userAttempts.find(
-      (a) => a.questionId === questionId
-    );
+    // const attempt = attempts.userAttempts.find(
+    //   (a) => a.questionId === questionId
+    // );
+    let attempt = null;
+    for (let i = 0; i < attempts.userAttempts.length; i++) {
+      if (attempts.userAttempts[i].questionId === questionId) {
+        attempt = attempts.userAttempts[i];
+        break;
+      }
+    }
     return (
       attempt || {
         attemptId: 0,
@@ -107,10 +114,10 @@ export default function KittenListPage() {
       }
     );
   };
-  
+
   const currentQuestion = questions[questionIndex];
   const currentAttempt = currentQuestion
-    ? getCurrentAttempt(String(currentQuestion.id))
+    ? getCurrentAttempt(currentQuestion.id.toString())
     : null;
 
   return (
