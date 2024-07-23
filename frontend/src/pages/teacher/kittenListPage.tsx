@@ -3,13 +3,12 @@ import { getUsers } from "../../services/users";
 import { getAttemptByUsername } from "../../services/attempts";
 import { getExercises } from "../../services/exercises";
 import "../../styles/kittenListPage.css";
-import { Button, Box, IconButton,Typography  } from "@mui/material";
+import { Button, Box} from "@mui/material";
 import { IUser } from "../../types/IUser";
 import { IQuestion } from "../../types/IQuestion";
 import CodeBox from "../../components/codeBox";
 import { IGetAttemptByUsername } from "../../types/IGetAttemptByUsername";
 import { IResult } from "../../types/IResult";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 export default function KittenListPage() {
   const initialAttemptState: IGetAttemptByUsername = {
@@ -85,49 +84,6 @@ export default function KittenListPage() {
       updateCurrentAttempts(newIndex, attempts, questions);
     }
   };
-
-  // /**
-  //  * @description - get the current attempt for the selected question
-  //  * @param questionId - id of the exercise
-  //  */
-  // const getCurrentAttempt = (questionId: string) => {
-  //   if (!attempts.userAttempts || attempts.userAttempts.length === 0) {
-  //     return {
-  //       attemptId: 0,
-  //       questionId,
-  //       username: selectedUsername || "",
-  //       description: "",
-  //       generateCode: "",
-  //       numPassed: 0,
-  //     };
-  //   }
-
-  //   // const attempt = attempts.userAttempts.find(
-  //   //   (a) => a.questionId === questionId
-  //   // );
-  //   let attempt = null;
-  //   for (let i = 0; i < attempts.userAttempts.length; i++) {
-  //     if (attempts.userAttempts[i].questionId === questionId) {
-  //       attempt = attempts.userAttempts[i];
-  //       break;
-  //     }
-  //   }
-  //   return (
-  //     attempt || {
-  //       attemptId: 0,
-  //       questionId,
-  //       username: selectedUsername || "",
-  //       description: "",
-  //       generateCode: "",
-  //       numPassed: 0,
-  //     }
-  //   );
-  // };
-
-  // const currentQuestion = questions[questionIndex];
-  // const currentAttempt = currentQuestion
-  //   ? getCurrentAttempt(currentQuestion.id.toString())
-  //   : null;
 
   const updateCurrentAttempts = (
     newQuestionIndex: number,
@@ -255,13 +211,6 @@ export default function KittenListPage() {
                       name={null}
                     />
                   )}
-                  {/* <IconButton
-                    onClick={handleNextAttempt}
-                    disabled={currentAttempts.length <= 1}
-                    sx={{ marginLeft: "10px" }}
-                  >
-                    <ArrowRightIcon />
-                  </IconButton> */}
                 </Box>
                 <Button
                     onClick={handleNextAttempt}
