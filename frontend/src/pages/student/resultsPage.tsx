@@ -76,21 +76,26 @@ export default function ResultsPage() {
 
     const getFeedback = async () => {
         try {
-          setLoadingFeedback(true);
-          const response = await generateFeedback(analysis);
-      
-          if (response.message) {
-            setFeedback(response.message);
-          } else {
-            setErrorFeedback('Error generating feedback');
-          }
+            setLoadingFeedback(true);
+            const response = await generateFeedback(analysis);
+
+            if (response.message) {
+                setFeedback(response.message);
+                setLoadingFeedback(false);
+                navigate('/student/feedbackPage', {
+                    state: { feedback: feedback }
+                });
+            } else {
+                setErrorFeedback('Error generating feedback');
+                setLoadingFeedback(false);
+            }
         } catch (e) {
-          console.log(e);
-          setErrorFeedback('Error generating feedback');
+            console.log(e);
+            setErrorFeedback('Error generating feedback');
         } finally {
-          setLoadingFeedback(false);
+            setLoadingFeedback(false);
         }
-      };
+    };
 
     /** 
      * @description - Function to navigate to the exercise page with same username when retry button is clicked
@@ -135,41 +140,36 @@ export default function ResultsPage() {
                                 marginBottom: '10px'
                             }}
                         >
-                            <Typography variant="h6">{loadingFeedback ? 'FeedbacK' : 'Analysis'}</Typography>
+                            <Typography variant="h6">Analysis</Typography>
                         </Box>
-                        {loadingFeedback && <Typography variant="h6"> Generating Feedback...</Typography>}
-                        {!feedback ? <>
-                            <List>
-                                <ListItem>
-                                    User: {analysis?.username}
-                                </ListItem>
-                                <ListItem>
-                                    Result: {analysis?.message}
-                                </ListItem>
-                                <ListItem>
-                                    Attempt #: {xAxis.length}
-                                </ListItem>
-                                <ListItem>
-                                    Test Cases Passed: {analysis?.numPassed}
-                                </ListItem>
-                            </List>
-                            {xAxis.length >= 2 && values.length >= 2 && <LineChart // Only render the line chart if there are at least 2 attempts - for the feedback workflow
-                                width={500}
-                                height={300}
-                                xAxis={[{ data: xAxis, label: 'Attempt Number' }]}
-                                series={[
-                                    {
-                                        data: values,
-                                        label: 'Test Cases Passed',
-                                    },
-                                ]}
-                                grid={{ vertical: true, horizontal: true }}
-                            >
-                            </LineChart>}
-                            {!analysis?.success && <Button onClick={getFeedback}>Generate Feedback</Button>}
-                        </> :
-                        <Typography variant="h6">AI Generated Feedback: {feedback}</Typography>
-                        }
+                        <List>
+                            <ListItem>
+                                User: {analysis?.username}
+                            </ListItem>
+                            <ListItem>
+                                Result: {analysis?.message}
+                            </ListItem>
+                            <ListItem>
+                                Attempt #: {xAxis.length}
+                            </ListItem>
+                            <ListItem>
+                                Test Cases Passed: {analysis?.numPassed}
+                            </ListItem>
+                        </List>
+                        {xAxis.length >= 2 && values.length >= 2 && <LineChart // Only render the line chart if there are at least 2 attempts - for the feedback workflow
+                            width={500}
+                            height={300}
+                            xAxis={[{ data: xAxis, label: 'Attempt Number' }]}
+                            series={[
+                                {
+                                    data: values,
+                                    label: 'Test Cases Passed',
+                                },
+                            ]}
+                            grid={{ vertical: true, horizontal: true }}
+                        >
+                        </LineChart>}
+                        {!analysis?.success && <Button onClick={getFeedback}>{loadingFeedback ? 'Generating...' : 'Generate Feedback'}</Button>}
                     </div>
 
                 </Box>
@@ -214,7 +214,7 @@ export default function ResultsPage() {
                     }
                 }}
                 onClick={handleRetry}
-            > {analysis?.success ? 'Try New Exercise' : 'Retry'} </Button>
+            > Try New Exercise</Button>
         </div>
     )
 }
