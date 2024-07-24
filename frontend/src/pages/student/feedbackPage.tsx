@@ -6,13 +6,16 @@ export default function FeedbackPage() {
     const location = useLocation()
     const navigate = useNavigate()
     const [feedback, setFeedback] = useState<string>('No feedback available')
-
+    
     useEffect(() => {
         if (location.state && location.state.feedback) {
             setFeedback(location.state.feedback)
         }
     }, [location.state])
 
+    /**
+     * @description - Function to handle retry button click
+     */
     const handleRetry = () => {
         const searchParams = new URLSearchParams(location.search)
         const username = searchParams.get('username')
@@ -41,9 +44,9 @@ export default function FeedbackPage() {
                         padding: '10px',
                         borderRadius: '10px',
                         backgroundColor: '#d3d3d3',
-                        width: '100%', // Set width to 100% to take the full width of the parent box
-                        maxWidth: '400px', // Set a maximum width for the inner box
-                        textAlign: 'left', // Center the text inside the inner box
+                        width: '100%', 
+                        maxWidth: '400px', 
+                        textAlign: 'left', 
                         height: '90%',
                     }}
                 >

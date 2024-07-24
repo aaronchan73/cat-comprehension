@@ -32,7 +32,6 @@ export default function ResultsPage() {
     const [xAxis, setXAxis] = useState<number[]>([])
     const [values, setValues] = useState<number[]>([])
     const [loadingFeedback, setLoadingFeedback] = useState<boolean>(false)
-    const [username, setUsername] = useState<string>('')
     const [feedback, setFeedback] = useState<string>('')
     const [errorFeedback, setErrorFeedback] = useState<string>('')
 
@@ -75,6 +74,9 @@ export default function ResultsPage() {
         }
     }
 
+    /**
+     * @description - Function to generate feedback and navigate to feedback page
+     */
     const getFeedback = async () => {
         try {
             setLoadingFeedback(true);
@@ -100,6 +102,10 @@ export default function ResultsPage() {
         }
     };
 
+    /**
+     * 
+     * @returns username from the URL
+     */
     const getUsername = () => {
         const searchParams = new URLSearchParams(location.search);
         const username = searchParams.get('username');
@@ -201,9 +207,9 @@ export default function ResultsPage() {
                             padding: '10px',
                             borderRadius: '10px',
                             backgroundColor: '#d3d3d3',
-                            width: '100%', // Set width to 100% to take the full width of the parent box
-                            maxWidth: '400px', // Set a maximum width for the inner box
-                            textAlign: 'center', // Center the text inside the inner box
+                            width: '100%', 
+                            maxWidth: '400px', 
+                            textAlign: 'center', 
                         }}
                     >
                         <Typography variant="h6">Your Code</Typography>
