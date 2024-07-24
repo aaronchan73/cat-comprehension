@@ -1,3 +1,4 @@
-export interface IFeedbackPageProps {
-    feedback: string 
+export interface IFeedbackResponse {
+    message: string,
+    feedback: string
 }

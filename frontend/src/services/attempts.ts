@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { IAddAttemptResponse } from '../types/AddAttempt'
 import { IGetAttemptByUsername } from '../types/IGetAttemptByUsername'
 import { IResult } from '../types/IResult'
+import { IFeedbackResponse } from '../types/IFeedbackProps'
 
 /**
  * @description - Service for adding an attempt to the db
@@ -71,9 +72,8 @@ export const generateFeedback = async (attempt: IResult | undefined) => {
             }
         })
 
-        const data = await response.json()
+        const data = await response.json() as IFeedbackResponse
         
-        console.log(data)
         return data
     } catch (e) {
         throw new Error('Error getting feedback for attempt')

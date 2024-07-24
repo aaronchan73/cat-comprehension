@@ -32,6 +32,7 @@ export default function ResultsPage() {
     const [xAxis, setXAxis] = useState<number[]>([])
     const [values, setValues] = useState<number[]>([])
     const [loadingFeedback, setLoadingFeedback] = useState<boolean>(false)
+    const [username, setUsername] = useState<string>('')
     const [feedback, setFeedback] = useState<string>('')
     const [errorFeedback, setErrorFeedback] = useState<string>('')
 
@@ -79,11 +80,13 @@ export default function ResultsPage() {
             setLoadingFeedback(true);
             const response = await generateFeedback(analysis);
 
-            if (response.message) {
-                setFeedback(response.message);
+            if (response.feedback) {
+                setFeedback(response.feedback);
                 setLoadingFeedback(false);
-                navigate('/student/feedbackPage', {
-                    state: { feedback: feedback }
+                const username = getUsername()
+                
+                navigate(`/student/feedbackPage?username=${username}`, {
+                    state: { feedback: response.feedback }
                 });
             } else {
                 setErrorFeedback('Error generating feedback');
@@ -97,12 +100,18 @@ export default function ResultsPage() {
         }
     };
 
+    const getUsername = () => {
+        const searchParams = new URLSearchParams(location.search);
+        const username = searchParams.get('username');
+
+        return username
+    }
+
     /** 
      * @description - Function to navigate to the exercise page with same username when retry button is clicked
     */
     const handleRetry = () => {
-        const searchParams = new URLSearchParams(location.search);
-        const username = searchParams.get('username');
+        const username = getUsername()
         navigate(`/student/exercisePage?username=${username}`)
     }
 
@@ -204,7 +213,7 @@ export default function ResultsPage() {
             </div>
             <Button
                 sx={{
-                    width: '100px',
+                    width: '200px',
                     alignSelf: 'center',
                     marginTop: '20px',
                     backgroundColor: '#f0f0f0',
