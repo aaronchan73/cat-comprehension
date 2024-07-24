@@ -2,9 +2,6 @@ import { Box, Button, List, ListItem, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-
-const sampleFeedback = `Sure, I can explain dick can be improved based on the given test cases. Here are some potential improvements: Test Cases: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] 1. Adding additional test cases to cover various input scenarios: - Test case 1: nums = [1,2,3], target = 6 TwoSum(nums, target) => [[1,0],[2,1],[3,2]] - Test case 2: nums = [4,9,1,2,3], target = 8 TwoSum(nums, target) => [[9,0],[1,1],[2,2],[3,3]] - Test case 3: nums = [-1,-2,3,4], target = 6 TwoSum(nums, target) => [] Testing the function under these additional test cases will ensure that it handles different input scenarios and does not break when faced with unexpected situations.`
-
 export default function FeedbackPage() {
     const location = useLocation()
     const navigate = useNavigate()
