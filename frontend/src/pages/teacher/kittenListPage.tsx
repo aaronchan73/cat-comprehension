@@ -85,6 +85,12 @@ export default function KittenListPage() {
     }
   };
 
+  /**
+ * @description - Update the current attempts based on the selected question index
+ * @param newQuestionIndex - The index of the newly selected question
+ * @param attemptsData - The data of user attempts
+ * @param questionsData - The list of questions
+ */
   const updateCurrentAttempts = (
     newQuestionIndex: number,
     attemptsData: IGetAttemptByUsername,
@@ -102,6 +108,9 @@ export default function KittenListPage() {
     }
   };
 
+  /**
+ * @description - Handle click to switch to the next attempt
+ */
   const handleNextAttempt = () => {
     if (currentAttempts.length > 0) {
       setAttemptIndex((prev) => (prev + 1) % currentAttempts.length);
