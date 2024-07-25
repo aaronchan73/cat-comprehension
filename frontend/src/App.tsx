@@ -5,6 +5,7 @@ import CatNamePage from "./pages/student/catNamePage"; // Import your target pag
 import ExercisePage from "./pages/student/exercisePage";
 import KittenListPage from "./pages/teacher/kittenListPage";
 import ResultsPage from "./pages/student/resultsPage";
+import FeedbackPage from "./pages/student/feedbackPage";
 
 /**
  * @description - Routing for application
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/student/exercisePage" element={<ExercisePage />} />
           <Route path="/student/resultsPage" element={<ResultsPage />} />
           <Route path="/teacher/kittenListPage" element={<KittenListPage />} />
+          <Route path="/student/feedBackPage" element={<FeedbackPage />} />
         </Routes>
       </div>
     </Router>

@@ -1,7 +1,7 @@
 import { Box, Button, List, ListItem, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { getAttemptByUsername } from '../../services/attempts'
+import { getAttemptByUsername, generateFeedback } from '../../services/attempts'
 import { IResult } from '../../types/IResult'
 import CodeBox from '../../components/codeBox'
 import { LineChart } from '@mui/x-charts'
@@ -31,6 +31,10 @@ export default function ResultsPage() {
     const [code, setCode] = useState<string>('')
     const [xAxis, setXAxis] = useState<number[]>([])
     const [values, setValues] = useState<number[]>([])
+    const [loadingFeedback, setLoadingFeedback] = useState<boolean>(false)
+    const [feedback, setFeedback] = useState<string>('')
+    const [errorFeedback, setErrorFeedback] = useState<string>('')
+
     const navigate = useNavigate()
 
     /**
@@ -41,7 +45,7 @@ export default function ResultsPage() {
             const searchParams = new URLSearchParams(location.search);
             const username = searchParams.get('username');
             const attemptId = searchParams.get('attemptId');
-            const questionId=  searchParams.get('questionId')
+            const questionId = searchParams.get('questionId')
 
             const response = await getAttemptByUsername(username)
             let xAxisValues = []
@@ -70,12 +74,50 @@ export default function ResultsPage() {
         }
     }
 
+    /**
+     * @description - Function to generate feedback and navigate to feedback page
+     */
+    const getFeedback = async () => {
+        try {
+            setLoadingFeedback(true);
+            const response = await generateFeedback(analysis);
+
+            if (response.feedback) {
+                setFeedback(response.feedback);
+                setLoadingFeedback(false);
+                const username = getUsername()
+                
+                navigate(`/student/feedbackPage?username=${username}`, {
+                    state: { feedback: response.feedback }
+                });
+            } else {
+                setErrorFeedback('Error generating feedback');
+                setLoadingFeedback(false);
+            }
+        } catch (e) {
+            console.log(e);
+            setErrorFeedback('Error generating feedback');
+        } finally {
+            setLoadingFeedback(false);
+        }
+    };
+
+    /**
+     * 
+     * @returns username from the URL
+     */
+    const getUsername = () => {
+        const searchParams = new URLSearchParams(location.search);
+        const username = searchParams.get('username');
+
+        return username
+    }
+
     /** 
      * @description - Function to navigate to the exercise page with same username when retry button is clicked
     */
     const handleRetry = () => {
-        const searchParams = new URLSearchParams(location.search);
-        const username = searchParams.get('username');
+        const username = getUsername()
         navigate(`/student/exercisePage?username=${username}`)
     }
 
@@ -142,6 +184,7 @@ export default function ResultsPage() {
                             grid={{ vertical: true, horizontal: true }}
                         >
                         </LineChart>}
+                        {!analysis?.success && <Button onClick={getFeedback}>{loadingFeedback ? 'Generating...' : 'Generate Feedback'}</Button>}
                     </div>
 
                 </Box>
@@ -164,9 +207,9 @@ export default function ResultsPage() {
                             padding: '10px',
                             borderRadius: '10px',
                             backgroundColor: '#d3d3d3',
-                            width: '100%', // Set width to 100% to take the full width of the parent box
-                            maxWidth: '400px', // Set a maximum width for the inner box
-                            textAlign: 'center', // Center the text inside the inner box
+                            width: '100%', 
+                            maxWidth: '400px', 
+                            textAlign: 'center', 
                         }}
                     >
                         <Typography variant="h6">Your Code</Typography>
@@ -176,7 +219,7 @@ export default function ResultsPage() {
             </div>
             <Button
                 sx={{
-                    width: '100px',
+                    width: '200px',
                     alignSelf: 'center',
                     marginTop: '20px',
                     backgroundColor: '#f0f0f0',
@@ -186,7 +229,7 @@ export default function ResultsPage() {
                     }
                 }}
                 onClick={handleRetry}
-            > Retry </Button>
+            > Try New Exercise</Button>
         </div>
     )
 }
