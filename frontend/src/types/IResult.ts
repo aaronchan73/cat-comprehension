@@ -1,3 +1,5 @@
+import { ITestCase } from "./ITestCase";
+
 export interface IResult {
   success: boolean;
   message: string;
@@ -6,4 +8,5 @@ export interface IResult {
   generateCode: string;
   numPassed: number;
   username: string;
+  testResults: ITestCase[];
 }

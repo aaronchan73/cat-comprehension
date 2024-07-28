@@ -22,7 +22,7 @@ export default function LoginPage() {
         if (user === undefined) {
             setError('User not found. Please sign up first.');
         } else {
-            setSuccess(response.message + ': Redirecting to exercise page...');
+            setSuccess('Login successful! Redirecting to exercise page...');
             setTimeout(() => { navigate(`/student/exercisePage?username=${catName}`); }, 3000);
         }
     }
