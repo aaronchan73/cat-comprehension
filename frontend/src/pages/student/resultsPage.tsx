@@ -5,6 +5,7 @@ import { getAttemptByUsername, generateFeedback } from '../../services/attempts'
 import { IResult } from '../../types/IResult'
 import CodeBox from '../../components/codeBox'
 import { LineChart } from '@mui/x-charts'
+import { ITestCase } from '../../types/ITestCase'
 
 
 const codeString = `
@@ -13,17 +14,17 @@ const codeString = `
  * and will return a list of two indices of the numbers that sum up to the target number.
  */
 function twoSum(nums, target) {
-  const numToIndex = {};
-  for (let index = 0; index < nums.length; index++) {
-    const complement = target - nums[index];
+  const numToIndex = {}
+  for (let index = 0 index < nums.length index++) {
+    const complement = target - nums[index]
     if (complement in numToIndex) {
-      return [numToIndex[complement], index];
+      return [numToIndex[complement], index]
     }
-    numToIndex[nums[index]] = index;
+    numToIndex[nums[index]] = index
   }
-  return []; // If there are no two numbers that sum up to the target number, return an empty array
+  return [] // If there are no two numbers that sum up to the target number, return an empty array
 }
-`;
+`
 
 export default function ResultsPage() {
     const [analysis, setAnalysis] = useState<IResult>()
@@ -32,6 +33,7 @@ export default function ResultsPage() {
     const [xAxis, setXAxis] = useState<number[]>([])
     const [values, setValues] = useState<number[]>([])
     const [loadingFeedback, setLoadingFeedback] = useState<boolean>(false)
+    const [testCases, setTestCases] = useState<ITestCase[]>([])
     const [feedback, setFeedback] = useState<string>('')
     const [errorFeedback, setErrorFeedback] = useState<string>('')
 
@@ -42,9 +44,9 @@ export default function ResultsPage() {
      */
     const getAttempt = async () => {
         try {
-            const searchParams = new URLSearchParams(location.search);
-            const username = searchParams.get('username');
-            const attemptId = searchParams.get('attemptId');
+            const searchParams = new URLSearchParams(location.search)
+            const username = searchParams.get('username')
+            const attemptId = searchParams.get('attemptId')
             const questionId = searchParams.get('questionId')
 
             const response = await getAttemptByUsername(username)
@@ -65,6 +67,7 @@ export default function ResultsPage() {
                 if (attempt.attemptId === attemptId) {
                     setAnalysis(attempt)
                     setCode(attempt.generateCode)
+                    setTestCases(attempt.testResults)
                 }
             }
             setXAxis(xAxisValues)
@@ -79,46 +82,57 @@ export default function ResultsPage() {
      */
     const getFeedback = async () => {
         try {
-            setLoadingFeedback(true);
-            const response = await generateFeedback(analysis);
+            setLoadingFeedback(true)
+            const response = await generateFeedback(analysis)
 
             if (response.feedback) {
-                setFeedback(response.feedback);
-                setLoadingFeedback(false);
-                const username = getUsername()
-                
+                setFeedback(response.feedback)
+                setLoadingFeedback(false)
+                const username = getSearchParams().username
+
                 navigate(`/student/feedbackPage?username=${username}`, {
                     state: { feedback: response.feedback }
-                });
+                })
             } else {
-                setErrorFeedback('Error generating feedback');
-                setLoadingFeedback(false);
+                setErrorFeedback('Error generating feedback')
+                setLoadingFeedback(false)
             }
         } catch (e) {
-            console.log(e);
-            setErrorFeedback('Error generating feedback');
+            console.log(e)
+            setErrorFeedback('Error generating feedback')
         } finally {
-            setLoadingFeedback(false);
+            setLoadingFeedback(false)
         }
-    };
+    }
+
+    const handleTestCases = () => {
+        const searchParams = getSearchParams()
+        const userTestCases = { username: searchParams.username, testCases: testCases, questionId: searchParams.questionId, attemptId: searchParams.attemptId }
+        navigate(`/student/testCasesPage`, {
+            state: userTestCases
+        })
+    }
+
 
     /**
      * 
      * @returns username from the URL
      */
-    const getUsername = () => {
-        const searchParams = new URLSearchParams(location.search);
-        const username = searchParams.get('username');
+    const getSearchParams = () => {
+        const searchParams = new URLSearchParams(location.search)
+        const username = searchParams.get('username')
+        const attemptId = searchParams.get('attemptId')
+        const questionId = searchParams.get('questionId')
 
-        return username
+        return { username, attemptId, questionId }
     }
 
     /** 
      * @description - Function to navigate to the exercise page with same username when retry button is clicked
     */
     const handleRetry = () => {
-        const username = getUsername()
-        navigate(`/student/exercisePage?username=${username}`)
+        const searchParams = getSearchParams()
+        navigate(`/student/exercisePage?username=${searchParams.username}`)
     }
 
     /**
@@ -143,7 +157,7 @@ export default function ResultsPage() {
                         marginTop: '20px',
                         marginRight: '20px',
                         width: '500px',
-                        height: '500px',
+                        height: '600px',
                     }}
                 >
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -155,7 +169,7 @@ export default function ResultsPage() {
                                 marginBottom: '10px'
                             }}
                         >
-                            <Typography variant="h6">Analysis</Typography>
+                            <Typography variant="h6" style={{ textAlign: 'center' }}>Analysis</Typography>
                         </Box>
                         <List>
                             <ListItem>
@@ -167,9 +181,7 @@ export default function ResultsPage() {
                             <ListItem>
                                 Attempt #: {xAxis.length}
                             </ListItem>
-                            <ListItem>
-                                Test Cases Passed: {analysis?.numPassed}
-                            </ListItem>
+                            <Button onClick={handleTestCases} disabled={loadingFeedback}>Test Cases Passed: {analysis?.numPassed}</Button>
                         </List>
                         {xAxis.length >= 2 && values.length >= 2 && <LineChart // Only render the line chart if there are at least 2 attempts - for the feedback workflow
                             width={500}
@@ -184,7 +196,14 @@ export default function ResultsPage() {
                             grid={{ vertical: true, horizontal: true }}
                         >
                         </LineChart>}
-                        {!analysis?.success && <Button onClick={getFeedback}>{loadingFeedback ? 'Generating...' : 'Generate Feedback'}</Button>}
+                        {!analysis?.success &&
+                            <Button
+                                onClick={getFeedback}
+                                disabled={loadingFeedback}
+                                style={{
+                                    width: '200px',
+                                }}
+                            >{loadingFeedback ? 'Generating...' : 'Generate Feedback'}</Button>}
                     </div>
 
                 </Box>
@@ -199,7 +218,7 @@ export default function ResultsPage() {
                         backgroundColor: '#f0f0f0',
                         marginTop: '20px',
                         width: '500px',
-                        height: '500px',
+                        height: '600px',
                     }}
                 >
                     <Box
@@ -207,9 +226,9 @@ export default function ResultsPage() {
                             padding: '10px',
                             borderRadius: '10px',
                             backgroundColor: '#d3d3d3',
-                            width: '100%', 
-                            maxWidth: '400px', 
-                            textAlign: 'center', 
+                            width: '100%',
+                            maxWidth: '400px',
+                            textAlign: 'center',
                         }}
                     >
                         <Typography variant="h6">Your Code</Typography>
@@ -218,6 +237,7 @@ export default function ResultsPage() {
                 </Box>
             </div>
             <Button
+                disabled={loadingFeedback}
                 sx={{
                     width: '200px',
                     alignSelf: 'center',

@@ -184,7 +184,7 @@ const readAttemptTestsJSON = () => {
  */
 const testAttempt = (userCode, testCases) => { 
     const feedback = testCases.map(testCase => {
-        const { input, expectedOutput, successMessage, errorMessage } = testCase; // extract these fields from JSON 
+        const { test, input, expectedOutput, successMessage, errorMessage } = testCase; // extract these fields from JSON 
         let actualOutput; 
 
         try {
@@ -199,6 +199,7 @@ const testAttempt = (userCode, testCases) => {
         const passed = JSON.stringify(actualOutput) === JSON.stringify(JSON.parse(expectedOutput));   
 
         return { // return clear feedback 
+            test,
             input, 
             expectedOutput, 
             actualOutput, 

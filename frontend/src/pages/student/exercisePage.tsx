@@ -147,7 +147,7 @@ export default function ExercisePage() {
                             padding: '10px',
                         }}
                     >
-                        {loading? 'Loading...' : 'Submit Attempt'}
+                        {loading? 'Running Test Cases...' : 'Submit Attempt'}
                     </Button>
                     {error && <Alert severity="error">{error}</Alert>}
                     
