@@ -3,12 +3,13 @@ import { getUsers } from "../../services/users";
 import { getAttemptByUsername } from "../../services/attempts";
 import { getExercises } from "../../services/exercises";
 import "../../styles/kittenListPage.css";
-import { Button, Box} from "@mui/material";
+import { Button, Box } from "@mui/material";
 import { IUser } from "../../types/IUser";
 import { IQuestion } from "../../types/IQuestion";
 import CodeBox from "../../components/codeBox";
 import { IGetAttemptByUsername } from "../../types/IGetAttemptByUsername";
 import { IResult } from "../../types/IResult";
+import { LineChart } from '@mui/x-charts';
 
 export default function KittenListPage() {
   const initialAttemptState: IGetAttemptByUsername = {
@@ -18,20 +19,18 @@ export default function KittenListPage() {
 
   const [users, setUsers] = useState<IUser[]>([]);
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
-  const [attempts, setAttempts] =
-    useState<IGetAttemptByUsername>(initialAttemptState);
+  const [attempts, setAttempts] = useState<IGetAttemptByUsername>(initialAttemptState);
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [attemptIndex, setAttemptIndex] = useState<number>(0);
   const [currentAttempts, setCurrentAttempts] = useState<IResult[]>([]);
+  const [xAxis, setXAxis] = useState<number[]>([]);
+  const [values, setValues] = useState<number[]>([]);
 
-  /**
+   /**
    * @description - useEffect to fetch users and questions when page mounts
    */
   useEffect(() => {
-    /**
-     * @description - fetch users from API
-     */
     const fetchUsers = async () => {
       try {
         const data = await getUsers();
@@ -42,7 +41,7 @@ export default function KittenListPage() {
     };
     fetchUsers();
 
-    /**
+     /**
      * @description - fetch questions from API
      */
     const fetchQuestions = async () => {
@@ -56,7 +55,7 @@ export default function KittenListPage() {
     fetchQuestions();
   }, []);
 
-  /**
+   /**
    * @description - handle button click to fetch attempts for a selected user
    * @param username - username of selected user
    */
@@ -68,6 +67,17 @@ export default function KittenListPage() {
       setQuestionIndex(0);
       setAttemptIndex(0);
       updateCurrentAttempts(0, attemptsData, questions);
+
+      const currentQuestionId = questions[0]?.id.toString();
+      if (currentQuestionId) {
+        const filteredAttempts = attemptsData.userAttempts.filter(
+          (attempt) => attempt.questionId === currentQuestionId
+        );
+        const xAxisValues = filteredAttempts.map((_, index) => index + 1);
+        const yAxisValues = filteredAttempts.map(attempt => attempt.numPassed);
+        setXAxis(xAxisValues);
+        setValues(yAxisValues);
+      }
     } catch (e) {
       console.error("Error fetching attempts:", e);
     }
@@ -85,7 +95,7 @@ export default function KittenListPage() {
     }
   };
 
-  /**
+    /**
  * @description - Update the current attempts based on the selected question index
  * @param newQuestionIndex - The index of the newly selected question
  * @param attemptsData - The data of user attempts
@@ -98,13 +108,19 @@ export default function KittenListPage() {
   ) => {
     const questionId = questionsData[newQuestionIndex]?.id.toString();
     if (questionId && attemptsData.userAttempts && attemptsData.userAttempts.length > 0) {
-      console.log(attemptsData)
       const filteredAttempts = attemptsData.userAttempts.filter(
         (a) => a.questionId === questionId
       );
       setCurrentAttempts(filteredAttempts);
+
+      const xAxisValues = filteredAttempts.map((_, index) => index + 1);
+      const yAxisValues = filteredAttempts.map(attempt => attempt.numPassed);
+      setXAxis(xAxisValues);
+      setValues(yAxisValues);
     } else {
       setCurrentAttempts([]);
+      setXAxis([]);
+      setValues([]);
     }
   };
 
@@ -208,6 +224,12 @@ export default function KittenListPage() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    minHeight: "200px",
+                    maxWidth: "550px",
+                    marginBottom: "10px",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    backgroundColor: "#f0f0f0",
                   }}
                 >
                   {currentAttempt && (
@@ -222,17 +244,39 @@ export default function KittenListPage() {
                   )}
                 </Box>
                 <Button
-                    onClick={handleNextAttempt}
-                    disabled={currentAttempts.length <= 1}
-                    sx={{ marginTop: "10px",
-                      padding: "5px 40px",
-                      fontSize: "0.5rem", }}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Next Attempt
-                  </Button>
+                  onClick={handleNextAttempt}
+                  disabled={currentAttempts.length <= 1}
+                  sx={{ marginTop: "10px", padding: "5px 40px", fontSize: "0.5rem" }}
+                  variant="contained"
+                  color="primary"
+                >
+                  Next Attempt
+                </Button>
                 <p>Test Cases Passed: {currentAttempt.numPassed}</p>
+                {xAxis.length >= 2 && values.length >= 2 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    minHeight: "200px",
+                    maxWidth: "550px",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    backgroundColor: "#f0f0f0",
+                    marginTop: "10px",
+                  }}
+                >
+                  <LineChart
+                    width={500}
+                    height={300}
+                    xAxis={[{ data: xAxis, label: 'Attempt Number' }]}
+                    series={[{ data: values, label: 'Test Cases Passed' }]}
+                    grid={{ vertical: true, horizontal: true }}
+                  />
+                  </Box>
+                    )}
               </div>
             ) : (
               <h2>Select a student</h2>
