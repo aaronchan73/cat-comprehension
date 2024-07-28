@@ -1,13 +1,10 @@
-import { useState, useEffect } from 'react';
+import { Alert, Button, TextField } from '@mui/material';
+import react, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/catNamePage.css'
+import { getUsers } from '../../services/users';
 import { IUser } from '../../types/IUser';
-import { addUser } from '../../services/users';
-import Alert from '@mui/material/Alert';
-import { Button, TextField } from '@mui/material';
 
-
-export default function CatNamePage() {
+export default function LoginPage() {
     const [catName, setCatName] = useState<string>('')
     const [studentID, setStudentID] = useState<string>('')
     const [error, setError] = useState<string>('')
@@ -17,22 +14,21 @@ export default function CatNamePage() {
     /**
      * @description - Function to save the student to the db
      */
-    const saveStudent = async () => {
-        const data = { studentId: Number(studentID), username: catName } as IUser
-        const reponse = await addUser(data)
-        console.log(reponse)
+    const loginStudent = async () => {
+        const response = await getUsers()
+        const users = response.users
 
-        if (reponse.message !== 'User added successfully') {
-            setError(reponse.message)
-        }
-        else {
-            setSuccess(reponse.message + ': Redirecting to exercise page...');
+        const user = users.find((user: IUser) => user.username === catName && user.studentId === Number(studentID))
+        if (user === undefined) {
+            setError('User not found. Please sign up first.');
+        } else {
+            setSuccess(response.message + ': Redirecting to exercise page...');
             setTimeout(() => { navigate(`/student/exercisePage?username=${catName}`); }, 3000);
         }
     }
 
-    const goToLogin = () => {
-        navigate("/student/loginPage");
+    const returnToSignUp = () => {
+        navigate("/student/catNamePage");
     }
 
     useEffect(() => {
@@ -40,18 +36,17 @@ export default function CatNamePage() {
 
     return (
         <div>
-            <div className="headerContainer">
-                <h1 style={{
+            <h1 style={{
                     margin: 0,
                     lineHeight: '2',
-                }}>Sign Up + Create a Username</h1>
-            </div>
+                    padding: '20px'
+                }}>Enter Your Username + StudentID</h1>
             <div className="inputContainer">
                 <TextField
                     type="text"
                     value={catName}
                     onChange={(e) => setCatName(e.target.value)}
-                    label="Username"
+                    label="User Name"
                     variant="filled"
                     className="customTextField"
                 />
@@ -63,11 +58,13 @@ export default function CatNamePage() {
                     variant="filled"
                     className="customTextField"
                 />
-                <Button onClick={saveStudent} className="customButton">
-                    Sign up
+                <Button onClick={loginStudent} className="customButton">
+                    Login
                 </Button>
+                {error && 
+                <Button onClick={returnToSignUp}>Return to Sign up</Button>
+                }
             </div>
-            <Button onClick={goToLogin}>Already a Cat?</Button>
             {error && !success && <Alert severity="error">{error}</Alert>}
             {success && <Alert severity="success">{success}</Alert>}
         </div>

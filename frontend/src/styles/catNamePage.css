@@ -33,3 +33,11 @@
 .customButton:hover {
     background-color: #0056b3;
 }
+
+.headerContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
