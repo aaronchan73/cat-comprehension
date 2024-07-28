@@ -3,11 +3,12 @@ import { getUsers } from "../../services/users";
 import { getAttemptByUsername } from "../../services/attempts";
 import { getExercises } from "../../services/exercises";
 import "../../styles/kittenListPage.css";
-import { Button, Box } from "@mui/material";
+import { Button, Box} from "@mui/material";
 import { IUser } from "../../types/IUser";
 import { IQuestion } from "../../types/IQuestion";
 import CodeBox from "../../components/codeBox";
 import { IGetAttemptByUsername } from "../../types/IGetAttemptByUsername";
+import { IResult } from "../../types/IResult";
 
 export default function KittenListPage() {
   const initialAttemptState: IGetAttemptByUsername = {
@@ -21,6 +22,8 @@ export default function KittenListPage() {
     useState<IGetAttemptByUsername>(initialAttemptState);
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
+  const [attemptIndex, setAttemptIndex] = useState<number>(0);
+  const [currentAttempts, setCurrentAttempts] = useState<IResult[]>([]);
 
   /**
    * @description - useEffect to fetch users and questions when page mounts
@@ -63,6 +66,8 @@ export default function KittenListPage() {
       const attemptsData = await getAttemptByUsername(username);
       setAttempts(attemptsData);
       setQuestionIndex(0);
+      setAttemptIndex(0);
+      updateCurrentAttempts(0, attemptsData, questions);
     } catch (e) {
       console.error("Error fetching attempts:", e);
     }
@@ -73,45 +78,54 @@ export default function KittenListPage() {
    */
   const handleTitleClick = () => {
     if (questions.length > 0) {
-      setQuestionIndex((prev) => (prev + 1) % questions.length);
+      const newIndex = (questionIndex + 1) % questions.length;
+      setQuestionIndex(newIndex);
+      setAttemptIndex(0);
+      updateCurrentAttempts(newIndex, attempts, questions);
     }
   };
 
   /**
-   * @description - get the current attempt for the selected question
-   * @param questionId - id of the exercise
-   */
-  const getCurrentAttempt = (questionId: string) => {
-    if (!attempts.userAttempts || attempts.userAttempts.length === 0) {
-      return {
-        attemptId: 0,
-        questionId,
-        username: selectedUsername || "",
-        description: "",
-        generateCode: "",
-        numPassed: 0,
-      };
+ * @description - Update the current attempts based on the selected question index
+ * @param newQuestionIndex - The index of the newly selected question
+ * @param attemptsData - The data of user attempts
+ * @param questionsData - The list of questions
+ */
+  const updateCurrentAttempts = (
+    newQuestionIndex: number,
+    attemptsData: IGetAttemptByUsername,
+    questionsData: IQuestion[]
+  ) => {
+    const questionId = questionsData[newQuestionIndex]?.id.toString();
+    if (questionId && attemptsData.userAttempts && attemptsData.userAttempts.length > 0) {
+      console.log(attemptsData)
+      const filteredAttempts = attemptsData.userAttempts.filter(
+        (a) => a.questionId === questionId
+      );
+      setCurrentAttempts(filteredAttempts);
+    } else {
+      setCurrentAttempts([]);
     }
-
-    const attempt = attempts.userAttempts.find(
-      (a) => a.questionId === questionId
-    );
-    return (
-      attempt || {
-        attemptId: 0,
-        questionId,
-        username: selectedUsername || "",
-        description: "",
-        generateCode: "",
-        numPassed: 0,
-      }
-    );
   };
-  
+
+  /**
+ * @description - Handle click to switch to the next attempt
+ */
+  const handleNextAttempt = () => {
+    if (currentAttempts.length > 0) {
+      setAttemptIndex((prev) => (prev + 1) % currentAttempts.length);
+    }
+  };
+
   const currentQuestion = questions[questionIndex];
-  const currentAttempt = currentQuestion
-    ? getCurrentAttempt(String(currentQuestion.id))
-    : null;
+  const currentAttempt = currentAttempts[attemptIndex] || {
+    attemptId: 0,
+    questionId: currentQuestion ? currentQuestion.id.toString() : "",
+    username: selectedUsername || "",
+    description: "",
+    generateCode: "",
+    numPassed: 0,
+  };
 
   return (
     <div className="kittenListPage">
@@ -189,25 +203,36 @@ export default function KittenListPage() {
                 <p style={{ textAlign: "center" }}>
                   Click question name to see other questions
                 </p>
-                {/* {currentAttempt && (
-                  <p>
-                    Number of Attempts:
-                    {currentAttempt.attemptId === 0
-                      ? 0
-                      : attempts.attempt.length}
-                  </p>
-                )} */}
-                <p>Test Cases Passed: {currentAttempt?.numPassed}</p>
-                {currentAttempt && (
-                  <CodeBox
-                    language="python"
-                    code={
-                      currentAttempt.generateCode ||
-                      "Student has not attempted question yet"
-                    }
-                    name={null}
-                  />
-                )}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {currentAttempt && (
+                    <CodeBox
+                      language="python"
+                      code={
+                        currentAttempt.generateCode ||
+                        "Student has not attempted question yet"
+                      }
+                      name={null}
+                    />
+                  )}
+                </Box>
+                <Button
+                    onClick={handleNextAttempt}
+                    disabled={currentAttempts.length <= 1}
+                    sx={{ marginTop: "10px",
+                      padding: "5px 40px",
+                      fontSize: "0.5rem", }}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Next Attempt
+                  </Button>
+                <p>Test Cases Passed: {currentAttempt.numPassed}</p>
               </div>
             ) : (
               <h2>Select a student</h2>
