@@ -207,6 +207,8 @@ const testAttempt = (userCode, testCases) => {
         }; 
     }); 
 
+    console.log(feedback)
+
     return feedback;
 }; 
 
