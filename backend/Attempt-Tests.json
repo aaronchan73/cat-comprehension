@@ -122,5 +122,88 @@
                 "errorMessage": "Try again! Your code failed to handle cases with more than 1 solution"
             }
         ]
+    },
+    { 
+        "id": 3, 
+        "name": "canFinish", 
+        "testCases": [
+            {
+                "test": "no prerequisites", 
+                "input": "2,[]",  
+                "expectedOutput": "true", 
+                "successMessage": "Good job! Your code can handle no prerequisites", 
+                "errorMessage": "Try again! Your code failed to handle no prerequisites"
+            }, 
+            {
+                "test": "single prerequisite", 
+                "input": "2, [[1, 0]]",   
+                "expectedOutput": "true", 
+                "successMessage": "Good job! Your code can handle a single prerequisite", 
+                "errorMessage": "Try again! Your code failed to handle a single prerequisite"
+            },
+            {
+                "test": "many prerequisites", 
+                "input": "4, [[0, 1], [2, 0], [3, 1], [3, 2]]", 
+                "expectedOutput": "true", 
+                "successMessage": "Good job! Your code can handle many prerequisites", 
+                "errorMessage": "Try again! Your code failed to handle many prerequisites"
+            }, 
+            {
+                "test": "simple cycle",
+                "input": "2, [[1, 0], [0, 1]]", 
+                "expectedOutput": "false", 
+                "successMessage": "Good job! Your code can handle a simple cycle", 
+                "errorMessage": "Try again! Your code failed to handle a simple cycle"  
+            }, 
+            {
+                "test": "complex cycle", 
+                "input": "4, [[1, 0], [2, 1], [3, 2], [1, 3]]",  
+                "expectedOutput": "false", 
+                "successMessage": "Good job! Your code can handle a complex cycle", 
+                "errorMessage": "Try again! Your code failed to handle a complex cycle"
+            }, 
+            {
+                "test": "disconnected graph", 
+                "input": "5, [[1, 0], [3, 2]]", 
+                "expectedOutput": "true", 
+                "successMessage": "Good job! Your code can handle a disconnected graph", 
+                "errorMessage": "Try again! Your code failed to handle a disconnected graph"
+            }, 
+            {
+                "test": "self dependency", 
+                "input": "3, [[1, 1]]", 
+                "expectedOutput": "false", 
+                "successMessage": "Good job! Your code can handle self-dependent courses", 
+                "errorMessage": "Try again! Your code failed to handle self-dependent courses"
+            }, 
+            {
+                "test": "interdependent courses", 
+                "input": "3, [[0, 1], [1, 2], [2, 0]]", 
+                "expectedOutput": "false", 
+                "successMessage": "Good job! Your code can handle interdependent courses", 
+                "errorMessage": "Try again! Your code failed to handle interdependent courses"
+            }, 
+            {
+                "test": "multiple paths to a course", 
+                "input": "4, [[1, 0], [2, 0], [3, 1], [3, 2], [3, 0]]", 
+                "expectedOutput": "true", 
+                "successMessage": "Good job! Your code can handle multiple paths to a course", 
+                "errorMessage": "Try again! Your code failed to handle multiple paths to a course"
+            }, 
+            {
+                "test": "no courses", 
+                "input": "0, []", 
+                "expectedOutput": "true", 
+                "successMessage": "Good job! Your code can handle no courses", 
+                "errorMessage": "Try again! Your code failed to handle no courses"
+            }, 
+            {
+                "test": "large number of courses", 
+                "input": "4000, []",  
+                "expectedOutput": "true", 
+                "successMessage": "Good job! Your code can handle a large number of courses", 
+                "errorMessage": "Try again! Your code failed to handle a large number of courses"
+            } 
+        ]
     }
 ]
