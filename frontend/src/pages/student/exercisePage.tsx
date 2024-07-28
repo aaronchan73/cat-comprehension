@@ -53,7 +53,14 @@ export default function ExercisePage() {
      */
     const handleChangeQuestion = () => {
         const newQuestion = String(Number(questionId) + 1)
-        setExerciseById(newQuestion)
+
+        console.log(newQuestion)
+        
+        if (newQuestion === '4') {
+            setExerciseById('1')
+        } else {
+            setExerciseById(newQuestion)
+        }
     }
 
     /**
