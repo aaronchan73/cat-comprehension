@@ -16,5 +16,64 @@
     "questionId": "1",
     "generateCode": "function multiply(a, b) { return a * b; }",
     "numPassed": 0
+  },
+  {
+    "username": "test123123",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": "9f16d1c7-1e2c-4295-a6c3-030f6811e2ab",
+    "questionId": "1",
+    "generateCode": "function twoSum(nums, target) {\n   const array = nums.concat();\n   let low = 0;\n   let high = array.length - 1;\n\n   while (low <= high) {\n      const mid = Math.floor((low + high) / 2);\n      if (target === array[mid]) {\n         return [array[low], array[mid]];\n      } else if (target < array[mid]) {\n         low = mid + 1;\n      } else {\n         high = mid - 1;\n      }\n   }\n}",
+    "numPassed": 0,
+    "testResults": [
+      {
+        "test": "basic case",
+        "input": "2, 3",
+        "expectedOutput": "5",
+        "actualOutput": "nums.concat is not a function",
+        "message": "Try again! Your code failed to handle basic cases",
+        "passed": false
+      },
+      {
+        "test": "0s",
+        "input": "0, 0",
+        "expectedOutput": "0",
+        "actualOutput": "nums.concat is not a function",
+        "message": "Try again! Your code failed to handle zeros",
+        "passed": false
+      },
+      {
+        "test": "negative numbers",
+        "input": "-1, -1",
+        "expectedOutput": "-2",
+        "actualOutput": "nums.concat is not a function",
+        "message": "Try again! Your code failed to handle negative numbers",
+        "passed": false
+      },
+      {
+        "test": "decimals",
+        "input": "1.5, 2.5",
+        "expectedOutput": "4.0",
+        "actualOutput": "nums.concat is not a function",
+        "message": "Try again! Your code failed to handle decimals",
+        "passed": false
+      },
+      {
+        "test": "large numbers",
+        "input": "1000000, 1000000",
+        "expectedOutput": "2000000",
+        "actualOutput": "nums.concat is not a function",
+        "message": "Try again! Your code failed to handle large numbers",
+        "passed": false
+      },
+      {
+        "test": "positive and negative numbers",
+        "input": "-2, 2",
+        "expectedOutput": "0",
+        "actualOutput": "nums.concat is not a function",
+        "message": "Try again! Your code failed to handle both positive and negative numbers",
+        "passed": false
+      }
+    ]
   }
 ]
