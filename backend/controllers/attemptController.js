@@ -35,12 +35,13 @@ const updateAttemptsJSON = (data) => {
  * @param response - generated response from LLM
  * @returns parsed response of JavaScript function or empty string on failure
  */
-const parseCode = (response) => {
+const parseCode = (generatedCode) => {
+    const response = generatedCode.replace(/```js/g, '```javascript');
     const codeStart = '```javascript';
     const codeEnd = '```';
     const indexStart = response.indexOf(codeStart);
     const indexEnd = response.indexOf(codeEnd, indexStart + codeStart.length);
-
+    
     if (indexStart !== -1 && indexEnd !== -1) {
         // Find JavaScript code block
         const trimmedCode = response.substring(indexStart + codeStart.length, indexEnd).trim().replace(/I/g, 'i');
@@ -59,7 +60,7 @@ const parseCode = (response) => {
  */
 const generateCode = async (description) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
-    const generatePrompt = `Please create a JavaScript function code based on the following description: "${description}"`;
+    const generatePrompt = `Please write code in JS and create a function based on the following description: "${description}". Dont include any logs. Do not use es6 arrow functions.`;
 
     try {
         // Generate code from LLM
