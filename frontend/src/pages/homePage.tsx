@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import "../styles/homePage.css";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +14,7 @@ export default function HomePage() {
 
   /**
    * @description Function to navigate to the teacher kitten list page
-   */ 
+   */
   const handleTeacherClick = () => {
     navigate("/teacher/kittenListPage");
   };
@@ -21,12 +22,43 @@ export default function HomePage() {
     <div>
       <h1>Which cat are you?</h1>
       <div className="homePageButtonContainer">
-        <button className="homePageButton" onClick={handleStudentClick}>
+        <Button
+          sx={{ // issues with css styling with className
+            fontSize: '1rem',
+            padding: '10px 20px',
+            border: '1px solid #ccc',
+            borderRadius: '1rem',
+            backgroundColor: '#f0f0f0',
+            color: 'black',
+            transition: 'background-color 0.3s, transform 0.3s',
+            '&:hover': {
+              backgroundColor: '#e0e0e0',
+              transform: 'scale(1.15)',
+              color: 'black'
+            }
+          }}
+          onClick={handleStudentClick}>
           Student Cat
-        </button>
-        <button className="homePageButton" onClick={handleTeacherClick}>
+        </Button>
+        <Button
+          sx={{
+            fontSize: '1rem',
+            padding: '10px 20px',
+            border: '1px solid #ccc',
+            borderRadius: '1rem',
+            backgroundColor: '#f0f0f0',
+            color: 'black',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s, transform 0.3s',
+            '&:hover': {
+              backgroundColor: '#e0e0e0',
+              transform: 'scale(1.15)',
+              color: 'black'
+            }
+          }}
+          onClick={handleTeacherClick}>
           Teacher Cat
-        </button>
+        </Button>
       </div>
     </div>
   );

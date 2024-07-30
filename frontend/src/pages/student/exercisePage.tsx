@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation} from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CodeBox from '../../components/codeBox'
 import '../../styles/exercisePage.css'
 import { getExercises, getExerciseById } from '../../services/exercises';
@@ -55,7 +55,7 @@ export default function ExercisePage() {
         const newQuestion = String(Number(questionId) + 1)
 
         console.log(newQuestion)
-        
+
         if (newQuestion === '4') {
             setExerciseById('1')
         } else {
@@ -76,7 +76,7 @@ export default function ExercisePage() {
                 navigate(`/student/resultsPage?username=${userName}&attemptId=${response.result.attemptId}&questionId=${questionId}`)
             } else {
                 setError('Error submitting attempt')
-            }            
+            }
         } catch (e) {
             setError(`Error submitting attempt: ${e}`)
         }
@@ -99,12 +99,17 @@ export default function ExercisePage() {
             <div className='exerciseContainer'>
                 <div>
                     <Tooltip title="Click title to change question" arrow>
-                        <Button style={{ color: 'black' }} onClick={handleChangeQuestion}>{name}</Button>
+                        <Button
+                            disabled={loading}
+                            sx={{
+                                color: 'black',
+                            }} 
+                            onClick={handleChangeQuestion}>{name}</Button>
                     </Tooltip>
                     <CodeBox language="python" code={code} name={name} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', height: '600px' }}>
-                    <div style={{ height: '80%%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', height: '630px',}}>
+                    <div style={{ height: '80%%', marginBottom:'25px'  }}>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -139,18 +144,23 @@ export default function ExercisePage() {
                     <Button
                         onClick={handleOnSubmit}
                         disabled={loading}
-                        style={{
+                        sx={{
                             alignContent: 'right',
+                            backgroundColor: '#f0f0f0',
                             color: 'black',
-                            backgroundColor: 'lightblue',
                             visibility: summaryDescription ? 'visible' : 'hidden',
                             padding: '10px',
+                            transition: 'background-color 0.3s, transform 0.3s',
+                            '&:hover': {
+                                backgroundColor: '#e0e0e0',
+                                color: 'black'
+                            }
                         }}
                     >
-                        {loading? 'Running Test Cases...' : 'Submit Attempt'}
+                        {loading ? 'Running Test Cases...' : 'Submit Attempt'}
                     </Button>
                     {error && <Alert severity="error">{error}</Alert>}
-                    
+
                 </div>
             </div>
         </div>

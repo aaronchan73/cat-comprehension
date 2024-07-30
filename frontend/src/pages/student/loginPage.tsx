@@ -27,22 +27,25 @@ export default function LoginPage() {
         }
     }
 
+    /**
+     * @description - Function to navigate back to the sign up page
+     */
     const returnToSignUp = () => {
         navigate("/student/catNamePage");
     }
 
-    useEffect(() => {
-    }, [catName, error])
-
     return (
         <div>
             <h1 style={{
-                    margin: 0,
-                    lineHeight: '2',
-                    padding: '20px'
-                }}>Enter Your Username + StudentID</h1>
+                margin: 0,
+                lineHeight: '2',
+                padding: '20px'
+            }}>Enter Your Username + StudentID</h1>
             <div className="inputContainer">
                 <TextField
+                    sx={{
+                        marginBottom: '10px'
+                    }}
                     type="text"
                     value={catName}
                     onChange={(e) => setCatName(e.target.value)}
@@ -51,6 +54,9 @@ export default function LoginPage() {
                     className="customTextField"
                 />
                 <TextField
+                    sx={{
+                        marginBottom: '30px'
+                    }}
                     type="text"
                     value={studentID}
                     onChange={(e) => setStudentID(e.target.value)}
@@ -58,13 +64,42 @@ export default function LoginPage() {
                     variant="filled"
                     className="customTextField"
                 />
-                <Button onClick={loginStudent} className="customButton">
+                <Button
+                    sx={{
+                        fontSize: '1rem',
+                        padding: '10px 20px',
+                        border: '1px solid #ccc',
+                        borderRadius: '1rem',
+                        backgroundColor: '#f0f0f0',
+                        color: 'black',
+                        transition: 'background-color 0.3s, transform 0.3s',
+                        '&:hover': {
+                            backgroundColor: '#e0e0e0',
+                            color: 'black'
+                        }
+                    }}
+                    onClick={loginStudent} className="customButton">
                     Login
                 </Button>
-                {error && 
-                <Button onClick={returnToSignUp}>Return to Sign up</Button>
-                }
             </div>
+            <Button
+                sx={{
+                    marginBottom: '20px',
+                    fontSize: '1rem',
+                    padding: '10px 20px',
+                    border: '1px solid #ccc',
+                    borderRadius: '1rem',
+                    backgroundColor: '#f0f0f0',
+                    color: 'black',
+                    transition: 'background-color 0.3s, transform 0.3s',
+                    '&:hover': {
+                        backgroundColor: '#e0e0e0',
+                        color: 'black'
+                    }
+                }}
+                onClick={returnToSignUp}>
+                Return to Sign up
+            </Button>
             {error && !success && <Alert severity="error">{error}</Alert>}
             {success && <Alert severity="success">{success}</Alert>}
         </div>
