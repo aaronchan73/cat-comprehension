@@ -49,7 +49,7 @@ export default function FeedbackPage() {
                         textAlign: 'left', 
                         height: '90%',
                         maxHeight: '500px', // Set a maximum height
-                        overflowY: 'auto',
+                        overflowY:'auto',
                     }}
                 >
                     <Typography
@@ -57,7 +57,8 @@ export default function FeedbackPage() {
                         sx={{
                             fontSize: '1em',
                             alignContent: 'left',
-                            overflowWrap: 'break-word'
+                            overflowWrap: 'break-word',
+                            overflowY: 'auto',
                         }}
                     >{feedback}</Typography>
                 </Box>
