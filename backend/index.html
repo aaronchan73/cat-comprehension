@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mocha Tests</title>
+    <link rel="stylesheet" href="./node_modules/mocha/mocha.css">
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.7.0/mocha.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/5.1.1/chai.min.js"></script>
+
+    <script type="module">mocha.setup('bdd');</script>
+
+    <!-- unit tests, loaded from file -->
+	<script type="module" src="./test/attemptController.test.mjs"></script>
+    <script type="module" src="./test/questionController.test.mjs"></script>
+    <script type="module" src="./test/userController.test.mjs"></script>
+
+    <!-- run Mocha -->
+    <script type="module">
+		mocha.run();
+    </script>
+	
+</body>
+</html>
+<!-- help from: https://stackoverflow.com/questions/42857778/how-do-you-run-mocha-tests-in-the-browser -->
+
