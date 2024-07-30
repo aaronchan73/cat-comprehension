@@ -19,18 +19,7 @@ h1 {
     justify-content: space-between;
 }
 
-.homePageButton {
-    font-family: Arial, sans-serif;
-    font-size: 2rem;
-    padding: 10px 20px;
-    border: 1px solid #ccc;
-    border-radius: 1rem;
-    background-color: grey;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-}
 
-.homePageButton:hover {
-    background-color: #e0e0e0;
-    transform: scale(1.15);
-}
+
+
+

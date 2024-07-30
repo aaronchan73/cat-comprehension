@@ -1,4 +1,4 @@
-import { Box, Button, List, ListItem, Typography } from '@mui/material'
+import { Box, Button, List, ListItem, Tooltip, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getAttemptByUsername, generateFeedback } from '../../services/attempts'
@@ -181,7 +181,9 @@ export default function ResultsPage() {
                             <ListItem>
                                 Attempt #: {xAxis.length}
                             </ListItem>
-                            <Button onClick={handleTestCases} disabled={loadingFeedback}>Test Cases Passed: {analysis?.numPassed}</Button>
+                            <Tooltip title="Click to view test case results" arrow>
+                                <Button onClick={handleTestCases} disabled={loadingFeedback}>Test Cases Passed: {analysis?.numPassed}</Button>
+                            </Tooltip>
                         </List>
                         {xAxis.length >= 2 && values.length >= 2 && <LineChart // Only render the line chart if there are at least 2 attempts - for the feedback workflow
                             width={500}
@@ -197,13 +199,16 @@ export default function ResultsPage() {
                         >
                         </LineChart>}
                         {!analysis?.success &&
-                            <Button
-                                onClick={getFeedback}
-                                disabled={loadingFeedback}
-                                style={{
-                                    width: '200px',
-                                }}
-                            >{loadingFeedback ? 'Generating...' : 'Generate Feedback'}</Button>}
+                            <Tooltip title="Click to generate feedback" arrow>
+                                <Button
+                                    onClick={getFeedback}
+                                    disabled={loadingFeedback}
+                                    style={{
+                                        width: '200px',
+                                    }}
+                                >{loadingFeedback ? 'Generating...' : 'Generate Feedback'}</Button>
+                            </Tooltip>
+                        }
                     </div>
 
                 </Box>

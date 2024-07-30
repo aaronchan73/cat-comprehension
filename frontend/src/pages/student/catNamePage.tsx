@@ -31,12 +31,12 @@ export default function CatNamePage() {
         }
     }
 
+    /**
+     * @description - Function to navigate to the login page
+     */
     const goToLogin = () => {
         navigate("/student/loginPage");
     }
-
-    useEffect(() => {
-    }, [catName, error])
 
     return (
         <div>
@@ -48,6 +48,9 @@ export default function CatNamePage() {
             </div>
             <div className="inputContainer">
                 <TextField
+                    sx={{
+                        marginBottom: '10px'
+                    }}
                     type="text"
                     value={catName}
                     onChange={(e) => setCatName(e.target.value)}
@@ -56,6 +59,9 @@ export default function CatNamePage() {
                     className="customTextField"
                 />
                 <TextField
+                    sx={{
+                        marginBottom: '30px'
+                    }}
                     type="text"
                     value={studentID}
                     onChange={(e) => setStudentID(e.target.value)}
@@ -63,11 +69,42 @@ export default function CatNamePage() {
                     variant="filled"
                     className="customTextField"
                 />
-                <Button onClick={saveStudent} className="customButton">
+                <Button
+                    sx={{
+                        fontSize: '1rem',
+                        padding: '10px 20px',
+                        border: '1px solid #ccc',
+                        borderRadius: '1rem',
+                        backgroundColor: '#f0f0f0',
+                        color: 'black',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.3s, transform 0.3s',
+                        '&:hover': {
+                            backgroundColor: '#e0e0e0',
+                            color: 'black'
+                        }
+                    }}
+                    onClick={saveStudent} className="customButton">
                     Sign up
                 </Button>
             </div>
-            <Button onClick={goToLogin}>Already a Cat?</Button>
+            <Button
+                sx={{
+                    marginBottom: '20px',
+                    fontSize: '1rem',
+                    padding: '10px 20px',
+                    border: '1px solid #ccc',
+                    borderRadius: '1rem',
+                    backgroundColor: '#f0f0f0',
+                    color: 'black',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s, transform 0.3s',
+                    '&:hover': {
+                        backgroundColor: '#e0e0e0',
+                        color: 'black'
+                    }
+                }}
+                onClick={goToLogin}>Already a Cat?</Button>
             {error && !success && <Alert severity="error">{error}</Alert>}
             {success && <Alert severity="success">{success}</Alert>}
         </div>
