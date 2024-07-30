@@ -113,13 +113,14 @@ exports.AddAttempt = async (req, res) => {
 
         // Generate code from LLM
         const code = await generateCode(description);
+        console.log("Generated code: ", code);
         if (code === undefined) {
             return res.status(400).json({ message: "Error generating code from Ollama" });
         }
 
         // Parse code from response
         const parsedCode = parseCode(code);
-        console.log("Generated code: ", parsedCode);
+        console.log("Parsed code: ", parsedCode);
         if (parsedCode === undefined || parsedCode === '') {
             return res.status(400).json({ message: "Error parsing code from Ollama" });
         }
