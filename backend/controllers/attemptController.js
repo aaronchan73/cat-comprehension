@@ -6,9 +6,9 @@ const path = require('path');
  * @returns contents of Attempts.json
  */
 const readAttemptsJSON = () => {
-  const filePath = path.join(__dirname, '../Attempts.json');
-  const data = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(data);
+    const filePath = path.join(__dirname, '../Attempts.json');
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
 };
 
 /**
@@ -40,10 +40,10 @@ const parseCode = (response) => {
     const codeEnd = '```';
     const indexStart = response.indexOf(codeStart);
     const indexEnd = response.indexOf(codeEnd, indexStart + codeStart.length);
-    
+
     if (indexStart !== -1 && indexEnd !== -1) {
         // Find JavaScript code block
-        const trimmedCode = response.substring(indexStart + codeStart.length, indexEnd).trim();
+        const trimmedCode = response.substring(indexStart + codeStart.length, indexEnd).trim().replace(/I/g, 'i');
         return trimmedCode;
     } else {
         return '';
@@ -57,19 +57,9 @@ const parseCode = (response) => {
  * @returns JSON of generated code from LLM
  * @throws error on fetch failures
  */
-const generateCode = async (description, question) => {
+const generateCode = async (description) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
-    const generatePrompt = `Generate runnable JavaScript code based on the following description: ${description}.
-                            Use the same parameters and return value as this function: ${question}.
-                            Do not call the function.
-                            Do not include comments in the response.
-                            Do not provide any example usage or tests.
-                            Do not include any console.log statements. If the function has a return value, ensure it is returned.
-                            Only include the JavaScript code in your response.
-                            Ensure the function is returned as a one-line string in the form: "function name(params) {}"
-                            and properly formatted to be executed using eval.
-                            Ensure that all of the variables within the function are consistent.`
-    console.log("Generating code from description");
+    const generatePrompt = `Please create a JavaScript function code based on the following description: "${description}"`;
 
     try {
         // Generate code from LLM
@@ -81,13 +71,10 @@ const generateCode = async (description, question) => {
             body: JSON.stringify({
                 model: 'tinyllama',
                 prompt: generatePrompt,
-                stream: false,
-                options: {
-                    top_p: 0.7,
-                    temperature: 0.7
-                }
+                stream: false
             })
         })
+        console.log(response)
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
@@ -113,28 +100,28 @@ exports.AddAttempt = async (req, res) => {
         const { attemptId } = req.params;
 
         if (!description) {
-            return res.status(400).json({message: "Description is required"});
+            return res.status(400).json({ message: "Description is required" });
         }
 
         // Get questions and find the specific question matching the given ID
         const questions = readQuestionsJSON();
         const question = questions.find(q => q.id == questionId);
-        
-         // Get tests and find the specific test matching the given ID
+
+        // Get tests and find the specific test matching the given ID
         const tests = readAttemptTestsJSON();
         const test = tests.find(t => t.id == questionId);
 
         // Generate code from LLM
-        const code = await generateCode(description, question.code);
+        const code = await generateCode(description);
         if (code === undefined) {
-            return res.status(400).json({message: "Error generating code from Ollama"});
+            return res.status(400).json({ message: "Error generating code from Ollama" });
         }
 
         // Parse code from response
         const parsedCode = parseCode(code);
         console.log("Generated code: ", parsedCode);
         if (parsedCode === undefined || parsedCode === '') {
-            return res.status(400).json({message: "Error parsing code from Ollama"});
+            return res.status(400).json({ message: "Error parsing code from Ollama" });
         }
 
         // Run test cases on generated code
@@ -160,7 +147,7 @@ exports.AddAttempt = async (req, res) => {
         updateAttemptsJSON(attempts);
 
         res.status(200).json({ message: 'Tests successfully ran', result });
-    } catch(error) {
+    } catch (error) {
         console.log("Adding attempt error ", error);
         res.status(500).json({ message: 'Internal server error' });
     }
@@ -170,11 +157,11 @@ exports.AddAttempt = async (req, res) => {
  * @description Read Attempt-Tests.json and parse contents
  * @returns contents of Attempt-Tests.json
  */
-const readAttemptTestsJSON = () => { 
-    const filePath = path.join(__dirname, '../Attempt-Tests.json'); 
-    const data = fs.readFileSync(filePath, 'utf8'); 
-    return JSON.parse(data); 
-}; 
+const readAttemptTestsJSON = () => {
+    const filePath = path.join(__dirname, '../Attempt-Tests.json');
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+};
 
 /**
  * @description Tests the user's answer (translated into code) against pre-written test cases 
@@ -182,36 +169,36 @@ const readAttemptTestsJSON = () => {
  * @param testCases - test cases to run the code on
  * @returns JSON representing the feedback from the tests
  */
-const testAttempt = (userCode, testCases) => { 
+const testAttempt = (userCode, testCases) => {
     const feedback = testCases.map(testCase => {
         const { test, input, expectedOutput, successMessage, errorMessage } = testCase; // extract these fields from JSON 
-        let actualOutput; 
+        let actualOutput;
 
         try {
             // Run generated code from LLM
-            const func = eval(`(${userCode})`); 
-            actualOutput = func(...JSON.parse(`[${input}]`)); 
-        } catch (error) { 
-            actualOutput = error.message; 
+            const func = eval(`(${userCode})`);
+            actualOutput = func(...JSON.parse(`[${input}]`));
+        } catch (error) {
+            actualOutput = error.message;
         }
 
         // Check test case
-        const passed = JSON.stringify(actualOutput) === JSON.stringify(JSON.parse(expectedOutput));   
+        const passed = JSON.stringify(actualOutput) === JSON.stringify(JSON.parse(expectedOutput));
 
         return { // return clear feedback 
             test,
-            input, 
-            expectedOutput, 
-            actualOutput, 
-            message : passed ? successMessage : errorMessage,
+            input,
+            expectedOutput,
+            actualOutput,
+            message: passed ? successMessage : errorMessage,
             passed,
-        }; 
-    }); 
+        };
+    });
 
     console.log(feedback)
 
     return feedback;
-}; 
+};
 
 /**
  * @description Gets a list of all the attempts in in the application for the username provided
@@ -238,17 +225,17 @@ exports.GetAttemptsByUsername = (req, res) => {
  * @returns JSON of generated feedback from LLM
  * @throws error on fetch failures
  */
-const generateFeedback = async (attempt) => {
+const generateFeedback = async (attempt, question) => {
     const code = attempt.generateCode;
-    const testResults = attempt.testResults;
-
+    const testResults = JSON.stringify(attempt.testResults);
+    const jsStart = "```javascript\n"
+    const jsEnd = "```"
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
-    const feedbackPrompt = `Based on this code that was generated by an LLM: ${code}, 
-                            can you explain what can be improved given the following test cases: ${testResults}?
-                            Do not include any code in your response.
-                            Do not include any test cases in your response.
-                            Keep the feedback to maximum one paragraph of maximum of 100 words in length.
-                            `
+    const feedbackPrompt = `This is a student's attempt at the ${question.name} leetcode question : 
+                        ${jsStart}${code}${jsEnd}. This is the correct code for the same question: ${question.code}
+                        Based on these test results generated by running the student's code ${testResults}, give hints as to 
+                        why their code isn't fully passing the tests. Keep hints less than 50 words. `;
+    console.log(feedbackPrompt);
     console.log("Generating feedback from attempts", attempt);
 
     // All tests passed; do not run LLM
@@ -266,7 +253,10 @@ const generateFeedback = async (attempt) => {
             body: JSON.stringify({
                 model: 'tinyllama',
                 prompt: feedbackPrompt,
-                stream: false
+                stream: false,
+                options: {
+                    max_tokens: 50
+                }
             })
         })
         if (!response.ok) {
@@ -294,15 +284,20 @@ exports.GetFeedback = async (req, res) => {
         // Get attempts and find the specific attempt matching the given username, questionId, and attemptId
         const attempts = readAttemptsJSON();
         const attempt = attempts.filter(attempt => attempt.username === username && attempt.questionId == questionId && attempt.attemptId == attemptId);
+        console.log(attempt)
+
+        const questions = readQuestionsJSON();
+        const question = questions.find(q => q.id == questionId);
+        console.log(question);
 
         // Send feedback to LLM
-        const feedback = await generateFeedback(attempt[0]);
+        const feedback = await generateFeedback(attempt[0], question);
         if (feedback === undefined) {
-            return res.status(400).json({message: "Error generating feedback from Ollama"});
+            return res.status(400).json({ message: "Error generating feedback from Ollama" });
         }
 
-        res.status(200).json({ message: 'Feedback successfully generated', feedback});
-    } catch(error) {
+        res.status(200).json({ message: 'Feedback successfully generated', feedback });
+    } catch (error) {
         console.log("Adding attempt error ", error);
         res.status(500).json({ message: 'Internal server error' });
     }
