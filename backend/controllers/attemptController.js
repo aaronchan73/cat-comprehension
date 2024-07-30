@@ -68,7 +68,7 @@ const generateCode = async (description, question, functionStub) => {
                             5. If the function needs a loop, it should be written as: "for (let i = 0; i < array.length; i++)".
                             6. If an object key access should be written as: "object[key]".
 
-                            Now that you know the requiremnet, please create a JavaScript function code based on the following description: "${description}".`
+                            Now that you know the requirements, please create a JavaScript function code based on the following description: "${description}".`
 
     try {
         // Generate code from LLM
