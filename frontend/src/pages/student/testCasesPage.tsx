@@ -108,7 +108,7 @@ export default function TestCasesPage() {
                                         Input: {testCase.input}
                                     </ListItem>
                                     <ListItem>
-                                        Output: {testCase.actualOutput}
+                                        Output: {JSON.stringify(testCase.actualOutput)}
                                     </ListItem>
                                     <ListItem>
                                         Expected Output: {testCase.expectedOutput}
