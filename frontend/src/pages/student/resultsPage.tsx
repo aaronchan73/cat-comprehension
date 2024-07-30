@@ -7,25 +7,6 @@ import CodeBox from '../../components/codeBox'
 import { LineChart } from '@mui/x-charts'
 import { ITestCase } from '../../types/ITestCase'
 
-
-const codeString = `
-/**
- * This is a function that takes in an array of numbers and a target number,
- * and will return a list of two indices of the numbers that sum up to the target number.
- */
-function twoSum(nums, target) {
-  const numToIndex = {}
-  for (let index = 0 index < nums.length index++) {
-    const complement = target - nums[index]
-    if (complement in numToIndex) {
-      return [numToIndex[complement], index]
-    }
-    numToIndex[nums[index]] = index
-  }
-  return [] // If there are no two numbers that sum up to the target number, return an empty array
-}
-`
-
 export default function ResultsPage() {
     const [analysis, setAnalysis] = useState<IResult>()
     const location = useLocation()
@@ -34,13 +15,12 @@ export default function ResultsPage() {
     const [values, setValues] = useState<number[]>([])
     const [loadingFeedback, setLoadingFeedback] = useState<boolean>(false)
     const [testCases, setTestCases] = useState<ITestCase[]>([])
-    const [feedback, setFeedback] = useState<string>('')
-    const [errorFeedback, setErrorFeedback] = useState<string>('')
 
     const navigate = useNavigate()
 
     /**
      * @description - Function to get the attempt by username and setting states for analysis and code
+     *                will also set the charts axis, analysis values and test cases
      */
     const getAttempt = async () => {
         try {
@@ -78,7 +58,7 @@ export default function ResultsPage() {
     }
 
     /**
-     * @description - Function to generate feedback and navigate to feedback page
+     * @description - Function to generate feedback and navigate to feedback page and set loadingFeedback and errorFeedback states
      */
     const getFeedback = async () => {
         try {
@@ -86,7 +66,6 @@ export default function ResultsPage() {
             const response = await generateFeedback(analysis)
 
             if (response.feedback) {
-                setFeedback(response.feedback)
                 setLoadingFeedback(false)
                 const username = getSearchParams().username
 
@@ -94,17 +73,18 @@ export default function ResultsPage() {
                     state: { feedback: response.feedback }
                 })
             } else {
-                setErrorFeedback('Error generating feedback')
                 setLoadingFeedback(false)
             }
         } catch (e) {
             console.log(e)
-            setErrorFeedback('Error generating feedback')
         } finally {
             setLoadingFeedback(false)
         }
     }
 
+    /**
+     * @description - Function to navigate to the test cases page with state context
+     */
     const handleTestCases = () => {
         const searchParams = getSearchParams()
         const userTestCases = { username: searchParams.username, testCases: testCases, questionId: searchParams.questionId, attemptId: searchParams.attemptId }

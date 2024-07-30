@@ -1,4 +1,4 @@
-import { IUser } from "../types/IUser";
+import { IUser } from "../types/IUser"
 
 /**
  * @description Service for getting all users

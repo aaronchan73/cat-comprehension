@@ -6,7 +6,6 @@ import { addUser } from '../../services/users';
 import Alert from '@mui/material/Alert';
 import { Button, TextField } from '@mui/material';
 
-
 export default function CatNamePage() {
     const [catName, setCatName] = useState<string>('')
     const [studentID, setStudentID] = useState<string>('')

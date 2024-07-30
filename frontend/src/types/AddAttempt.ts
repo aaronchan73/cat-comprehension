@@ -1,6 +1,6 @@
-import { IResult } from "./IResult";
+import { IResult } from "./IResult"
 
 export interface IAddAttemptResponse {
-  message: string;
-  result: IResult;
+  message: string
+  result: IResult
 }

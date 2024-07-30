@@ -1,12 +1,16 @@
-import { Box, Button, List, ListItem, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function FeedbackPage() {
-    const location = useLocation()
-    const navigate = useNavigate()
     const [feedback, setFeedback] = useState<string>('No feedback available')
     
+    const location = useLocation()
+    const navigate = useNavigate()
+
+    /**
+     * @description - UseEffect to set the feedback from the location state
+     */
     useEffect(() => {
         if (location.state && location.state.feedback) {
             setFeedback(location.state.feedback)
@@ -48,7 +52,7 @@ export default function FeedbackPage() {
                         maxWidth: '400px', 
                         textAlign: 'left', 
                         height: '90%',
-                        maxHeight: '500px', // Set a maximum height
+                        maxHeight: '500px',
                         overflowY:'auto',
                     }}
                 >
