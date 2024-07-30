@@ -59,7 +59,7 @@ const parseCode = (response) => {
  */
 const generateCode = async (description) => {
     const ollamaGenerateUrl = 'http://host.docker.internal:11434/api/generate';
-    const generatePrompt = `Please create a JavaScript function code based on the following description: "${description}"`;
+    const generatePrompt = `Please write code ONLY in the JavaScript coding language - do NOT code in java. Please create a function based on the following description: "${description}"`;
 
     try {
         // Generate code from LLM
