@@ -1,0 +1,20 @@
+[
+  {
+    "username": "test",
+    "success": false,
+    "message": "Tests failed",
+    "attemptId": 2,
+    "questionId": "1",
+    "generateCode": "function sum(a, b) { return a + b; }",
+    "numPassed": 0
+  },
+  {
+    "username": "test",
+    "success": true,
+    "message": "All tests passed",
+    "attemptId": 1,
+    "questionId": "2",
+    "generateCode": "function twoSum(nums, target) {\n    const numMap = new Map();\n    \n    for (let i = 0; i < nums.length; i++) {\n        const complement = target - nums[i];\n        \n        if (numMap.has(complement)) {\n            return [numMap.get(complement), i];\n        }\n        \n        numMap.set(nums[i], i);\n    }\n    \n    return null; // If no solution found\n}",
+    "numPassed": 10
+  }
+]
