@@ -83,6 +83,13 @@ export default function ExercisePage() {
     }
 
     /**
+     * @description - Function to handle the log out button click
+     */
+    const handleLogOut = () => {
+        navigate('/')
+    }
+
+    /**
      * @description - useEffect to set the states + render UI on page mount
      */
     useEffect(() => {
@@ -160,9 +167,21 @@ export default function ExercisePage() {
                         {loading ? 'Running Test Cases...' : 'Submit Attempt'}
                     </Button>
                     {error && <Alert severity="error">{error}</Alert>}
-
                 </div>
             </div>
+            <Button sx={{
+                width: '200px',
+                alignSelf: 'center',
+                marginTop: '20px',
+                backgroundColor: '#f0f0f0',
+                color: 'black',
+                '&:hover': {
+                    backgroundColor: '#d3d3d3',
+                }
+            }}
+                onClick={handleLogOut}>
+                Logout
+            </Button>
         </div>
     )
 }
