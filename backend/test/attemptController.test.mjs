@@ -1,5 +1,5 @@
-import { expect } from "chai";
-import sinon from "sinon";
+// import { expect } from "chai";
+// import sinon from "sinon";
 import fs from "fs";
 const attemptController = await import("../controllers/attemptController.js");
 

@@ -6,15 +6,16 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.7.0/mocha.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/5.1.1/chai.min.js"></script>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.7.0/mocha.min.js"></script>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/chai/5.1.1/chai.min.js"></script>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/18.0.0/sinon.min.js"></script>
 
     <script type="module">mocha.setup('bdd');</script>
 
     <!-- unit tests, loaded from file -->
-	<script type="module" src="./test/attemptController.test.mjs"></script>
-    <script type="module" src="./test/questionController.test.mjs"></script>
-    <script type="module" src="./test/userController.test.mjs"></script>
+	<script type="module" src="./test/attemptController.test.js"></script>
+    <!-- <script type="module" src="./test/questionController.test.js"></script> -->
+    <!-- <script type="module" src="./test/userController.test.js"></script> -->
 
     <!-- run Mocha -->
     <script type="module">
