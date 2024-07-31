@@ -1,5 +1,5 @@
-// import { expect } from "chai";
-// import sinon from "sinon";
+import { expect } from "chai";
+import sinon from "sinon";
 import fs from "fs";
 const attemptController = await import("../controllers/attemptController.js");
 
@@ -188,6 +188,7 @@ describe("Helper Functions", () => {
           actualOutput: 3,
           message: "Success",
           passed: true,
+          test: undefined
         },
       ]);
     });
@@ -211,6 +212,7 @@ describe("Helper Functions", () => {
           actualOutput: "error",
           message: "Fail",
           passed: false,
+          test: undefined
         },
       ]);
     });

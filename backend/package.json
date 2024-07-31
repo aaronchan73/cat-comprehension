@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --reporter mochawesome --reporter-options reportFilename=index && http-server ./mochawesome-report -o ",
+    "test": "mocha --reporter mochawesome --reporter-options reportFilename=index && http-server ./mochawesome-report -o /index.html",
     "start": "node server.js"
   },
   "author": "",
