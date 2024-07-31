@@ -18,12 +18,13 @@ export default function HomePage() {
   const handleTeacherClick = () => {
     navigate("/teacher/kittenListPage");
   };
+  
   return (
     <div>
       <h1>Which cat are you?</h1>
       <div className="homePageButtonContainer">
         <Button
-          sx={{ // issues with css styling with className
+          sx={{
             fontSize: '1rem',
             padding: '10px 20px',
             border: '1px solid #ccc',

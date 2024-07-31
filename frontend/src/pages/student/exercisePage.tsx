@@ -103,13 +103,13 @@ export default function ExercisePage() {
                             disabled={loading}
                             sx={{
                                 color: 'black',
-                            }} 
+                            }}
                             onClick={handleChangeQuestion}>{name}</Button>
                     </Tooltip>
                     <CodeBox language="python" code={code} name={name} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', height: '630px',}}>
-                    <div style={{ height: '80%%', marginBottom:'25px'  }}>
+                <div style={{ display: 'flex', flexDirection: 'column', height: '630px', }}>
+                    <div style={{ height: '80%%', marginBottom: '25px' }}>
                         <Box
                             sx={{
                                 display: 'flex',

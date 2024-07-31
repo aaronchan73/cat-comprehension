@@ -54,9 +54,8 @@ export const getAttemptByUsername = async (username: string | null) => {
 }
 
 /**
- * 
- * @param attempt - IResult object
- * @returns 
+ * @description - Service for generating feedback for an attempt
+ * @param attempt - IResult object or undefined
  */
 export const generateFeedback = async (attempt: IResult | undefined) => {
     try {

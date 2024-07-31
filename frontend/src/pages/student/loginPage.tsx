@@ -1,5 +1,5 @@
 import { Alert, Button, TextField } from '@mui/material';
-import react, { useState, useEffect } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUsers } from '../../services/users';
 import { IUser } from '../../types/IUser';
@@ -9,6 +9,7 @@ export default function LoginPage() {
     const [studentID, setStudentID] = useState<string>('')
     const [error, setError] = useState<string>('')
     const [success, setSuccess] = useState<string>('')
+    
     const navigate = useNavigate()
 
     /**

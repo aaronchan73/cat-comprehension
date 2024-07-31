@@ -5,12 +5,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ITestCase } from "../../types/ITestCase";
 
 export default function TestCasesPage() {
-    const location = useLocation()
-    const navigate = useNavigate()
-    const [userName, setUserName] = useState<string>('')
     const [testCases, setTestCases] = useState<ITestCase[]>([])
     const [testCase, setTestCase] = useState<ITestCase>()
+    
+    const location = useLocation()
+    const navigate = useNavigate()
 
+    /**
+     * @description - UseEffect to set the test cases from the location state if all the required data is present
+     */
     useEffect(() => {
         if (location.state && location.state.testCases && location.state.username) {
             const { testCases, username } = location.state
@@ -21,17 +24,23 @@ export default function TestCasesPage() {
                 }
             })
             setTestCases(testCasesWithNumber)
-            setUserName(username)
         } else {
-            setUserName('User not found, navigate back to the results page')
+            throw new Error('No test cases found')
         }
     }, [location.state])
 
+    /**
+     * @description - Function to handle button click and set the selected test case to update UI
+     * @param test - test case name to be selected
+     */
     const handleButtonClick = (test: string) => {
         const testCase = testCases.find((testCase) => testCase.test === test)
         setTestCase(testCase)
     }
 
+    /**
+     * @description - Function to handle return button click and navigate to results page
+     */
     const handleReturn = () => {
         const { questionId, attemptId, username } = location.state
         navigate(`/student/resultsPage?username=${username}&attemptId=${attemptId}&questionId=${questionId}`)
