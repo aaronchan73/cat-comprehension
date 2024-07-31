@@ -21,8 +21,9 @@ Features such as **Progression and Performance Tracking** and **Educator Tools a
 6. Ollama is accessible at `http://localhost:11434`
 
 ## Testing
-1. Unit tests are located in `/backend/test`
-2. Run tests using:
+1. Unit test report is located at [index.html](./backend/mochawesome-report/index.html)
+2. To run tests using command line and regenerate report and automatically open html report:
     ```sh
     cd backend && npm i && npm test
     ```
+Note: We clarified with TA Yinan Ye that we can have a command line input to generate index.html file
