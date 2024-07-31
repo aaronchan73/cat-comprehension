@@ -214,6 +214,7 @@ export default function ResultsPage() {
                             width: '100%',
                             maxWidth: '400px',
                             textAlign: 'center',
+                            height:'80%'
                         }}
                     >
                         <Typography variant="h6">Your Code</Typography>

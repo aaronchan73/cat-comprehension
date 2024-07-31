@@ -3,7 +3,7 @@ import { getUsers } from "../../services/users";
 import { getAttemptByUsername } from "../../services/attempts";
 import { getExercises } from "../../services/exercises";
 import "../../styles/kittenListPage.css";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Tooltip } from "@mui/material";
 import { IUser } from "../../types/IUser";
 import { IQuestion } from "../../types/IQuestion";
 import CodeBox from "../../components/codeBox";
@@ -27,9 +27,9 @@ export default function KittenListPage() {
   const [xAxis, setXAxis] = useState<number[]>([]);
   const [values, setValues] = useState<number[]>([]);
 
-   /**
-   * @description - useEffect to fetch users and questions when page mounts
-   */
+  /**
+  * @description - useEffect to fetch users and questions when page mounts
+  */
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -41,9 +41,9 @@ export default function KittenListPage() {
     };
     fetchUsers();
 
-     /**
-     * @description - fetch questions from API
-     */
+    /**
+    * @description - fetch questions from API
+    */
     const fetchQuestions = async () => {
       try {
         const data = await getExercises();
@@ -55,10 +55,10 @@ export default function KittenListPage() {
     fetchQuestions();
   }, []);
 
-   /**
-   * @description - handle button click to fetch attempts for a selected user
-   * @param username - username of selected user
-   */
+  /**
+  * @description - handle button click to fetch attempts for a selected user
+  * @param username - username of selected user
+  */
   const handleButtonClick = async (username: string) => {
     setSelectedUsername(username);
     try {
@@ -95,12 +95,12 @@ export default function KittenListPage() {
     }
   };
 
-    /**
- * @description - Update the current attempts based on the selected question index
- * @param newQuestionIndex - The index of the newly selected question
- * @param attemptsData - The data of user attempts
- * @param questionsData - The list of questions
- */
+  /**
+* @description - Update the current attempts based on the selected question index
+* @param newQuestionIndex - The index of the newly selected question
+* @param attemptsData - The data of user attempts
+* @param questionsData - The list of questions
+*/
   const updateCurrentAttempts = (
     newQuestionIndex: number,
     attemptsData: IGetAttemptByUsername,
@@ -208,17 +208,16 @@ export default function KittenListPage() {
                   <h2 className="username" style={{ marginRight: "70px" }}>
                     {selectedUsername}
                   </h2>
-                  <h2
-                    style={{ marginLeft: "70px", cursor: "pointer" }}
-                    onClick={handleTitleClick}
-                    className="username"
-                  >
-                    {currentQuestion.name}
-                  </h2>
+                  <Tooltip title="Click question name to see other questions">
+                    <h2
+                      style={{ marginLeft: "70px", cursor: "pointer" }}
+                      onClick={handleTitleClick}
+                      className="username"
+                    >
+                      {currentQuestion.name}
+                    </h2>
+                  </Tooltip>
                 </Box>
-                <p style={{ textAlign: "center" }}>
-                  Click question name to see other questions
-                </p>
                 <Box
                   sx={{
                     display: "flex",
@@ -254,29 +253,29 @@ export default function KittenListPage() {
                 </Button>
                 <p>Test Cases Passed: {currentAttempt.numPassed}</p>
                 {xAxis.length >= 2 && values.length >= 2 && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    minHeight: "200px",
-                    maxWidth: "550px",
-                    padding: "10px",
-                    borderRadius: "10px",
-                    backgroundColor: "#f0f0f0",
-                    marginTop: "10px",
-                  }}
-                >
-                  <LineChart
-                    width={500}
-                    height={300}
-                    xAxis={[{ data: xAxis, label: 'Attempt Number' }]}
-                    series={[{ data: values, label: 'Test Cases Passed' }]}
-                    grid={{ vertical: true, horizontal: true }}
-                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      minHeight: "200px",
+                      maxWidth: "550px",
+                      padding: "10px",
+                      borderRadius: "10px",
+                      backgroundColor: "#f0f0f0",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <LineChart
+                      width={500}
+                      height={300}
+                      xAxis={[{ data: xAxis, label: 'Attempt Number' }]}
+                      series={[{ data: values, label: 'Test Cases Passed' }]}
+                      grid={{ vertical: true, horizontal: true }}
+                    />
                   </Box>
-                    )}
+                )}
               </div>
             ) : (
               <h2>Select a student</h2>
