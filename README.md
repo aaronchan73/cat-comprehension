@@ -8,7 +8,7 @@ Features such as **Progression and Performance Tracking** and **Educator Tools a
 
 ## Docker Compose
 1. Install Docker Desktop
-2. Navigate to the root folder of our application.
+2. Navigate to the root folder of the application.
 3. Build the containers using:
     ```sh
     docker compose build
