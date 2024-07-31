@@ -6,7 +6,7 @@ const path = require('path');
  * @returns contents of Questions.json
  */
 const readQuestionsJSON = () => {
-  const filePath = path.join(__dirname, '../Questions.json');
+  const filePath = path.join(__dirname, '../data/Questions.json');
   const data = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(data);
 };

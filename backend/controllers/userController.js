@@ -6,7 +6,7 @@ const path = require('path');
  * @returns contents of Users.json
  */
 const readUsersJSON = () => {
-  const filePath = path.join(__dirname, '../Users.json');
+  const filePath = path.join(__dirname, '../data/Users.json');
   const data = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(data);
 };
@@ -16,7 +16,7 @@ const readUsersJSON = () => {
  * @param data - contents to update Users.json with
  */
 const updateUsersJSON = (data) => {
-  const filePath = path.join(__dirname, '../Users.json');
+  const filePath = path.join(__dirname, '../data/Users.json');
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 

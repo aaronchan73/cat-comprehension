@@ -6,7 +6,7 @@ const path = require('path');
  * @returns contents of Attempts.json
  */
 const readAttemptsJSON = () => {
-    const filePath = path.join(__dirname, '../Attempts.json');
+    const filePath = path.join(__dirname, '../data/Attempts.json');
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
 };
@@ -16,7 +16,7 @@ const readAttemptsJSON = () => {
  * @returns contents of Questions.json
  */
 const readQuestionsJSON = () => {
-    const filePath = path.join(__dirname, '../Questions.json');
+    const filePath = path.join(__dirname, '../data/Questions.json');
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
 };
@@ -26,7 +26,7 @@ const readQuestionsJSON = () => {
  * @param data - contents to update Attempts.json with
  */
 const updateAttemptsJSON = (data) => {
-    const filePath = path.join(__dirname, '../Attempts.json');
+    const filePath = path.join(__dirname, '../data/Attempts.json');
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 };
 
@@ -160,7 +160,7 @@ exports.AddAttempt = async (req, res) => {
  * @returns contents of Attempt-Tests.json
  */
 const readAttemptTestsJSON = () => {
-    const filePath = path.join(__dirname, '../Attempt-Tests.json');
+    const filePath = path.join(__dirname, '../data/Attempt-Tests.json');
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
 };
