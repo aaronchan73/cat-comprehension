@@ -1,0 +1,950 @@
+{
+  "stats": {
+    "suites": 17,
+    "tests": 21,
+    "passes": 21,
+    "pending": 0,
+    "failures": 0,
+    "start": "2024-07-31T05:00:38.795Z",
+    "end": "2024-07-31T05:00:38.835Z",
+    "duration": 40,
+    "testsRegistered": 21,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "7d99ae92-43bc-489f-8657-8af8a3d8fc2f",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "38ba2241-6b22-4bde-b661-d249ad35bb8f",
+          "title": "Helper Functions",
+          "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+          "file": "/test/attemptController.test.mjs",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Helper Functions\"",
+              "fullTitle": "Helper Functions \"before each\" hook in \"Helper Functions\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Initial mock database\nmockDb = {\n  attempts: JSON.stringify([\n    {\n      username: \"test\",\n      success: true,\n      message: \"All tests passed\",\n      attemptId: 1,\n      questionId: 2,\n      generateCode: \"function sum(a, b) { return a + b; }\",\n      numPassed: 1,\n    },\n    {\n      username: \"testUser\",\n      success: false,\n      message: \"Tests failed\",\n      attemptId: \"1\",\n      questionId: \"1\",\n      generateCode:\n        \"function twoSum(nums, target) { return `${nums[1]}, ${nums[0]}`; }\",\n      numPassed: 0,\n    },\n  ]),\n  questions: JSON.stringify([\n    {\n      id: 1,\n      name: \"Two Sum\",\n      code: \"from typing import List\\n\\ndef twoSum(nums: List[int], target: int) -> List[int]:\\n    numToIndex = {}\\n    for index, num in enumerate(nums):\\n        complement = target - num\\n        if complement in numToIndex:\\n            return [numToIndex[complement], index]\\n        numToIndex[num] = index\\n    return []\\n\\n# Example usage:\\nnums = [2, 7, 11, 15]\\ntarget = 9\\nresult = twoSum(nums, target)\\nprint(result)  # Output: [0, 1]\\n\",\n    },\n    {\n      id: 2,\n      name: \"Sum Function\",\n      code: \"function add(a, b) { return a + b; }\",\n    },\n  ]),\n  attemptTests: JSON.stringify([\n    {\n      id: 1,\n      testCases: [\n        {\n          input: \"1, 2\",\n          expectedOutput: \"3\",\n          successMessage: \"Success\",\n          errorMessage: \"Fail\",\n        },\n      ],\n    },\n  ]),\n};\n// Stub fs.readFileSync to return the mock database\nsinon.stub(fs, \"readFileSync\").callsFake((filePath, encoding) => {\n  if (encoding === \"utf8\") {\n    if (filePath.includes(\"Attempts.json\")) {\n      return mockDb.attempts;\n    }\n    if (filePath.includes(\"Questions.json\")) {\n      return mockDb.questions;\n    }\n    if (filePath.includes(\"Attempt-Tests.json\")) {\n      return mockDb.attemptTests;\n    }\n  }\n});\n// Stub fs.writeFileSync to update the mock database\nsinon.stub(fs, \"writeFileSync\").callsFake((filePath, data) => {\n  if (filePath.includes(\"Attempts.json\")) {\n    mockDb.attempts = data;\n  }\n});",
+              "err": {},
+              "uuid": "6171b977-e430-4db5-9018-56eb2bf6b96f",
+              "parentUUID": "38ba2241-6b22-4bde-b661-d249ad35bb8f",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Helper Functions\"",
+              "fullTitle": "Helper Functions \"after each\" hook in \"Helper Functions\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "sinon.restore();",
+              "err": {},
+              "uuid": "625b8d43-850f-47b9-9394-f7f2b3ca8887",
+              "parentUUID": "38ba2241-6b22-4bde-b661-d249ad35bb8f",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "abd4305a-786a-4032-a3bc-0b4415761400",
+              "title": "readAttemptsJSON",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should read and parse Attempts.json",
+                  "fullTitle": "Helper Functions readAttemptsJSON should read and parse Attempts.json",
+                  "timedOut": false,
+                  "duration": 2,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const result = readAttemptsJSON();\nexpect(result).to.deep.equal(JSON.parse(mockDb.attempts));",
+                  "err": {},
+                  "uuid": "044780a1-6d37-446c-87e3-4ed2c8f42111",
+                  "parentUUID": "abd4305a-786a-4032-a3bc-0b4415761400",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "044780a1-6d37-446c-87e3-4ed2c8f42111"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 2,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "f08974d5-3813-44ee-aa24-c929f510a892",
+              "title": "readQuestionsJSON",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should read and parse Questions.json",
+                  "fullTitle": "Helper Functions readQuestionsJSON should read and parse Questions.json",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const result = readQuestionsJSON();\nexpect(result).to.deep.equal(JSON.parse(mockDb.questions));",
+                  "err": {},
+                  "uuid": "5a74162b-ab16-4b6d-a93e-84cfa7c1eead",
+                  "parentUUID": "f08974d5-3813-44ee-aa24-c929f510a892",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "5a74162b-ab16-4b6d-a93e-84cfa7c1eead"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 1,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "eb82a86d-d895-4e50-9a1c-e25a2e63eb1c",
+              "title": "updateAttemptsJSON",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should write data to Attempts.json",
+                  "fullTitle": "Helper Functions updateAttemptsJSON should write data to Attempts.json",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const fakeData = [{ id: 1 }];\nupdateAttemptsJSON(fakeData);\nexpect(mockDb.attempts).to.equal(JSON.stringify(fakeData, null, 2));",
+                  "err": {},
+                  "uuid": "5e9b9a42-3f81-4dd2-b833-6e5add6915dc",
+                  "parentUUID": "eb82a86d-d895-4e50-9a1c-e25a2e63eb1c",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "5e9b9a42-3f81-4dd2-b833-6e5add6915dc"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 0,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "64ab3e5d-0df9-4f7d-8ee3-669780cb92c2",
+              "title": "parseCode",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should return an empty string if no code is found",
+                  "fullTitle": "Helper Functions parseCode should return an empty string if no code is found",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const response = \"No code here\";\nconst result = parseCode(response);\nexpect(result).to.equal(\"\");",
+                  "err": {},
+                  "uuid": "f4dd1c57-5e93-4c97-b56b-3b7d5baa5bf2",
+                  "parentUUID": "64ab3e5d-0df9-4f7d-8ee3-669780cb92c2",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "f4dd1c57-5e93-4c97-b56b-3b7d5baa5bf2"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 0,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "eeb85399-6d39-4156-a6b2-f0ed8d4bffab",
+              "title": "generateCode",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should generate code based on the description and question",
+                  "fullTitle": "Helper Functions generateCode should generate code based on the description and question",
+                  "timedOut": false,
+                  "duration": 3,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const fetchStub = sinon.stub(global, \"fetch\").resolves({\n  ok: true,\n  json: async () => ({ response: \"generatedCode\" }),\n});\nconst result = await generateCode(\"description\", \"question\");\nexpect(result).to.equal(\"generatedCode\");\nfetchStub.restore();",
+                  "err": {},
+                  "uuid": "d3aa95be-5004-4a40-af2c-0309c100a61a",
+                  "parentUUID": "eeb85399-6d39-4156-a6b2-f0ed8d4bffab",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "should throw an error if the response is not ok",
+                  "fullTitle": "Helper Functions generateCode should throw an error if the response is not ok",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const fetchStub = sinon.stub(global, \"fetch\").resolves({\n  ok: false,\n  status: 500,\n});\nlet error;\ntry {\n  await generateCode(\"description\", \"question\");\n} catch (err) {\n  error = err;\n}\nexpect(error).to.be.an(\"error\");\nfetchStub.restore();",
+                  "err": {},
+                  "uuid": "bbfdbeb8-e063-4f8c-b818-ce705d10e60f",
+                  "parentUUID": "eeb85399-6d39-4156-a6b2-f0ed8d4bffab",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "d3aa95be-5004-4a40-af2c-0309c100a61a",
+                "bbfdbeb8-e063-4f8c-b818-ce705d10e60f"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 4,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "a36773b4-d5b0-4fea-bf50-7375f7ef7739",
+              "title": "readAttemptTestsJSON",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should read and parse Attempt-Tests.json",
+                  "fullTitle": "Helper Functions readAttemptTestsJSON should read and parse Attempt-Tests.json",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const result = readAttemptTestsJSON();\nexpect(result).to.deep.equal(JSON.parse(mockDb.attemptTests));",
+                  "err": {},
+                  "uuid": "586194f2-0e3b-46f1-85c3-bc79db1123b2",
+                  "parentUUID": "a36773b4-d5b0-4fea-bf50-7375f7ef7739",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "586194f2-0e3b-46f1-85c3-bc79db1123b2"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 0,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "a42c88b1-7ccc-4cf6-acb6-27a6863e289e",
+              "title": "testAttempt",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should test user code against test cases",
+                  "fullTitle": "Helper Functions testAttempt should test user code against test cases",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const userCode = \"function add(a, b) { return a + b; }\";\nconst testCases = [\n  {\n    input: \"1, 2\",\n    expectedOutput: \"3\",\n    successMessage: \"Success\",\n    errorMessage: \"Fail\",\n  },\n];\nconst result = testAttempt(userCode, testCases);\nexpect(result).to.deep.equal([\n  {\n    input: \"1, 2\",\n    expectedOutput: \"3\",\n    actualOutput: 3,\n    message: \"Success\",\n    passed: true,\n    test: undefined\n  },\n]);",
+                  "err": {},
+                  "uuid": "bea2ed6e-4175-4c65-a2ce-04f3cd9271bf",
+                  "parentUUID": "a42c88b1-7ccc-4cf6-acb6-27a6863e289e",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "should handle errors in user code",
+                  "fullTitle": "Helper Functions testAttempt should handle errors in user code",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "const userCode = 'function add(a, b) { throw new Error(\"error\"); }';\nconst testCases = [\n  {\n    input: \"1, 2\",\n    expectedOutput: \"3\",\n    successMessage: \"Success\",\n    errorMessage: \"Fail\",\n  },\n];\nconst result = testAttempt(userCode, testCases);\nexpect(result).to.deep.equal([\n  {\n    input: \"1, 2\",\n    expectedOutput: \"3\",\n    actualOutput: \"error\",\n    message: \"Fail\",\n    passed: false,\n    test: undefined\n  },\n]);",
+                  "err": {},
+                  "uuid": "305153df-a1a4-464c-b495-fe179e458d1f",
+                  "parentUUID": "a42c88b1-7ccc-4cf6-acb6-27a6863e289e",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "bea2ed6e-4175-4c65-a2ce-04f3cd9271bf",
+                "305153df-a1a4-464c-b495-fe179e458d1f"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 2,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        },
+        {
+          "uuid": "10592e6b-6e03-4e1f-af8b-412717911945",
+          "title": "Controller Functions",
+          "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+          "file": "/test/attemptController.test.mjs",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Controller Functions\"",
+              "fullTitle": "Controller Functions \"before each\" hook in \"Controller Functions\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Initial mock database\nmockDb = {\n  attempts: JSON.stringify([\n    {\n      username: \"test\",\n      success: true,\n      message: \"All tests passed\",\n      attemptId: 1,\n      questionId: 2,\n      generateCode: \"function sum(a, b) { return a + b; }\",\n      numPassed: 1,\n    },\n    {\n      username: \"testUser\",\n      success: false,\n      message: \"Tests failed\",\n      attemptId: \"1\",\n      questionId: \"1\",\n      generateCode:\n        \"function twoSum(nums, target) { return `${nums[1]}, ${nums[0]}`; }\",\n      numPassed: 0,\n    },\n  ]),\n  questions: JSON.stringify([\n    {\n      id: 1,\n      name: \"Two Sum\",\n      code: \"from typing import List\\n\\ndef twoSum(nums: List[int], target: int) -> List[int]:\\n    numToIndex = {}\\n    for index, num in enumerate(nums):\\n        complement = target - num\\n        if complement in numToIndex:\\n            return [numToIndex[complement], index]\\n        numToIndex[num] = index\\n    return []\\n\\n# Example usage:\\nnums = [2, 7, 11, 15]\\ntarget = 9\\nresult = twoSum(nums, target)\\nprint(result)  # Output: [0, 1]\\n\",\n    },\n    {\n      id: 2,\n      name: \"Sum Function\",\n      code: \"function add(a, b) { return a + b; }\",\n    },\n  ]),\n  attemptTests: JSON.stringify([\n    {\n      id: 1,\n      testCases: [\n        {\n          input: \"1, 2\",\n          expectedOutput: \"3\",\n          successMessage: \"Success\",\n          errorMessage: \"Fail\",\n        },\n      ],\n    },\n  ]),\n};\n// Stub fs.readFileSync to return the mock database\nsinon.stub(fs, \"readFileSync\").callsFake((filePath, encoding) => {\n  if (encoding === \"utf8\") {\n    if (filePath.includes(\"Attempts.json\")) {\n      return mockDb.attempts;\n    }\n    if (filePath.includes(\"Questions.json\")) {\n      return mockDb.questions;\n    }\n    if (filePath.includes(\"Attempt-Tests.json\")) {\n      return mockDb.attemptTests;\n    }\n  }\n});\n// Stub fs.writeFileSync to update the mock database\nsinon.stub(fs, \"writeFileSync\").callsFake((filePath, data) => {\n  if (filePath.includes(\"Attempts.json\")) {\n    mockDb.attempts = data;\n  }\n});\nreq = {\n  body: {},\n  params: {},\n};\nres = {\n  status: sinon.stub().returnsThis(),\n  json: sinon.stub(),\n};",
+              "err": {},
+              "uuid": "256906b1-0675-4b7c-9969-c7418b6d9cc7",
+              "parentUUID": "10592e6b-6e03-4e1f-af8b-412717911945",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Controller Functions\"",
+              "fullTitle": "Controller Functions \"after each\" hook in \"Controller Functions\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "sinon.restore();",
+              "err": {},
+              "uuid": "1bfbe8c9-bbaf-4bae-8ca4-b6d65a716a2a",
+              "parentUUID": "10592e6b-6e03-4e1f-af8b-412717911945",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "3666f179-dafe-4678-b60d-9af6f5f90bda",
+              "title": "GetAttemptsByUsername",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should return attempts for the given username",
+                  "fullTitle": "Controller Functions GetAttemptsByUsername should return attempts for the given username",
+                  "timedOut": false,
+                  "duration": 2,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "req.params.username = \"testUser\";\nGetAttemptsByUsername(req, res);\nexpect(res.status.calledWith(200)).to.be.true;\nexpect(\n  res.json.calledWith(\n    sinon.match({\n      message: \"Attempt retrieved successfully\",\n      userAttempts: sinon.match.array,\n    })\n  )\n).to.be.true;\nexpect(res.json.args[0][0].userAttempts).to.deep.include({\n  username: \"testUser\",\n  success: false,\n  message: \"Tests failed\",\n  attemptId: \"1\",\n  questionId: \"1\",\n  generateCode:\n    \"function twoSum(nums, target) { return `${nums[1]}, ${nums[0]}`; }\",\n  numPassed: 0,\n});",
+                  "err": {},
+                  "uuid": "12a49cf4-817f-4384-99c4-d931674c9139",
+                  "parentUUID": "3666f179-dafe-4678-b60d-9af6f5f90bda",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "should return an error if no attempts found for the given username",
+                  "fullTitle": "Controller Functions GetAttemptsByUsername should return an error if no attempts found for the given username",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "req.params.username = \"nonexistentuser\";\nGetAttemptsByUsername(req, res);\nexpect(res.status.calledWith(400)).to.be.true;\nexpect(res.json.calledWith({ message: \"Attempt not found\" })).to.be.true;",
+                  "err": {},
+                  "uuid": "51844c43-783a-4a30-a612-34715a93f7b1",
+                  "parentUUID": "3666f179-dafe-4678-b60d-9af6f5f90bda",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "12a49cf4-817f-4384-99c4-d931674c9139",
+                "51844c43-783a-4a30-a612-34715a93f7b1"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 2,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "d6350fda-4313-4481-a9b8-9084db259287",
+              "title": "AddAttempt",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/attemptController.test.mjs",
+              "file": "/test/attemptController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should return an error if description is missing",
+                  "fullTitle": "Controller Functions AddAttempt should return an error if description is missing",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "req.body = {\n  username: \"newuser\",\n  questionId: 1,\n};\nreq.params.attemptId = 2;\nawait AddAttempt(req, res);\nexpect(res.status.calledWith(400)).to.be.true;\nexpect(res.json.calledWith({ message: \"Description is required\" })).to.be\n  .true;",
+                  "err": {},
+                  "uuid": "9dbaad33-211a-4039-b6f2-741161900e78",
+                  "parentUUID": "d6350fda-4313-4481-a9b8-9084db259287",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "9dbaad33-211a-4039-b6f2-741161900e78"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 0,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        },
+        {
+          "uuid": "cdd853b3-c876-45e8-a784-b3aead04ad02",
+          "title": "Question Controller",
+          "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/questionController.test.mjs",
+          "file": "/test/questionController.test.mjs",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"Question Controller\"",
+              "fullTitle": "Question Controller \"before each\" hook in \"Question Controller\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Initial mock database\nmockDb = {\n    questions: JSON.stringify([\n        {\n            \"id\": 1,\n            \"code\": \"function add(a, b) { return a + b; }\"\n        },\n        {\n            \"id\": 2,\n            \"code\": \"function subtract(a, b) { return a - b; }\"\n        }\n    ])\n};\n// Stub fs.readFileSync to return mock database\nsinon.stub(fs, 'readFileSync').callsFake((filePath, encoding) => {\n    if (encoding === 'utf8') {\n        if (filePath.includes('Questions.json')) {\n            return mockDb.questions;\n        }\n    }\n    return undefined;\n});\nreq = {\n    params: {}\n};\nres = {\n    status: sinon.stub().returnsThis(),\n    json: sinon.stub()\n};",
+              "err": {},
+              "uuid": "a962e94d-d222-4477-9849-2296ab8b572e",
+              "parentUUID": "cdd853b3-c876-45e8-a784-b3aead04ad02",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Question Controller\"",
+              "fullTitle": "Question Controller \"after each\" hook in \"Question Controller\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "sinon.restore();",
+              "err": {},
+              "uuid": "36d25f6f-2c51-4c0c-be5e-4ff26297434a",
+              "parentUUID": "cdd853b3-c876-45e8-a784-b3aead04ad02",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "7905a485-8422-4b97-93c1-4db313197ec9",
+              "title": "GetQuestions",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/questionController.test.mjs",
+              "file": "/test/questionController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should return all available questions",
+                  "fullTitle": "Question Controller GetQuestions should return all available questions",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "GetQuestions(req, res);\nexpect(res.status.calledWith(200)).to.be.true;\nexpect(res.json.calledWith(sinon.match({\n    message: 'Questions retrieved successfully',\n    questions: sinon.match.array\n}))).to.be.true;\nexpect(res.json.args[0][0].questions).to.deep.equal(JSON.parse(mockDb.questions));",
+                  "err": {},
+                  "uuid": "afc83ac0-8809-4e21-9691-a438d4dcedfe",
+                  "parentUUID": "7905a485-8422-4b97-93c1-4db313197ec9",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "afc83ac0-8809-4e21-9691-a438d4dcedfe"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 1,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "098221a6-d0d5-4ac8-8fe0-9afa1eb57b8f",
+              "title": "GetQuestionsById",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/questionController.test.mjs",
+              "file": "/test/questionController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "should return a specific question by ID",
+                  "fullTitle": "Question Controller GetQuestionsById should return a specific question by ID",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "req.params.id = 1;\nGetQuestionsById(req, res);\nexpect(res.status.calledWith(200)).to.be.true;\nexpect(res.json.calledWith(sinon.match({\n    message: 'Question retrieved successfully',\n    question: sinon.match.object\n}))).to.be.true;\nconst expectedQuestion = {\n    \"id\": 1,\n    \"code\": \"function add(a, b) { return a + b; }\"\n};\nexpect(res.json.args[0][0].question).to.deep.equal(expectedQuestion);",
+                  "err": {},
+                  "uuid": "875a8b1a-c350-4b9c-8e6a-8c9fd184d26a",
+                  "parentUUID": "098221a6-d0d5-4ac8-8fe0-9afa1eb57b8f",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "should return an error if question ID is not found",
+                  "fullTitle": "Question Controller GetQuestionsById should return an error if question ID is not found",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "req.params.id = 3;\nGetQuestionsById(req, res);\nexpect(res.status.calledWith(400)).to.be.true;\nexpect(res.json.calledWith({ message: 'Question not found' })).to.be.true;",
+                  "err": {},
+                  "uuid": "aaf9a408-11bb-4116-a7ca-82915e55ef72",
+                  "parentUUID": "098221a6-d0d5-4ac8-8fe0-9afa1eb57b8f",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "should return an error if question ID is not a valid number",
+                  "fullTitle": "Question Controller GetQuestionsById should return an error if question ID is not a valid number",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "req.params.id = 'invalid';\nGetQuestionsById(req, res);\nexpect(res.status.calledWith(400)).to.be.true;\nexpect(res.json.calledWith({ message: 'Question not found' })).to.be.true;",
+                  "err": {},
+                  "uuid": "98bb0f74-f99b-4ba6-833a-e03733be45ef",
+                  "parentUUID": "098221a6-d0d5-4ac8-8fe0-9afa1eb57b8f",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "875a8b1a-c350-4b9c-8e6a-8c9fd184d26a",
+                "aaf9a408-11bb-4116-a7ca-82915e55ef72",
+                "98bb0f74-f99b-4ba6-833a-e03733be45ef"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 3,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        },
+        {
+          "uuid": "201e5f41-6492-49de-8263-723fa11e0ff9",
+          "title": "userController tests",
+          "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/userController.test.mjs",
+          "file": "/test/userController.test.mjs",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook in \"userController tests\"",
+              "fullTitle": "userController tests \"before each\" hook in \"userController tests\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Initialize mock database\nmockDb = [\n  { username: 'gloria', studentId: 123 },\n  { username: 'tim', studentId: 456 }\n];\n// Stub fs.readFileSync to return the mock database\nsinon.stub(fs, 'readFileSync').callsFake((filePath, encoding) => {\n  if (encoding === 'utf8') {\n    return JSON.stringify(mockDb);\n  }\n});\n// Stub fs.writeFileSync to update the mock database\nsinon.stub(fs, 'writeFileSync').callsFake((filePath, data) => {\n  mockDb = JSON.parse(data);\n});\nreq = {\n  body: {}\n};\nres = {\n  status: sinon.stub().returnsThis(),\n  json: sinon.stub()\n};",
+              "err": {},
+              "uuid": "068d1397-8bb6-426d-b78e-3bf9c2390579",
+              "parentUUID": "201e5f41-6492-49de-8263-723fa11e0ff9",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"userController tests\"",
+              "fullTitle": "userController tests \"after each\" hook in \"userController tests\"",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "sinon.restore();",
+              "err": {},
+              "uuid": "9dfa8bb6-543b-4970-9592-8d1554a868a0",
+              "parentUUID": "201e5f41-6492-49de-8263-723fa11e0ff9",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "af854373-0d27-4710-a191-d4d0d288c6d5",
+              "title": "AddStudent",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/userController.test.mjs",
+              "file": "/test/userController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "successfully adds a new student",
+                  "fullTitle": "userController tests AddStudent successfully adds a new student",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "// Successful case \n     req.body = {\n       username: 'newname',\n       studentId: '789'\n     };\n     userController.AddStudent(req, res);\n     expect(res.status.calledWith(200)).to.be.true;\n     expect(res.json.calledWith(sinon.match({\n       message: 'User added successfully',\n       user: { username: 'newname', studentId: '789' }\n     }))).to.be.true;\n     expect(mockDb).to.deep.include({ username: 'newname', studentId: '789' });",
+                  "err": {},
+                  "uuid": "1e05234b-5980-46b1-9e22-dadda8fa268a",
+                  "parentUUID": "af854373-0d27-4710-a191-d4d0d288c6d5",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "returns error if username or studentId is missing",
+                  "fullTitle": "userController tests AddStudent returns error if username or studentId is missing",
+                  "timedOut": false,
+                  "duration": 1,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "// missing username or student ID, should fail \n     req.body = { username: 'missingId' };\n     userController.AddStudent(req, res);\n     expect(res.status.calledWith(400)).to.be.true;\n     expect(res.json.calledWith({ message: 'Username or student ID is required' })).to.be.true;",
+                  "err": {},
+                  "uuid": "b5ce4d2c-9de6-460d-88b2-5e8509319201",
+                  "parentUUID": "af854373-0d27-4710-a191-d4d0d288c6d5",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "returns error if username or studentId already exists",
+                  "fullTitle": "userController tests AddStudent returns error if username or studentId already exists",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "// username or student ID already exists, should fail \n     req.body = {\n       username: 'gloria',\n       studentId: 123\n     };\n     userController.AddStudent(req, res);\n     expect(res.status.calledWith(400)).to.be.true;\n     expect(res.json.calledWith({ message: 'Username or student ID already exists' })).to.be.true;",
+                  "err": {},
+                  "uuid": "ec39fa64-1239-4fd0-a924-dc6a0db55b58",
+                  "parentUUID": "af854373-0d27-4710-a191-d4d0d288c6d5",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "1e05234b-5980-46b1-9e22-dadda8fa268a",
+                "b5ce4d2c-9de6-460d-88b2-5e8509319201",
+                "ec39fa64-1239-4fd0-a924-dc6a0db55b58"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 2,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            },
+            {
+              "uuid": "9cfcadf3-169f-423f-98c5-5cd5e88dd570",
+              "title": "GetStudents",
+              "fullFile": "/Users/timothyfang/Documents/Computer Science Repositories/Project-Groups-20-Lab-C/backend/test/userController.test.mjs",
+              "file": "/test/userController.test.mjs",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "returns all registered students",
+                  "fullTitle": "userController tests GetStudents returns all registered students",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "// Successful case \n     userController.GetStudents(req, res);\n     expect(res.status.calledWith(200)).to.be.true;\n     expect(res.json.calledWith(sinon.match({\n       message: 'Users retrieved successfully',\n       users: mockDb\n     }))).to.be.true;",
+                  "err": {},
+                  "uuid": "7868496a-85a4-4be7-8bbc-62914c62ed11",
+                  "parentUUID": "9cfcadf3-169f-423f-98c5-5cd5e88dd570",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "returns an empty array if no users are present",
+                  "fullTitle": "userController tests GetStudents returns an empty array if no users are present",
+                  "timedOut": false,
+                  "duration": 0,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "// no students to retrieve, should return empty array \n     mockDb = []; \n     userController.GetStudents(req, res);\n     expect(res.status.calledWith(200)).to.be.true;\n     expect(res.json.calledWith(sinon.match({\n       message: 'Users retrieved successfully',\n       users: []\n     }))).to.be.true;",
+                  "err": {},
+                  "uuid": "63c5ec4e-c5e2-4114-80f0-82d810a473d9",
+                  "parentUUID": "9cfcadf3-169f-423f-98c5-5cd5e88dd570",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "7868496a-85a4-4be7-8bbc-62914c62ed11",
+                "63c5ec4e-c5e2-4114-80f0-82d810a473d9"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 0,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "10.7.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "index",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportFilename": "index"
+      },
+      "version": "6.2.0"
+    }
+  }
+}

@@ -188,6 +188,7 @@ describe("Helper Functions", () => {
           actualOutput: 3,
           message: "Success",
           passed: true,
+          test: undefined
         },
       ]);
     });
@@ -211,6 +212,7 @@ describe("Helper Functions", () => {
           actualOutput: "error",
           message: "Fail",
           passed: false,
+          test: undefined
         },
       ]);
     });
@@ -346,43 +348,6 @@ describe("Controller Functions", () => {
   });
 
   describe("AddAttempt", () => {
-    // it('should add a new attempt and return the result', async () => {
-    //     req.body = {
-    //         username: 'newuser',
-    //         description: 'test description',
-    //         questionId: 1
-    //     };
-    //     req.params.attemptId = 2;
-
-    //     const fetchStub = sinon.stub(global, 'fetch').resolves({
-    //         ok: true,
-    //         json: async () => ({ response: '```javascript\nfunction example() { return "example"; }\n```' })
-    //     });
-
-    //     await AddAttempt(req, res);
-
-    //     expect(res.status.calledWith(200)).to.be.true;
-    //     expect(res.json.calledWith(sinon.match({
-    //         message: 'Tests successfully ran',
-    //         result: sinon.match.object
-    //     }))).to.be.true;
-
-    //     const newAttempt = {
-    //         username: 'newuser',
-    //         success: false, // Update expected values to match the actual result
-    //         message: 'Tests failed',
-    //         attemptId: 2,
-    //         questionId: 1,
-    //         generateCode: 'function example() { return "example"; }',
-    //         numPassed: 0
-    //     };
-
-    //     console.log("mockDb.attempts:", JSON.parse(mockDb.attempts));
-    //     console.log("newAttempt:", newAttempt);
-
-    //     expect(JSON.parse(mockDb.attempts)).to.deep.include(newAttempt);
-    //     fetchStub.restore();
-    // });
 
     it("should return an error if description is missing", async () => {
       req.body = {
