@@ -19,20 +19,6 @@ export default function ExercisePage() {
     const location = useLocation()
 
     /**
-     * @description - Function to get the exercises and choosing an excersie to set - will be usedl in next sprint
-     */
-    const getExercise = async () => {
-        try {
-            const data = await getExercises()
-            const randomNumber = Math.random()
-            setCode(data.questions[0].code)
-            setName(data.questions[0].name)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    /**
      * @description - Function to set the exercise by id and setting states for code and name
      * @param id - id of the exercise
      */
@@ -179,6 +165,7 @@ export default function ExercisePage() {
                     backgroundColor: '#d3d3d3',
                 }
             }}
+                disabled={loading}
                 onClick={handleLogOut}>
                 Logout
             </Button>
