@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CodeBox from '../../components/codeBox'
 import '../../styles/exercisePage.css'
-import { getExercises, getExerciseById } from '../../services/exercises';
+import { getExerciseById } from '../../services/exercises';
 import { Alert, Box, Button, TextareaAutosize, Tooltip } from '@mui/material';
 import { addAttempt } from '../../services/attempts';
 
