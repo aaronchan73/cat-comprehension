@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CodeBox from '../../components/codeBox'
 import '../../styles/exercisePage.css'
-import { getExercises, getExerciseById } from '../../services/exercises';
+import { getExerciseById } from '../../services/exercises';
 import { Alert, Box, Button, TextareaAutosize, Tooltip } from '@mui/material';
 import { addAttempt } from '../../services/attempts';
 
@@ -17,20 +17,6 @@ export default function ExercisePage() {
 
     const navigate = useNavigate()
     const location = useLocation()
-
-    /**
-     * @description - Function to get the exercises and choosing an excersie to set - will be usedl in next sprint
-     */
-    const getExercise = async () => {
-        try {
-            const data = await getExercises()
-            const randomNumber = Math.random()
-            setCode(data.questions[0].code)
-            setName(data.questions[0].name)
-        } catch (e) {
-            console.log(e)
-        }
-    }
 
     /**
      * @description - Function to set the exercise by id and setting states for code and name
@@ -179,6 +165,7 @@ export default function ExercisePage() {
                     backgroundColor: '#d3d3d3',
                 }
             }}
+                disabled={loading}
                 onClick={handleLogOut}>
                 Logout
             </Button>
